@@ -85,7 +85,7 @@ function App() {
 
     const addTextField = () => {
         if (!pdfDimensions.width || !pdfDimensions.height) {
-            toast.error('Upload a PDF before adding text')
+            toast.error('Choose a PDF before adding text')
             return
         }
 
@@ -125,10 +125,10 @@ function App() {
             previous.map(field =>
                 field.id === id
                     ? {
-                          ...field,
-                          x: clamp(position.x / width, 0, 1),
-                          y: clamp(position.y / height, 0, 1),
-                      }
+                        ...field,
+                        x: clamp(position.x / width, 0, 1),
+                        y: clamp(position.y / height, 0, 1),
+                    }
                     : field
             )
         )
@@ -224,7 +224,7 @@ function App() {
                         <div className="flex items-center gap-2">
                             <Button variant="outline" size="sm" onClick={openFileDialog}>
                                 <UploadCloud className="size-4" />
-                                {pdfFile ? 'Replace PDF' : 'Upload PDF'}
+                                {pdfFile ? 'Replace PDF' : 'Choose PDF'}
                             </Button>
                             <Button variant="outline" size="sm" onClick={addTextField} disabled={!pdfFile}>
                                 <Type className="size-4" />
@@ -446,7 +446,7 @@ function App() {
                                 <div className="mt-10 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
                                     <Button size="lg" onClick={openFileDialog}>
                                         <UploadCloud className="size-5" />
-                                        Upload PDF
+                                        Choose PDF
                                     </Button>
                                     <Button variant="outline" size="lg" onClick={addTextField} disabled>
                                         <Type className="size-5" />

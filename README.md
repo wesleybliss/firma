@@ -4,7 +4,7 @@ Firma is a simple, in-browser PDF editor that allows you to add text fields to y
 
 ## Features
 
--   **Upload a PDF**: Choose a PDF file from your computer to start editing.
+-   **Choose a PDF**: Choose a PDF file from your computer to start editing.
 -   **Add Text Fields**: Click the "Add Text Field" button to add a new text field to your document.
 -   **Drag and Drop**: Move text fields around the document by dragging and dropping them.
 -   **Edit Text**: Click on a text field to edit the text inside it.
@@ -28,7 +28,7 @@ Firma is a simple, in-browser PDF editor that allows you to add text fields to y
 
 ## How it Works
 
-Firma uses `react-pdf` to render the PDF in the browser. When you upload a PDF, it's read as a data URL and passed to the `Document` component from `react-pdf`.
+Firma uses `react-pdf` to render the PDF in the browser. When you choose a PDF, it's read as a data URL and passed to the `Document` component from `react-pdf`.
 
 Text fields are managed in the React state. When you add a new text field, it's added to an array of text fields in the state. Each text field has an ID, text content, and x/y coordinates.
 
