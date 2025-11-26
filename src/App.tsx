@@ -35,6 +35,35 @@ const clamp = (value: number, min: number, max: number) => Math.min(Math.max(val
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`
 
+interface PDFViewerProps {
+    file: string | null
+    scale: number
+    onLoadSuccess: (page: any) => void
+}
+
+const PDFViewer = React.memo(({ file, scale, onLoadSuccess }: PDFViewerProps) => {
+    return (
+        <Document
+            file={file}
+            className="drop-shadow-xl"
+            loading={
+                <div className="flex h-64 w-64 items-center justify-center text-sm text-slate-500">
+                    Rendering PDF…
+                </div>
+            }
+        >
+            <Page
+                pageNumber={1}
+                scale={scale}
+                onLoadSuccess={onLoadSuccess}
+                renderTextLayer={false}
+                renderAnnotationLayer={false}
+            />
+        </Document>
+    )
+})
+PDFViewer.displayName = 'PDFViewer'
+
 function App() {
     const [pdfFile, setPdfFile] = useState<string | null>(null)
     const [fileName, setFileName] = useState<string | null>(null)
@@ -174,12 +203,12 @@ function App() {
         }
     }
 
-    const handlePageLoadSuccess = (page: any) => {
+    const handlePageLoadSuccess = React.useCallback((page: any) => {
         setPdfDimensions({
             width: page.originalWidth,
-            height: page.originalHeight,
+            height: page.originalHeight
         })
-    }
+    }, [])
 
     const handleZoomChange = (value: number[]) => {
         const next = clamp(value[0], 0.5, 2)
@@ -316,23 +345,11 @@ function App() {
                                                     height: scaledHeight || undefined,
                                                 }}
                                             >
-                                                <Document
+                                                <PDFViewer
                                                     file={pdfFile}
-                                                    className="drop-shadow-xl"
-                                                    loading={
-                                                        <div className="flex h-64 w-64 items-center justify-center text-sm text-slate-500">
-                                                            Rendering PDF…
-                                                        </div>
-                                                    }
-                                                >
-                                                    <Page
-                                                        pageNumber={1}
-                                                        scale={scale}
-                                                        onLoadSuccess={handlePageLoadSuccess}
-                                                        renderTextLayer={false}
-                                                        renderAnnotationLayer={false}
-                                                    />
-                                                </Document>
+                                                    scale={scale}
+                                                    onLoadSuccess={handlePageLoadSuccess}
+                                                />
 
                                                 {pdfDimensions.width > 0 && (
                                                     <div
@@ -348,21 +365,20 @@ function App() {
 
                                                             return (
                                                                 <Draggable
-                                                                    key={field.id}
+                                                                    key={`${field.id}-${scale}`}
                                                                     nodeRef={nodeRef}
                                                                     handle=".drag-handle"
-                                                                    position={{
+                                                                    defaultPosition={{
                                                                         x: field.x * scaledWidth,
                                                                         y: field.y * scaledHeight,
                                                                     }}
-                                                                    onDrag={(_, data) => updateFieldPosition(field.id, data)}
                                                                     onStop={(_, data) => updateFieldPosition(field.id, data)}
                                                                     bounds="parent"
                                                                 >
                                                                     <div
                                                                         ref={nodeRef}
                                                                         className={cn(
-                                                                            'pointer-events-auto absolute flex items-center gap-1 rounded border bg-white/90 p-1 shadow-sm backdrop-blur-sm transition-all hover:ring-1 hover:ring-slate-300',
+                                                                            'pointer-events-auto absolute flex items-center gap-1 rounded border bg-white p-1 shadow-sm transition-colors hover:ring-1 hover:ring-slate-300',
                                                                             isActive ? 'z-50 border-sky-500 ring-1 ring-sky-500' : 'z-10 border-transparent hover:border-slate-300'
                                                                         )}
                                                                     >
@@ -513,5 +529,7 @@ function FeatureCard({ icon, title, description }: FeatureCardProps) {
         </div>
     )
 }
+
+
 
 export default App
