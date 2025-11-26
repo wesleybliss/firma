@@ -350,6 +350,7 @@ function App() {
                                                                 <Draggable
                                                                     key={field.id}
                                                                     nodeRef={nodeRef}
+                                                                    handle=".drag-handle"
                                                                     position={{
                                                                         x: field.x * scaledWidth,
                                                                         y: field.y * scaledHeight,
@@ -361,19 +362,34 @@ function App() {
                                                                     <div
                                                                         ref={nodeRef}
                                                                         className={cn(
-                                                                            'pointer-events-auto rounded-lg border bg-white shadow-sm transition-all focus-within:ring-2 focus-within:ring-sky-400',
-                                                                            isActive ? 'border-sky-500 ring-2 ring-sky-400' : 'border-slate-200'
+                                                                            'pointer-events-auto absolute flex items-center gap-1 rounded border bg-white/90 p-1 shadow-sm backdrop-blur-sm transition-all hover:ring-1 hover:ring-slate-300',
+                                                                            isActive ? 'z-50 border-sky-500 ring-1 ring-sky-500' : 'z-10 border-transparent hover:border-slate-300'
                                                                         )}
                                                                     >
-                                                                        <Input
+                                                                        <div className={cn("drag-handle cursor-grab p-0.5 text-slate-400 hover:text-slate-600 active:cursor-grabbing", !isActive && "opacity-0 group-hover:opacity-100")}>
+                                                                            <PanelsTopLeft className="size-3" />
+                                                                        </div>
+                                                                        <input
                                                                             id={`field-${field.id}`}
                                                                             value={field.text}
                                                                             onFocus={() => setActiveFieldId(field.id)}
                                                                             onClick={() => setActiveFieldId(field.id)}
                                                                             onChange={event => updateTextField(field.id, event.target.value)}
-                                                                            className={cn('min-w-[180px] border-0 bg-transparent text-sm text-slate-900 focus-visible:ring-0')}
-                                                                            placeholder="Enter text"
+                                                                            className="h-6 min-w-[80px] max-w-[300px] border-0 bg-transparent p-0 text-sm text-slate-900 placeholder:text-slate-400 focus:ring-0"
+                                                                            placeholder="Type here..."
+                                                                            style={{ width: `${Math.max(field.text.length, 10)}ch` }}
                                                                         />
+                                                                        {isActive && (
+                                                                            <button
+                                                                                onClick={(e) => {
+                                                                                    e.stopPropagation();
+                                                                                    removeTextField(field.id);
+                                                                                }}
+                                                                                className="ml-1 rounded-sm p-0.5 text-slate-400 hover:bg-red-50 hover:text-red-500"
+                                                                            >
+                                                                                <Trash2 className="size-3" />
+                                                                            </button>
+                                                                        )}
                                                                     </div>
                                                                 </Draggable>
                                                             )
