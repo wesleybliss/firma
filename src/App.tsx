@@ -1,489 +1,23 @@
-import React, { useEffect, useRef, useState } from 'react'
-import { PDFDocument, StandardFonts, rgb } from 'pdf-lib'
-import fontkit from '@pdf-lib/fontkit'
-import { Document, Page, pdfjs } from 'react-pdf'
-import Draggable from 'react-draggable'
-import {
-    Download,
-    FileText,
-    MousePointer2,
-    PanelsTopLeft,
-    Plus,
-    Sparkles,
-    Trash2,
-    Type,
-    UploadCloud,
-    ZoomIn,
-    ZoomOut,
-    ChevronLeft,
-    ChevronRight,
-    Bold,
-    Italic,
-    Underline,
-    Strikethrough,
-} from 'lucide-react'
-import { GOOGLE_FONTS } from '@/lib/fonts'
+import { Download, FileText, MousePointer2, Type, UploadCloud } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Slider } from '@/components/ui/slider'
-import { Input } from '@/components/ui/input'
 import { Toaster } from '@/components/ui/sonner'
-import { toast } from 'sonner'
-import { cn } from '@/lib/utils'
-
-import 'react-pdf/dist/Page/TextLayer.css'
-
-type TextField = {
-    id: string
-    text: string
-    x: number
-    y: number
-    isNew?: boolean
-    fontFamily: string
-    fontSize: number
-    color: string
-    isBold: boolean
-    isItalic: boolean
-    isUnderline: boolean
-    isStrikethrough: boolean
-    page: number
-}
-
-const clamp = (value: number, min: number, max: number) => Math.min(Math.max(value, min), max)
-
-pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`
-
-interface PDFViewerProps {
-    file: string | null
-    scale: number
-    pageNumber: number
-    onDocumentLoadSuccess: (pdf: any) => void
-    onPageLoadSuccess: (page: any) => void
-}
-
-const PDFViewer = React.memo(({ file, scale, pageNumber, onDocumentLoadSuccess, onPageLoadSuccess }: PDFViewerProps) => {
-    return (
-        <Document
-            file={file}
-            className="drop-shadow-xl"
-            loading={
-                <div className="flex h-64 w-64 items-center justify-center text-sm text-slate-500">
-                    Rendering PDF…
-                </div>
-            }
-            onLoadSuccess={onDocumentLoadSuccess}
-        >
-            <Page
-                pageNumber={pageNumber}
-                scale={scale}
-                renderTextLayer={false}
-                renderAnnotationLayer={false}
-                onLoadSuccess={onPageLoadSuccess}
-            />
-        </Document>
-    )
-})
-PDFViewer.displayName = 'PDFViewer'
-
-interface TextPropertiesProps {
-    field: TextField
-    onUpdate: (property: keyof TextField, value: any) => void
-}
-
-function TextProperties({ field, onUpdate }: TextPropertiesProps) {
-    return (
-        <div className="space-y-6">
-            <div className="space-y-2">
-                <p className="text-xs font-medium text-slate-500">Font Family</p>
-                <select
-                    value={field.fontFamily}
-                    onChange={(e) => onUpdate('fontFamily', e.target.value)}
-                    className="w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 focus:border-slate-900 focus:outline-none"
-                >
-                    {GOOGLE_FONTS.map(font => (
-                        <option key={font.name} value={font.family} style={{ fontFamily: font.family }}>
-                            {font.name}
-                        </option>
-                    ))}
-                </select>
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                    <p className="text-xs font-medium text-slate-500">Size</p>
-                    <div className="flex items-center gap-2">
-                        <Input
-                            type="number"
-                            value={field.fontSize}
-                            onChange={(e) => onUpdate('fontSize', Number(e.target.value))}
-                            className="h-9"
-                            min={8}
-                            max={72}
-                        />
-                        <span className="text-xs text-slate-400">px</span>
-                    </div>
-                </div>
-                <div className="space-y-2">
-                    <p className="text-xs font-medium text-slate-500">Color</p>
-                    <div className="flex items-center gap-2">
-                        <div className="relative flex-1">
-                            <input
-                                type="color"
-                                value={field.color}
-                                onChange={(e) => onUpdate('color', e.target.value)}
-                                className="absolute inset-0 h-full w-full cursor-pointer opacity-0"
-                            />
-                            <div
-                                className="flex h-9 w-full items-center gap-2 rounded-md border border-slate-200 bg-white px-2"
-                                style={{ color: field.color }}
-                            >
-                                <div className="size-4 rounded-full border border-slate-200" style={{ backgroundColor: field.color }} />
-                                <span className="text-xs font-medium uppercase text-slate-600">{field.color}</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div className="space-y-2">
-                <p className="text-xs font-medium text-slate-500">Style</p>
-                <div className="grid grid-cols-4 gap-1 rounded-lg border border-slate-200 bg-white p-1">
-                    <Button
-                        variant={field.isBold ? 'secondary' : 'ghost'}
-                        size="icon-sm"
-                        className="h-8 w-full rounded-md"
-                        onClick={() => onUpdate('isBold', !field.isBold)}
-                    >
-                        <Bold className="size-4" />
-                    </Button>
-                    <Button
-                        variant={field.isItalic ? 'secondary' : 'ghost'}
-                        size="icon-sm"
-                        className="h-8 w-full rounded-md"
-                        onClick={() => onUpdate('isItalic', !field.isItalic)}
-                    >
-                        <Italic className="size-4" />
-                    </Button>
-                    <Button
-                        variant={field.isUnderline ? 'secondary' : 'ghost'}
-                        size="icon-sm"
-                        className="h-8 w-full rounded-md"
-                        onClick={() => onUpdate('isUnderline', !field.isUnderline)}
-                    >
-                        <Underline className="size-4" />
-                    </Button>
-                    <Button
-                        variant={field.isStrikethrough ? 'secondary' : 'ghost'}
-                        size="icon-sm"
-                        className="h-8 w-full rounded-md"
-                        onClick={() => onUpdate('isStrikethrough', !field.isStrikethrough)}
-                    >
-                        <Strikethrough className="size-4" />
-                    </Button>
-                </div>
-            </div>
-        </div>
-    )
-}
+import { FeatureCard } from '@/components/FeatureCard'
+import { PDFCanvas } from '@/components/PDFCanvas'
+import { Sidebar } from '@/components/Sidebar'
+import { Toolbar } from '@/components/Toolbar'
+import { useFirma } from '@/hooks/useFirma'
 
 function App() {
-    const [pdfFile, setPdfFile] = useState<string | null>(null)
-    const [fileName, setFileName] = useState<string | null>(null)
-    const [textFields, setTextFields] = useState<TextField[]>([])
-    const [activeFieldId, setActiveFieldId] = useState<string | null>(null)
-    const [scale, setScale] = useState(1)
-    const [pdfDimensions, setPdfDimensions] = useState({ width: 0, height: 0 })
-    const [numPages, setNumPages] = useState<number>(0)
-    const [currentPage, setCurrentPage] = useState<number>(1)
-    const fileInputRef = useRef<HTMLInputElement>(null)
-    const nodeRefs = useRef<Record<string, React.RefObject<HTMLDivElement>>>({})
-
-    useEffect(() => {
-        const link = document.createElement('link')
-        link.href = 'https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Roboto:wght@400;700&family=Open+Sans:wght@400;700&family=Lato:wght@400;700&family=Montserrat:wght@400;700&family=Oswald:wght@400;700&family=Merriweather:wght@400;700&family=Playfair+Display:wght@400;700&display=swap'
-        link.rel = 'stylesheet'
-        document.head.appendChild(link)
-        return () => {
-            document.head.removeChild(link)
-        }
-    }, [])
-
-    useEffect(() => {
-        if (activeFieldId) {
-            const input = document.getElementById(`field-${activeFieldId}`) as HTMLInputElement | null
-            if (input) {
-                input.focus()
-                input.select()
-            }
-        }
-    }, [activeFieldId])
-
-    const openFileDialog = () => {
-        fileInputRef.current?.click()
-    }
-
-    const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const file = event.target.files?.[0]
-        if (!file) return
-
-        const reader = new FileReader()
-        reader.onloadend = () => {
-            setPdfFile(reader.result as string)
-            setFileName(file.name)
-            setTextFields([])
-            setActiveFieldId(null)
-            setScale(1)
-            toast.success('PDF is ready to edit')
-        }
-        reader.readAsDataURL(file)
-        event.target.value = ''
-    }
-
-    const getNodeRef = (id: string) => {
-        if (!nodeRefs.current[id]) {
-            nodeRefs.current[id] = React.createRef<HTMLDivElement>()
-        }
-        return nodeRefs.current[id]
-    }
-
-    const addTextField = () => {
-        if (!pdfDimensions.width || !pdfDimensions.height) {
-            toast.error('Choose a PDF before adding text')
-            return
-        }
-
-        const newField: TextField = {
-            id: crypto.randomUUID(),
-            text: 'New text',
-            x: 0.5,
-            y: 0.35,
-            isNew: true,
-            fontFamily: 'Inter',
-            fontSize: 16,
-            color: '#000000',
-            isBold: false,
-            isItalic: false,
-            isUnderline: false,
-            isStrikethrough: false,
-            page: currentPage,
-        }
-
-        setTextFields(previous => [...previous, newField])
-        setActiveFieldId(newField.id)
-        toast.info('Text field added to the canvas')
-    }
-
-    const removeTextField = (id: string) => {
-        setTextFields(previous => previous.filter(field => field.id !== id))
-        delete nodeRefs.current[id]
-        if (activeFieldId === id) {
-            setActiveFieldId(null)
-        }
-    }
-
-    const updateTextField = (id: string, text: string) => {
-        setTextFields(previous =>
-            previous.map(field => (field.id === id ? { ...field, text, isNew: false } : field))
-        )
-    }
-
-    const updateFieldProperty = (id: string, property: keyof TextField, value: any) => {
-        setTextFields(previous =>
-            previous.map(field => (field.id === id ? { ...field, [property]: value, isNew: false } : field))
-        )
-    }
-
-    const updateFieldPosition = (id: string, position: { x: number; y: number }) => {
-        if (!pdfDimensions.width || !pdfDimensions.height) return
-
-        const width = pdfDimensions.width * scale
-        const height = pdfDimensions.height * scale
-
-        setTextFields(previous =>
-            previous.map(field =>
-                field.id === id
-                    ? {
-                        ...field,
-                        x: clamp(position.x / width, 0, 1),
-                        y: clamp(position.y / height, 0, 1),
-                        isNew: false,
-                    }
-                    : field
-            )
-        )
-    }
-
-    const hexToRgb = (hex: string) => {
-        const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
-        return result
-            ? rgb(parseInt(result[1], 16) / 255, parseInt(result[2], 16) / 255, parseInt(result[3], 16) / 255)
-            : rgb(0, 0, 0)
-    }
-
-    const fetchFontBytes = async (fontFamily: string, isBold: boolean, isItalic: boolean) => {
-        try {
-            const weight = isBold ? '700' : '400'
-            const style = isItalic ? '1' : '0'
-            const url = `https://fonts.googleapis.com/css2?family=${fontFamily.replace(/ /g, '+')}:ital,wght@${style},${weight}&display=swap`
-
-            const css = await fetch(url).then(res => res.text())
-            const match = css.match(/src: url\((.+?)\) format\('woff2'\)/)
-
-            if (!match) {
-                // Fallback for fonts that might not return woff2 or have different CSS structure
-                // Try fetching the standard URL if specific variant fails
-                console.warn(`Could not parse font URL for ${fontFamily} ${style},${weight}`)
-                return null
-            }
-
-            return await fetch(match[1]).then(res => res.arrayBuffer())
-        } catch (e) {
-            console.error('Error fetching font:', e)
-            return null
-        }
-    }
-
-    const handleDownload = async () => {
-        if (!pdfFile) return
-
-        try {
-            const existingPdfBytes = await fetch(pdfFile).then(res => res.arrayBuffer())
-            const pdfDoc = await PDFDocument.load(existingPdfBytes)
-            pdfDoc.registerFontkit(fontkit)
-
-            // Group fields by page
-            const fieldsByPage: Record<number, TextField[]> = {}
-            textFields.forEach(field => {
-                if (!field.text.trim()) return
-                if (!fieldsByPage[field.page]) {
-                    fieldsByPage[field.page] = []
-                }
-                fieldsByPage[field.page].push(field)
-            })
-
-            const pages = pdfDoc.getPages()
-            const { width, height } = pages[0].getSize() // Assuming all pages have same size for now
-
-            // Group fields by font settings to minimize embedding
-            // For simplicity, we'll embed for each unique combination or just cache them
-            const fontCache: Record<string, any> = {}
-
-            for (const [pageIndex, fields] of Object.entries(fieldsByPage)) {
-                const page = pages[Number(pageIndex) - 1]
-                if (!page) continue
-
-                for (const field of fields) {
-                    const fontKey = `${field.fontFamily}-${field.isBold}-${field.isItalic}`
-                    let font = fontCache[fontKey]
-
-                    if (!font) {
-                        const fontBytes = await fetchFontBytes(field.fontFamily, field.isBold, field.isItalic)
-                        if (fontBytes) {
-                            font = await pdfDoc.embedFont(fontBytes)
-                            fontCache[fontKey] = font
-                        } else {
-                            // Fallback to Helvetica
-                            font = await pdfDoc.embedFont(StandardFonts.Helvetica)
-                        }
-                    }
-
-                    const fontSize = field.fontSize
-                    const color = hexToRgb(field.color)
-
-                    const pdfX = clamp(field.x, 0, 1) * width
-                    const pdfY = height - clamp(field.y, 0, 1) * height - fontSize
-
-                    page.drawText(field.text, {
-                        x: pdfX,
-                        y: pdfY,
-                        size: fontSize,
-                        font,
-                        color,
-                    })
-
-                    const textWidth = font.widthOfTextAtSize(field.text, fontSize)
-
-                    if (field.isUnderline) {
-                        page.drawLine({
-                            start: { x: pdfX, y: pdfY - 2 },
-                            end: { x: pdfX + textWidth, y: pdfY - 2 },
-                            thickness: fontSize / 15,
-                            color,
-                        })
-                    }
-
-                    if (field.isStrikethrough) {
-                        page.drawLine({
-                            start: { x: pdfX, y: pdfY + fontSize / 3 },
-                            end: { x: pdfX + textWidth, y: pdfY + fontSize / 3 },
-                            thickness: fontSize / 15,
-                            color,
-                        })
-                    }
-                }
-            }
-
-            const pdfBytes = await pdfDoc.save()
-            const blob = new Blob([pdfBytes as any], { type: 'application/pdf' })
-            const url = URL.createObjectURL(blob)
-            const link = document.createElement('a')
-            link.href = url
-            link.download = fileName ? `firma-${fileName}` : 'firma-document.pdf'
-            link.click()
-            URL.revokeObjectURL(url)
-            toast.success('PDF downloaded')
-        } catch (error) {
-            console.error(error)
-            toast.error('Something went wrong while creating your PDF')
-        }
-    }
-
-    const onDocumentLoadSuccess = React.useCallback((pdf: any) => {
-        setNumPages(pdf.numPages)
-    }, [])
-
-    const onPageLoadSuccess = React.useCallback((page: any) => {
-        setPdfDimensions({
-            width: page.originalWidth,
-            height: page.originalHeight
-        })
-    }, [])
-
-    const handleZoomChange = (value: number[]) => {
-        const next = clamp(value[0], 0.5, 2)
-        setScale(Number(next.toFixed(2)))
-    }
-
-    const adjustZoom = (step: number) => {
-        setScale(previous => {
-            const next = clamp(previous + step, 0.5, 2)
-            return Number(next.toFixed(2))
-        })
-    }
-
-    const changePage = (offset: number) => {
-        setCurrentPage(prev => clamp(prev + offset, 1, numPages))
-    }
-
-    const resetZoom = () => setScale(1)
-
-    const handleCanvasClick = (e: React.MouseEvent) => {
-        if (e.target === e.currentTarget || (e.target as HTMLElement).closest('.react-pdf__Page')) {
-            setActiveFieldId(null)
-            setTextFields(previous => previous.map(field => ({ ...field, isNew: false })))
-        }
-    }
-
-    const scaledWidth = pdfDimensions.width * scale
-    const scaledHeight = pdfDimensions.height * scale
+    const { state, actions } = useFirma()
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-slate-100 via-white to-slate-200 text-slate-900">
             <Toaster richColors />
             <input
-                ref={fileInputRef}
+                ref={state.fileInputRef}
                 type="file"
                 accept=".pdf"
-                onChange={handleFileUpload}
+                onChange={actions.handleFileUpload}
                 className="hidden"
             />
             <div className="flex h-screen flex-col">
@@ -500,15 +34,15 @@ function App() {
                         </div>
 
                         <div className="flex items-center gap-2">
-                            <Button variant="outline" size="sm" onClick={openFileDialog}>
+                            <Button variant="outline" size="sm" onClick={actions.openFileDialog}>
                                 <UploadCloud className="size-4" />
-                                {pdfFile ? 'Replace PDF' : 'Choose PDF'}
+                                {state.pdfFile ? 'Replace PDF' : 'Choose PDF'}
                             </Button>
-                            <Button variant="outline" size="sm" onClick={addTextField} disabled={!pdfFile}>
+                            <Button variant="outline" size="sm" onClick={actions.addTextField} disabled={!state.pdfFile}>
                                 <Type className="size-4" />
                                 Add Text
                             </Button>
-                            <Button size="sm" onClick={handleDownload} disabled={!pdfFile || textFields.length === 0}>
+                            <Button size="sm" onClick={actions.handleDownload} disabled={!state.pdfFile || state.textFields.length === 0}>
                                 <Download className="size-4" />
                                 Export
                             </Button>
@@ -516,225 +50,81 @@ function App() {
                     </div>
                 </header>
 
-                {pdfFile ? (
+                {state.pdfFile ? (
                     <div className="flex flex-1 overflow-hidden">
-                        <aside className="hidden w-72 border-r border-slate-200 bg-white/70 px-6 py-6 md:flex md:flex-col md:gap-8">
-                            <section>
-                                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Overview</p>
-                                <div className="mt-4 space-y-2 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-                                    <div className="flex items-start gap-3">
-                                        <Sparkles className="mt-1 size-4 text-slate-400" />
-                                        <div>
-                                            <p className="text-sm font-medium text-slate-900">{fileName ?? 'Untitled.pdf'}</p>
-                                            <p className="text-xs text-slate-500">{textFields.length} field{textFields.length === 1 ? '' : 's'} on page 1</p>
-                                        </div>
-                                    </div>
-                                    <Button variant="ghost" size="sm" className="w-full justify-start" onClick={addTextField}>
-                                        <Plus className="size-4" />
-                                        Drop a new text field
-                                    </Button>
-                                </div>
-                            </section>
-
-                            {activeFieldId ? (
-                                <TextProperties
-                                    field={textFields.find(f => f.id === activeFieldId)!}
-                                    onUpdate={(property, value) => updateFieldProperty(activeFieldId, property, value)}
-                                />
-                            ) : (
-                                <section>
-                                    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">How it works</p>
-                                    <div className="mt-4 space-y-3 rounded-2xl border border-slate-200 bg-white p-5 text-sm text-slate-600 shadow-sm">
-                                        <div className="flex gap-3">
-                                            <UploadCloud className="size-4 text-slate-400" />
-                                            <span>Upload your PDF from the toolbar above.</span>
-                                        </div>
-                                        <div className="flex gap-3">
-                                            <MousePointer2 className="size-4 text-slate-400" />
-                                            <span>Drag any text field to the right spot.</span>
-                                        </div>
-                                        <div className="flex gap-3">
-                                            <Download className="size-4 text-slate-400" />
-                                            <span>Export a flattened PDF when you’re done.</span>
-                                        </div>
-                                    </div>
-                                </section>
-                            )}
-                        </aside>
+                        <Sidebar
+                            fileName={state.fileName}
+                            textFields={state.textFields}
+                            activeFieldId={state.activeFieldId}
+                            onAddTextField={actions.addTextField}
+                            onRemoveTextField={actions.removeTextField}
+                            onUpdateFieldProperty={actions.updateFieldProperty}
+                        />
 
                         <main className="flex-1 overflow-hidden px-4 py-6 sm:px-6">
                             <div className="mx-auto flex h-full max-w-5xl flex-col gap-6">
-                                <div className="flex flex-col justify-between gap-4 rounded-2xl border border-slate-200 bg-white/90 p-6 shadow-lg backdrop-blur md:flex-row md:items-center">
-                                    <div className="flex items-center gap-3">
-                                        <Button variant="outline" size="icon-sm" onClick={() => adjustZoom(-0.1)} disabled={scale <= 0.5}>
-                                            <ZoomOut className="size-4" />
-                                        </Button>
-                                        <Slider
-                                            className="w-40"
-                                            min={0.5}
-                                            max={2}
-                                            step={0.1}
-                                            value={[scale]}
-                                            onValueChange={handleZoomChange}
-                                        />
-                                        <Button variant="outline" size="icon-sm" onClick={() => adjustZoom(0.1)} disabled={scale >= 2}>
-                                            <ZoomIn className="size-4" />
-                                        </Button>
-                                        <Button variant="ghost" size="sm" onClick={resetZoom} disabled={scale === 1}>
-                                            Reset
-                                        </Button>
-                                        <span className="text-xs font-medium text-slate-500">{Math.round(scale * 100)}%</span>
-                                    </div>
-                                    <div className="flex items-center gap-2 border-l border-slate-200 pl-4">
-                                        <Button variant="outline" size="icon-sm" onClick={() => changePage(-1)} disabled={currentPage <= 1}>
-                                            <ChevronLeft className="size-4" />
-                                        </Button>
-                                        <span className="text-sm font-medium text-slate-900">
-                                            Page {currentPage} of {numPages}
-                                        </span>
-                                        <Button variant="outline" size="icon-sm" onClick={() => changePage(1)} disabled={currentPage >= numPages}>
-                                            <ChevronRight className="size-4" />
-                                        </Button>
-                                    </div>
-                                </div>
+                                <Toolbar
+                                    scale={state.scale}
+                                    currentPage={state.currentPage}
+                                    numPages={state.numPages}
+                                    onZoomChange={actions.handleZoomChange}
+                                    onZoomAdjust={actions.adjustZoom}
+                                    onZoomReset={actions.resetZoom}
+                                    onPageChange={actions.changePage}
+                                />
 
-                                <div
-                                    className="relative flex flex-1 items-center justify-center rounded-3xl border border-slate-200 bg-white/80 p-6 shadow-2xl backdrop-blur"
-                                    onClick={handleCanvasClick}
-                                >
-                                    <div className="relative h-full w-full overflow-auto rounded-2xl border border-slate-200/60 bg-slate-50 p-6 shadow-inner">
-                                        <div className="flex justify-center">
-                                            <div
-                                                className="relative inline-block"
-                                                style={{
-                                                    width: scaledWidth || undefined,
-                                                    height: scaledHeight || undefined,
-                                                }}
-                                            >
-                                                <PDFViewer
-                                                    file={pdfFile}
-                                                    scale={scale}
-                                                    pageNumber={currentPage}
-                                                    onDocumentLoadSuccess={onDocumentLoadSuccess}
-                                                    onPageLoadSuccess={onPageLoadSuccess}
-                                                />
-
-                                                {pdfDimensions.width > 0 && (
-                                                    <div
-                                                        className="pointer-events-none absolute left-0 top-0"
-                                                        style={{
-                                                            width: scaledWidth,
-                                                            height: scaledHeight,
-                                                        }}
-                                                    >
-                                                        {textFields.filter(f => f.page === currentPage).map(field => {
-                                                            const nodeRef = getNodeRef(field.id)
-                                                            const isActive = activeFieldId === field.id
-                                                            const showChrome = isActive || field.isNew
-
-                                                            return (
-                                                                <Draggable
-                                                                    key={`${field.id}-${scale}`}
-                                                                    nodeRef={nodeRef}
-                                                                    handle=".drag-handle"
-                                                                    defaultPosition={{
-                                                                        x: field.x * scaledWidth,
-                                                                        y: field.y * scaledHeight,
-                                                                    }}
-                                                                    onStop={(_, data) => updateFieldPosition(field.id, data)}
-                                                                    bounds="parent"
-                                                                >
-                                                                    <div
-                                                                        ref={nodeRef}
-                                                                        onClick={(e) => {
-                                                                            e.stopPropagation()
-                                                                            setActiveFieldId(field.id)
-                                                                        }}
-                                                                        className={cn(
-                                                                            'pointer-events-auto absolute flex items-center gap-1 rounded p-1 transition-colors',
-                                                                            showChrome
-                                                                                ? 'z-50 border border-sky-500 bg-white shadow-sm ring-1 ring-sky-500'
-                                                                                : 'z-10 border border-transparent hover:border-slate-300 hover:bg-white/50'
-                                                                        )}
-                                                                    >
-                                                                        <div className={cn("drag-handle cursor-grab p-0.5 text-slate-400 hover:text-slate-600 active:cursor-grabbing", !showChrome && "opacity-0 group-hover:opacity-100")}>
-                                                                            <PanelsTopLeft className="size-3" />
-                                                                        </div>
-                                                                        <input
-                                                                            id={`field-${field.id}`}
-                                                                            value={field.text}
-                                                                            onFocus={() => setActiveFieldId(field.id)}
-                                                                            onClick={() => setActiveFieldId(field.id)}
-                                                                            onChange={event => updateTextField(field.id, event.target.value)}
-                                                                            className="h-6 min-w-[80px] max-w-[300px] border-0 bg-transparent p-0 text-sm text-slate-900 placeholder:text-slate-400 focus:ring-0"
-                                                                            placeholder="Type here..."
-                                                                            style={{
-                                                                                width: `${Math.max(field.text.length, 10)}ch`,
-                                                                                fontFamily: field.fontFamily,
-                                                                                fontSize: `${field.fontSize}px`,
-                                                                                color: field.color,
-                                                                                fontWeight: field.isBold ? 'bold' : 'normal',
-                                                                                fontStyle: field.isItalic ? 'italic' : 'normal',
-                                                                                textDecoration: [
-                                                                                    field.isUnderline ? 'underline' : '',
-                                                                                    field.isStrikethrough ? 'line-through' : ''
-                                                                                ].filter(Boolean).join(' ')
-                                                                            }}
-                                                                        />
-                                                                        {showChrome && (
-                                                                            <button
-                                                                                onClick={(e) => {
-                                                                                    e.stopPropagation();
-                                                                                    removeTextField(field.id);
-                                                                                }}
-                                                                                className="ml-1 rounded-sm p-0.5 text-slate-400 hover:bg-red-50 hover:text-red-500"
-                                                                            >
-                                                                                <Trash2 className="size-3" />
-                                                                            </button>
-                                                                        )}
-                                                                    </div>
-                                                                </Draggable>
-                                                            )
-                                                        })}
-                                                    </div>
-                                                )}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                <PDFCanvas
+                                    pdfFile={state.pdfFile}
+                                    scale={state.scale}
+                                    currentPage={state.currentPage}
+                                    textFields={state.textFields}
+                                    activeFieldId={state.activeFieldId}
+                                    pdfDimensions={state.pdfDimensions}
+                                    onDocumentLoadSuccess={actions.onDocumentLoadSuccess}
+                                    onPageLoadSuccess={actions.onPageLoadSuccess}
+                                    onCanvasClick={actions.handleCanvasClick}
+                                    onFieldClick={actions.setActiveFieldId}
+                                    onFieldUpdate={actions.updateTextField}
+                                    onFieldRemove={actions.removeTextField}
+                                    onFieldPositionUpdate={actions.updateFieldPosition}
+                                    getNodeRef={actions.getNodeRef}
+                                />
                             </div>
                         </main>
 
                         <aside className="hidden w-80 flex-col border-l border-slate-200 bg-white/70 px-6 py-6 lg:flex">
                             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Inspector</p>
                             <div className="mt-4 flex-1 space-y-4 overflow-y-auto rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
-                                {textFields.length === 0 ? (
+                                {state.textFields.length === 0 ? (
                                     <div className="flex h-full flex-col items-center justify-center gap-2 text-center text-sm text-slate-500">
-                                        <PanelsTopLeft className="size-6 text-slate-300" />
+                                        <div className="size-6 text-slate-300">
+                                            <FileText className="size-6" />
+                                        </div>
                                         Add a text field to see it here.
                                     </div>
                                 ) : (
-                                    textFields.map((field, index) => {
-                                        const isActive = activeFieldId === field.id
+                                    state.textFields.map((field, index) => {
+                                        const isActive = state.activeFieldId === field.id
                                         return (
                                             <div
                                                 key={field.id}
-                                                className={cn(
-                                                    'rounded-xl border p-4 transition-colors',
-                                                    isActive ? 'border-sky-500 bg-sky-50/70' : 'border-slate-200 bg-white hover:border-slate-300'
-                                                )}
+                                                className={`rounded-xl border p-4 transition-colors ${isActive ? 'border-sky-500 bg-sky-50/70' : 'border-slate-200 bg-white hover:border-slate-300'
+                                                    }`}
                                             >
                                                 <div className="mb-3 flex items-center justify-between">
                                                     <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Field {index + 1}</p>
-                                                    <Button variant="ghost" size="icon-sm" onClick={() => removeTextField(field.id)}>
-                                                        <Trash2 className="size-4 text-slate-400" />
+                                                    <Button variant="ghost" size="icon-sm" onClick={() => actions.removeTextField(field.id)}>
+                                                        <div className="size-4 text-slate-400">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-trash-2"><path d="M3 6h18" /><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" /><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" /><line x1="10" x2="10" y1="11" y2="17" /><line x1="14" x2="14" y1="11" y2="17" /></svg>
+                                                        </div>
                                                     </Button>
                                                 </div>
-                                                <Input
+                                                <input
                                                     value={field.text}
-                                                    onChange={event => updateTextField(field.id, event.target.value)}
-                                                    onFocus={() => setActiveFieldId(field.id)}
+                                                    onChange={event => actions.updateTextField(field.id, event.target.value)}
+                                                    onFocus={() => actions.setActiveFieldId(field.id)}
                                                     placeholder="Enter text"
+                                                    className="w-full rounded-md border border-slate-200 px-3 py-2 text-sm focus:border-sky-500 focus:outline-none"
                                                 />
                                                 <div className="mt-3 grid grid-cols-2 gap-2 text-[11px] text-slate-500">
                                                     <span>X: {(field.x * 100).toFixed(0)}%</span>
@@ -762,11 +152,11 @@ function App() {
                                     </p>
                                 </div>
                                 <div className="mt-10 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
-                                    <Button size="lg" onClick={openFileDialog}>
+                                    <Button size="lg" onClick={actions.openFileDialog}>
                                         <UploadCloud className="size-5" />
                                         Choose PDF
                                     </Button>
-                                    <Button variant="outline" size="lg" onClick={addTextField} disabled>
+                                    <Button variant="outline" size="lg" onClick={actions.addTextField} disabled>
                                         <Type className="size-5" />
                                         Add Text Field
                                     </Button>
@@ -797,25 +187,5 @@ function App() {
         </div>
     )
 }
-
-type FeatureCardProps = {
-    icon: React.ReactNode
-    title: string
-    description: string
-}
-
-function FeatureCard({ icon, title, description }: FeatureCardProps) {
-    return (
-        <div className="relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-6 shadow-md transition hover:-translate-y-1 hover:shadow-lg">
-            <div className="flex size-11 items-center justify-center rounded-xl bg-slate-100 text-slate-900">
-                {icon}
-            </div>
-            <h3 className="mt-4 text-base font-semibold text-slate-900">{title}</h3>
-            <p className="mt-2 text-sm text-slate-500">{description}</p>
-        </div>
-    )
-}
-
-
 
 export default App
