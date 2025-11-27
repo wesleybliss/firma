@@ -227,6 +227,13 @@ function App() {
 
     const resetZoom = () => setScale(1)
 
+    const handleCanvasClick = (e: React.MouseEvent) => {
+        if (e.target === e.currentTarget || (e.target as HTMLElement).closest('.react-pdf__Page')) {
+            setActiveFieldId(null)
+            setTextFields(previous => previous.map(field => ({ ...field, isNew: false })))
+        }
+    }
+
     const scaledWidth = pdfDimensions.width * scale
     const scaledHeight = pdfDimensions.height * scale
 
@@ -338,7 +345,10 @@ function App() {
                                     </div>
                                 </div>
 
-                                <div className="relative flex flex-1 items-center justify-center rounded-3xl border border-slate-200 bg-white/80 p-6 shadow-2xl backdrop-blur">
+                                <div
+                                    className="relative flex flex-1 items-center justify-center rounded-3xl border border-slate-200 bg-white/80 p-6 shadow-2xl backdrop-blur"
+                                    onClick={handleCanvasClick}
+                                >
                                     <div className="relative h-full w-full overflow-auto rounded-2xl border border-slate-200/60 bg-slate-50 p-6 shadow-inner">
                                         <div className="flex justify-center">
                                             <div
@@ -381,6 +391,10 @@ function App() {
                                                                 >
                                                                     <div
                                                                         ref={nodeRef}
+                                                                        onClick={(e) => {
+                                                                            e.stopPropagation()
+                                                                            setActiveFieldId(field.id)
+                                                                        }}
                                                                         className={cn(
                                                                             'pointer-events-auto absolute flex items-center gap-1 rounded p-1 transition-colors',
                                                                             showChrome
