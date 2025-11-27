@@ -15,6 +15,8 @@ import {
     UploadCloud,
     ZoomIn,
     ZoomOut,
+    ChevronLeft,
+    ChevronRight,
     Bold,
     Italic,
     Underline,
@@ -43,6 +45,7 @@ type TextField = {
     isItalic: boolean
     isUnderline: boolean
     isStrikethrough: boolean
+    page: number
 }
 
 const clamp = (value: number, min: number, max: number) => Math.min(Math.max(value, min), max)
@@ -52,10 +55,12 @@ pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/b
 interface PDFViewerProps {
     file: string | null
     scale: number
-    onLoadSuccess: (page: any) => void
+    pageNumber: number
+    onDocumentLoadSuccess: (pdf: any) => void
+    onPageLoadSuccess: (page: any) => void
 }
 
-const PDFViewer = React.memo(({ file, scale, onLoadSuccess }: PDFViewerProps) => {
+const PDFViewer = React.memo(({ file, scale, pageNumber, onDocumentLoadSuccess, onPageLoadSuccess }: PDFViewerProps) => {
     return (
         <Document
             file={file}
@@ -65,13 +70,14 @@ const PDFViewer = React.memo(({ file, scale, onLoadSuccess }: PDFViewerProps) =>
                     Rendering PDF…
                 </div>
             }
+            onLoadSuccess={onDocumentLoadSuccess}
         >
             <Page
-                pageNumber={1}
+                pageNumber={pageNumber}
                 scale={scale}
-                onLoadSuccess={onLoadSuccess}
                 renderTextLayer={false}
                 renderAnnotationLayer={false}
+                onLoadSuccess={onPageLoadSuccess}
             />
         </Document>
     )
@@ -186,6 +192,8 @@ function App() {
     const [activeFieldId, setActiveFieldId] = useState<string | null>(null)
     const [scale, setScale] = useState(1)
     const [pdfDimensions, setPdfDimensions] = useState({ width: 0, height: 0 })
+    const [numPages, setNumPages] = useState<number>(0)
+    const [currentPage, setCurrentPage] = useState<number>(1)
     const fileInputRef = useRef<HTMLInputElement>(null)
     const nodeRefs = useRef<Record<string, React.RefObject<HTMLDivElement>>>({})
 
@@ -256,6 +264,7 @@ function App() {
             isItalic: false,
             isUnderline: false,
             isStrikethrough: false,
+            page: currentPage,
         }
 
         setTextFields(previous => [...previous, newField])
@@ -341,67 +350,80 @@ function App() {
             const pdfDoc = await PDFDocument.load(existingPdfBytes)
             pdfDoc.registerFontkit(fontkit)
 
-            const page = pdfDoc.getPage(0)
-            const { width, height } = page.getSize()
+            // Group fields by page
+            const fieldsByPage: Record<number, TextField[]> = {}
+            textFields.forEach(field => {
+                if (!field.text.trim()) return
+                if (!fieldsByPage[field.page]) {
+                    fieldsByPage[field.page] = []
+                }
+                fieldsByPage[field.page].push(field)
+            })
+
+            const pages = pdfDoc.getPages()
+            const { width, height } = pages[0].getSize() // Assuming all pages have same size for now
 
             // Group fields by font settings to minimize embedding
             // For simplicity, we'll embed for each unique combination or just cache them
             const fontCache: Record<string, any> = {}
 
-            for (const field of textFields) {
-                if (!field.text.trim()) continue
+            for (const [pageIndex, fields] of Object.entries(fieldsByPage)) {
+                const page = pages[Number(pageIndex) - 1]
+                if (!page) continue
 
-                const fontKey = `${field.fontFamily}-${field.isBold}-${field.isItalic}`
-                let font = fontCache[fontKey]
+                for (const field of fields) {
+                    const fontKey = `${field.fontFamily}-${field.isBold}-${field.isItalic}`
+                    let font = fontCache[fontKey]
 
-                if (!font) {
-                    const fontBytes = await fetchFontBytes(field.fontFamily, field.isBold, field.isItalic)
-                    if (fontBytes) {
-                        font = await pdfDoc.embedFont(fontBytes)
-                        fontCache[fontKey] = font
-                    } else {
-                        // Fallback to Helvetica
-                        font = await pdfDoc.embedFont(StandardFonts.Helvetica)
+                    if (!font) {
+                        const fontBytes = await fetchFontBytes(field.fontFamily, field.isBold, field.isItalic)
+                        if (fontBytes) {
+                            font = await pdfDoc.embedFont(fontBytes)
+                            fontCache[fontKey] = font
+                        } else {
+                            // Fallback to Helvetica
+                            font = await pdfDoc.embedFont(StandardFonts.Helvetica)
+                        }
                     }
-                }
 
-                const fontSize = field.fontSize
-                const color = hexToRgb(field.color)
+                    const fontSize = field.fontSize
+                    const color = hexToRgb(field.color)
 
-                const pdfX = clamp(field.x, 0, 1) * width
-                const pdfY = height - clamp(field.y, 0, 1) * height - fontSize
+                    const pdfX = clamp(field.x, 0, 1) * width
+                    const pdfY = height - clamp(field.y, 0, 1) * height - fontSize
 
-                page.drawText(field.text, {
-                    x: pdfX,
-                    y: pdfY,
-                    size: fontSize,
-                    font,
-                    color,
-                })
-
-                const textWidth = font.widthOfTextAtSize(field.text, fontSize)
-
-                if (field.isUnderline) {
-                    page.drawLine({
-                        start: { x: pdfX, y: pdfY - 2 },
-                        end: { x: pdfX + textWidth, y: pdfY - 2 },
-                        thickness: fontSize / 15,
+                    page.drawText(field.text, {
+                        x: pdfX,
+                        y: pdfY,
+                        size: fontSize,
+                        font,
                         color,
                     })
-                }
 
-                if (field.isStrikethrough) {
-                    page.drawLine({
-                        start: { x: pdfX, y: pdfY + fontSize / 3 },
-                        end: { x: pdfX + textWidth, y: pdfY + fontSize / 3 },
-                        thickness: fontSize / 15,
-                        color,
-                    })
+                    const textWidth = font.widthOfTextAtSize(field.text, fontSize)
+
+                    if (field.isUnderline) {
+                        page.drawLine({
+                            start: { x: pdfX, y: pdfY - 2 },
+                            end: { x: pdfX + textWidth, y: pdfY - 2 },
+                            thickness: fontSize / 15,
+                            color,
+                        })
+                    }
+
+                    if (field.isStrikethrough) {
+                        page.drawLine({
+                            start: { x: pdfX, y: pdfY + fontSize / 3 },
+                            end: { x: pdfX + textWidth, y: pdfY + fontSize / 3 },
+                            thickness: fontSize / 15,
+                            color,
+                        })
+                    }
                 }
             }
 
             const pdfBytes = await pdfDoc.save()
-            const blob = new Blob([pdfBytes], { type: 'application/pdf' })
+            const blob = new Blob([pdfBytes as any], { type: 'application/pdf' })
             const url = URL.createObjectURL(blob)
             const link = document.createElement('a')
             link.href = url
@@ -415,7 +437,11 @@ function App() {
         }
     }
 
-    const handlePageLoadSuccess = React.useCallback((page: any) => {
+    const onDocumentLoadSuccess = React.useCallback((pdf: any) => {
+        setNumPages(pdf.numPages)
+    }, [])
+
+    const onPageLoadSuccess = React.useCallback((page: any) => {
         setPdfDimensions({
             width: page.originalWidth,
             height: page.originalHeight
@@ -432,6 +458,10 @@ function App() {
             const next = clamp(previous + step, 0.5, 2)
             return Number(next.toFixed(2))
         })
+    }
+
+    const changePage = (offset: number) => {
+        setCurrentPage(prev => clamp(prev + offset, 1, numPages))
     }
 
     const resetZoom = () => setScale(1)
@@ -555,8 +585,16 @@ function App() {
                                         </Button>
                                         <span className="text-xs font-medium text-slate-500">{Math.round(scale * 100)}%</span>
                                     </div>
-                                    <div>
-                                        <p>TODO: Pagination controls</p>
+                                    <div className="flex items-center gap-2 border-l border-slate-200 pl-4">
+                                        <Button variant="outline" size="icon-sm" onClick={() => changePage(-1)} disabled={currentPage <= 1}>
+                                            <ChevronLeft className="size-4" />
+                                        </Button>
+                                        <span className="text-sm font-medium text-slate-900">
+                                            Page {currentPage} of {numPages}
+                                        </span>
+                                        <Button variant="outline" size="icon-sm" onClick={() => changePage(1)} disabled={currentPage >= numPages}>
+                                            <ChevronRight className="size-4" />
+                                        </Button>
                                     </div>
                                 </div>
 
@@ -576,7 +614,9 @@ function App() {
                                                 <PDFViewer
                                                     file={pdfFile}
                                                     scale={scale}
-                                                    onLoadSuccess={handlePageLoadSuccess}
+                                                    pageNumber={currentPage}
+                                                    onDocumentLoadSuccess={onDocumentLoadSuccess}
+                                                    onPageLoadSuccess={onPageLoadSuccess}
                                                 />
 
                                                 {pdfDimensions.width > 0 && (
@@ -587,7 +627,7 @@ function App() {
                                                             height: scaledHeight,
                                                         }}
                                                     >
-                                                        {textFields.map(field => {
+                                                        {textFields.filter(f => f.page === currentPage).map(field => {
                                                             const nodeRef = getNodeRef(field.id)
                                                             const isActive = activeFieldId === field.id
                                                             const showChrome = isActive || field.isNew
