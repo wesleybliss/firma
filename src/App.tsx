@@ -535,10 +535,6 @@ function App() {
                         <main className="flex-1 overflow-hidden px-4 py-6 sm:px-6">
                             <div className="mx-auto flex h-full max-w-5xl flex-col gap-6">
                                 <div className="flex flex-col justify-between gap-4 rounded-2xl border border-slate-200 bg-white/90 p-6 shadow-lg backdrop-blur md:flex-row md:items-center">
-                                    <div>
-                                        <p className="text-sm font-medium text-slate-900">Canvas</p>
-                                        <p className="text-xs text-slate-500">Drag to reposition text. Use the inspector to fine-tune content.</p>
-                                    </div>
                                     <div className="flex items-center gap-3">
                                         <Button variant="outline" size="icon-sm" onClick={() => adjustZoom(-0.1)} disabled={scale <= 0.5}>
                                             <ZoomOut className="size-4" />
@@ -558,6 +554,9 @@ function App() {
                                             Reset
                                         </Button>
                                         <span className="text-xs font-medium text-slate-500">{Math.round(scale * 100)}%</span>
+                                    </div>
+                                    <div>
+                                        <p>TODO: Pagination controls</p>
                                     </div>
                                 </div>
 
