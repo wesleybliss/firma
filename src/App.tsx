@@ -29,6 +29,7 @@ type TextField = {
     text: string
     x: number
     y: number
+    isNew?: boolean
 }
 
 const clamp = (value: number, min: number, max: number) => Math.min(Math.max(value, min), max)
@@ -123,6 +124,7 @@ function App() {
             text: 'New text',
             x: 0.5,
             y: 0.35,
+            isNew: true,
         }
 
         setTextFields(previous => [...previous, newField])
@@ -140,7 +142,7 @@ function App() {
 
     const updateTextField = (id: string, text: string) => {
         setTextFields(previous =>
-            previous.map(field => (field.id === id ? { ...field, text } : field))
+            previous.map(field => (field.id === id ? { ...field, text, isNew: false } : field))
         )
     }
 
@@ -157,6 +159,7 @@ function App() {
                         ...field,
                         x: clamp(position.x / width, 0, 1),
                         y: clamp(position.y / height, 0, 1),
+                        isNew: false,
                     }
                     : field
             )
@@ -362,6 +365,7 @@ function App() {
                                                         {textFields.map(field => {
                                                             const nodeRef = getNodeRef(field.id)
                                                             const isActive = activeFieldId === field.id
+                                                            const showChrome = isActive || field.isNew
 
                                                             return (
                                                                 <Draggable
@@ -378,11 +382,13 @@ function App() {
                                                                     <div
                                                                         ref={nodeRef}
                                                                         className={cn(
-                                                                            'pointer-events-auto absolute flex items-center gap-1 rounded border bg-white p-1 shadow-sm transition-colors hover:ring-1 hover:ring-slate-300',
-                                                                            isActive ? 'z-50 border-sky-500 ring-1 ring-sky-500' : 'z-10 border-transparent hover:border-slate-300'
+                                                                            'pointer-events-auto absolute flex items-center gap-1 rounded p-1 transition-colors',
+                                                                            showChrome
+                                                                                ? 'z-50 border border-sky-500 bg-white shadow-sm ring-1 ring-sky-500'
+                                                                                : 'z-10 border border-transparent hover:border-slate-300 hover:bg-white/50'
                                                                         )}
                                                                     >
-                                                                        <div className={cn("drag-handle cursor-grab p-0.5 text-slate-400 hover:text-slate-600 active:cursor-grabbing", !isActive && "opacity-0 group-hover:opacity-100")}>
+                                                                        <div className={cn("drag-handle cursor-grab p-0.5 text-slate-400 hover:text-slate-600 active:cursor-grabbing", !showChrome && "opacity-0 group-hover:opacity-100")}>
                                                                             <PanelsTopLeft className="size-3" />
                                                                         </div>
                                                                         <input
@@ -395,7 +401,7 @@ function App() {
                                                                             placeholder="Type here..."
                                                                             style={{ width: `${Math.max(field.text.length, 10)}ch` }}
                                                                         />
-                                                                        {isActive && (
+                                                                        {showChrome && (
                                                                             <button
                                                                                 onClick={(e) => {
                                                                                     e.stopPropagation();
