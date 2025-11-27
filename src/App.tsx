@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { PDFDocument, StandardFonts } from 'pdf-lib'
+import { PDFDocument, StandardFonts, rgb } from 'pdf-lib'
+import fontkit from '@pdf-lib/fontkit'
 import { Document, Page, pdfjs } from 'react-pdf'
 import Draggable from 'react-draggable'
 import {
@@ -14,7 +15,12 @@ import {
     UploadCloud,
     ZoomIn,
     ZoomOut,
+    Bold,
+    Italic,
+    Underline,
+    Strikethrough,
 } from 'lucide-react'
+import { GOOGLE_FONTS } from '@/lib/fonts'
 import { Button } from '@/components/ui/button'
 import { Slider } from '@/components/ui/slider'
 import { Input } from '@/components/ui/input'
@@ -30,6 +36,13 @@ type TextField = {
     x: number
     y: number
     isNew?: boolean
+    fontFamily: string
+    fontSize: number
+    color: string
+    isBold: boolean
+    isItalic: boolean
+    isUnderline: boolean
+    isStrikethrough: boolean
 }
 
 const clamp = (value: number, min: number, max: number) => Math.min(Math.max(value, min), max)
@@ -65,6 +78,107 @@ const PDFViewer = React.memo(({ file, scale, onLoadSuccess }: PDFViewerProps) =>
 })
 PDFViewer.displayName = 'PDFViewer'
 
+interface TextPropertiesProps {
+    field: TextField
+    onUpdate: (property: keyof TextField, value: any) => void
+}
+
+function TextProperties({ field, onUpdate }: TextPropertiesProps) {
+    return (
+        <div className="space-y-6">
+            <div className="space-y-2">
+                <p className="text-xs font-medium text-slate-500">Font Family</p>
+                <select
+                    value={field.fontFamily}
+                    onChange={(e) => onUpdate('fontFamily', e.target.value)}
+                    className="w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 focus:border-slate-900 focus:outline-none"
+                >
+                    {GOOGLE_FONTS.map(font => (
+                        <option key={font.name} value={font.family} style={{ fontFamily: font.family }}>
+                            {font.name}
+                        </option>
+                    ))}
+                </select>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                    <p className="text-xs font-medium text-slate-500">Size</p>
+                    <div className="flex items-center gap-2">
+                        <Input
+                            type="number"
+                            value={field.fontSize}
+                            onChange={(e) => onUpdate('fontSize', Number(e.target.value))}
+                            className="h-9"
+                            min={8}
+                            max={72}
+                        />
+                        <span className="text-xs text-slate-400">px</span>
+                    </div>
+                </div>
+                <div className="space-y-2">
+                    <p className="text-xs font-medium text-slate-500">Color</p>
+                    <div className="flex items-center gap-2">
+                        <div className="relative flex-1">
+                            <input
+                                type="color"
+                                value={field.color}
+                                onChange={(e) => onUpdate('color', e.target.value)}
+                                className="absolute inset-0 h-full w-full cursor-pointer opacity-0"
+                            />
+                            <div
+                                className="flex h-9 w-full items-center gap-2 rounded-md border border-slate-200 bg-white px-2"
+                                style={{ color: field.color }}
+                            >
+                                <div className="size-4 rounded-full border border-slate-200" style={{ backgroundColor: field.color }} />
+                                <span className="text-xs font-medium uppercase text-slate-600">{field.color}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div className="space-y-2">
+                <p className="text-xs font-medium text-slate-500">Style</p>
+                <div className="grid grid-cols-4 gap-1 rounded-lg border border-slate-200 bg-white p-1">
+                    <Button
+                        variant={field.isBold ? 'secondary' : 'ghost'}
+                        size="icon-sm"
+                        className="h-8 w-full rounded-md"
+                        onClick={() => onUpdate('isBold', !field.isBold)}
+                    >
+                        <Bold className="size-4" />
+                    </Button>
+                    <Button
+                        variant={field.isItalic ? 'secondary' : 'ghost'}
+                        size="icon-sm"
+                        className="h-8 w-full rounded-md"
+                        onClick={() => onUpdate('isItalic', !field.isItalic)}
+                    >
+                        <Italic className="size-4" />
+                    </Button>
+                    <Button
+                        variant={field.isUnderline ? 'secondary' : 'ghost'}
+                        size="icon-sm"
+                        className="h-8 w-full rounded-md"
+                        onClick={() => onUpdate('isUnderline', !field.isUnderline)}
+                    >
+                        <Underline className="size-4" />
+                    </Button>
+                    <Button
+                        variant={field.isStrikethrough ? 'secondary' : 'ghost'}
+                        size="icon-sm"
+                        className="h-8 w-full rounded-md"
+                        onClick={() => onUpdate('isStrikethrough', !field.isStrikethrough)}
+                    >
+                        <Strikethrough className="size-4" />
+                    </Button>
+                </div>
+            </div>
+        </div>
+    )
+}
+
 function App() {
     const [pdfFile, setPdfFile] = useState<string | null>(null)
     const [fileName, setFileName] = useState<string | null>(null)
@@ -74,6 +188,16 @@ function App() {
     const [pdfDimensions, setPdfDimensions] = useState({ width: 0, height: 0 })
     const fileInputRef = useRef<HTMLInputElement>(null)
     const nodeRefs = useRef<Record<string, React.RefObject<HTMLDivElement>>>({})
+
+    useEffect(() => {
+        const link = document.createElement('link')
+        link.href = 'https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Roboto:wght@400;700&family=Open+Sans:wght@400;700&family=Lato:wght@400;700&family=Montserrat:wght@400;700&family=Oswald:wght@400;700&family=Merriweather:wght@400;700&family=Playfair+Display:wght@400;700&display=swap'
+        link.rel = 'stylesheet'
+        document.head.appendChild(link)
+        return () => {
+            document.head.removeChild(link)
+        }
+    }, [])
 
     useEffect(() => {
         if (activeFieldId) {
@@ -120,11 +244,18 @@ function App() {
         }
 
         const newField: TextField = {
-            id: typeof crypto !== 'undefined' && 'randomUUID' in crypto ? crypto.randomUUID() : Date.now().toString(),
+            id: crypto.randomUUID(),
             text: 'New text',
             x: 0.5,
             y: 0.35,
             isNew: true,
+            fontFamily: 'Inter',
+            fontSize: 16,
+            color: '#000000',
+            isBold: false,
+            isItalic: false,
+            isUnderline: false,
+            isStrikethrough: false,
         }
 
         setTextFields(previous => [...previous, newField])
@@ -143,6 +274,12 @@ function App() {
     const updateTextField = (id: string, text: string) => {
         setTextFields(previous =>
             previous.map(field => (field.id === id ? { ...field, text, isNew: false } : field))
+        )
+    }
+
+    const updateFieldProperty = (id: string, property: keyof TextField, value: any) => {
+        setTextFields(previous =>
+            previous.map(field => (field.id === id ? { ...field, [property]: value, isNew: false } : field))
         )
     }
 
@@ -166,19 +303,70 @@ function App() {
         )
     }
 
+    const hexToRgb = (hex: string) => {
+        const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
+        return result
+            ? rgb(parseInt(result[1], 16) / 255, parseInt(result[2], 16) / 255, parseInt(result[3], 16) / 255)
+            : rgb(0, 0, 0)
+    }
+
+    const fetchFontBytes = async (fontFamily: string, isBold: boolean, isItalic: boolean) => {
+        try {
+            const weight = isBold ? '700' : '400'
+            const style = isItalic ? '1' : '0'
+            const url = `https://fonts.googleapis.com/css2?family=${fontFamily.replace(/ /g, '+')}:ital,wght@${style},${weight}&display=swap`
+
+            const css = await fetch(url).then(res => res.text())
+            const match = css.match(/src: url\((.+?)\) format\('woff2'\)/)
+
+            if (!match) {
+                // Fallback for fonts that might not return woff2 or have different CSS structure
+                // Try fetching the standard URL if specific variant fails
+                console.warn(`Could not parse font URL for ${fontFamily} ${style},${weight}`)
+                return null
+            }
+
+            return await fetch(match[1]).then(res => res.arrayBuffer())
+        } catch (e) {
+            console.error('Error fetching font:', e)
+            return null
+        }
+    }
+
     const handleDownload = async () => {
         if (!pdfFile) return
 
         try {
             const existingPdfBytes = await fetch(pdfFile).then(res => res.arrayBuffer())
             const pdfDoc = await PDFDocument.load(existingPdfBytes)
+            pdfDoc.registerFontkit(fontkit)
+
             const page = pdfDoc.getPage(0)
             const { width, height } = page.getSize()
-            const font = await pdfDoc.embedFont(StandardFonts.Helvetica)
-            const fontSize = 12
 
-            textFields.forEach(field => {
-                if (!field.text.trim()) return
+            // Group fields by font settings to minimize embedding
+            // For simplicity, we'll embed for each unique combination or just cache them
+            const fontCache: Record<string, any> = {}
+
+            for (const field of textFields) {
+                if (!field.text.trim()) continue
+
+                const fontKey = `${field.fontFamily}-${field.isBold}-${field.isItalic}`
+                let font = fontCache[fontKey]
+
+                if (!font) {
+                    const fontBytes = await fetchFontBytes(field.fontFamily, field.isBold, field.isItalic)
+                    if (fontBytes) {
+                        font = await pdfDoc.embedFont(fontBytes)
+                        fontCache[fontKey] = font
+                    } else {
+                        // Fallback to Helvetica
+                        font = await pdfDoc.embedFont(StandardFonts.Helvetica)
+                    }
+                }
+
+                const fontSize = field.fontSize
+                const color = hexToRgb(field.color)
 
                 const pdfX = clamp(field.x, 0, 1) * width
                 const pdfY = height - clamp(field.y, 0, 1) * height - fontSize
@@ -188,8 +376,29 @@ function App() {
                     y: pdfY,
                     size: fontSize,
                     font,
+                    color,
                 })
-            })
+
+                const textWidth = font.widthOfTextAtSize(field.text, fontSize)
+
+                if (field.isUnderline) {
+                    page.drawLine({
+                        start: { x: pdfX, y: pdfY - 2 },
+                        end: { x: pdfX + textWidth, y: pdfY - 2 },
+                        thickness: fontSize / 15,
+                        color,
+                    })
+                }
+
+                if (field.isStrikethrough) {
+                    page.drawLine({
+                        start: { x: pdfX, y: pdfY + fontSize / 3 },
+                        end: { x: pdfX + textWidth, y: pdfY + fontSize / 3 },
+                        thickness: fontSize / 15,
+                        color,
+                    })
+                }
+            }
 
             const pdfBytes = await pdfDoc.save()
             const blob = new Blob([pdfBytes], { type: 'application/pdf' })
@@ -297,23 +506,30 @@ function App() {
                                 </div>
                             </section>
 
-                            <section>
-                                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">How it works</p>
-                                <div className="mt-4 space-y-3 rounded-2xl border border-slate-200 bg-white p-5 text-sm text-slate-600 shadow-sm">
-                                    <div className="flex gap-3">
-                                        <UploadCloud className="size-4 text-slate-400" />
-                                        <span>Upload your PDF from the toolbar above.</span>
+                            {activeFieldId ? (
+                                <TextProperties
+                                    field={textFields.find(f => f.id === activeFieldId)!}
+                                    onUpdate={(property, value) => updateFieldProperty(activeFieldId, property, value)}
+                                />
+                            ) : (
+                                <section>
+                                    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">How it works</p>
+                                    <div className="mt-4 space-y-3 rounded-2xl border border-slate-200 bg-white p-5 text-sm text-slate-600 shadow-sm">
+                                        <div className="flex gap-3">
+                                            <UploadCloud className="size-4 text-slate-400" />
+                                            <span>Upload your PDF from the toolbar above.</span>
+                                        </div>
+                                        <div className="flex gap-3">
+                                            <MousePointer2 className="size-4 text-slate-400" />
+                                            <span>Drag any text field to the right spot.</span>
+                                        </div>
+                                        <div className="flex gap-3">
+                                            <Download className="size-4 text-slate-400" />
+                                            <span>Export a flattened PDF when you’re done.</span>
+                                        </div>
                                     </div>
-                                    <div className="flex gap-3">
-                                        <MousePointer2 className="size-4 text-slate-400" />
-                                        <span>Drag any text field to the right spot.</span>
-                                    </div>
-                                    <div className="flex gap-3">
-                                        <Download className="size-4 text-slate-400" />
-                                        <span>Export a flattened PDF when you’re done.</span>
-                                    </div>
-                                </div>
-                            </section>
+                                </section>
+                            )}
                         </aside>
 
                         <main className="flex-1 overflow-hidden px-4 py-6 sm:px-6">
@@ -413,7 +629,18 @@ function App() {
                                                                             onChange={event => updateTextField(field.id, event.target.value)}
                                                                             className="h-6 min-w-[80px] max-w-[300px] border-0 bg-transparent p-0 text-sm text-slate-900 placeholder:text-slate-400 focus:ring-0"
                                                                             placeholder="Type here..."
-                                                                            style={{ width: `${Math.max(field.text.length, 10)}ch` }}
+                                                                            style={{
+                                                                                width: `${Math.max(field.text.length, 10)}ch`,
+                                                                                fontFamily: field.fontFamily,
+                                                                                fontSize: `${field.fontSize}px`,
+                                                                                color: field.color,
+                                                                                fontWeight: field.isBold ? 'bold' : 'normal',
+                                                                                fontStyle: field.isItalic ? 'italic' : 'normal',
+                                                                                textDecoration: [
+                                                                                    field.isUnderline ? 'underline' : '',
+                                                                                    field.isStrikethrough ? 'line-through' : ''
+                                                                                ].filter(Boolean).join(' ')
+                                                                            }}
                                                                         />
                                                                         {showChrome && (
                                                                             <button
