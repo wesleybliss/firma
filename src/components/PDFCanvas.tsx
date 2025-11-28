@@ -88,12 +88,12 @@ export function PDFCanvas({
 
     return (
         <div
-            className="relative flex flex-1 items-center justify-center rounded-3xl
-                border border-slate-200 bg-white/80 p-6 shadow-2xl backdrop-blur"
+            className="relative flex flex-1 items-center justify-center rounded-lg
+                border border-slate-200 bg-white/80 p-4 shadow-xl backdrop-blur"
             onClick={onCanvasClick}
         >
             <div className="relative h-full w-full overflow-auto rounded-2xl
-                border border-slate-200/60 bg-slate-50 p-6 shadow-inner">
+                p-2">
                 <div className="flex justify-center">
                     <div
                         className="relative inline-block"

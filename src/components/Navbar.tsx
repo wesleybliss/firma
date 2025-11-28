@@ -19,7 +19,7 @@ const Navbar = ({ state, actions }: { state: any, actions: any }) => {
                     </div>
                 </div>
 
-                <Toolbar
+                {state.pdfFile && <Toolbar
                     scale={state.scale}
                     currentPage={state.currentPage}
                     numPages={state.numPages}
@@ -27,7 +27,7 @@ const Navbar = ({ state, actions }: { state: any, actions: any }) => {
                     onZoomAdjust={actions.adjustZoom}
                     onZoomReset={actions.resetZoom}
                     onPageChange={actions.changePage}
-                />
+                />}
 
                 <div className="flex items-center gap-2">
                     <Button variant="outline" size="sm" onClick={actions.openFileDialog}>
