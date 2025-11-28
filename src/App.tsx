@@ -44,8 +44,8 @@ function App() {
                             onPlaceSignature={actions.placeSignature}
                         />
 
-                        <main className="flex-1 overflow-hidden px-4 py-6 sm:px-6">
-                            <div className="mx-auto flex h-full max-w-5xl flex-col gap-6">
+                        <main className="flex-1 overflow-hidden">
+                            <div className="flex h-full flex-col gap-6">
                                 {/* <Toolbar
                                     scale={state.scale}
                                     currentPage={state.currentPage}
