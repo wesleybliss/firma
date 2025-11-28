@@ -22,12 +22,20 @@ export function useFirma() {
     const nodeRefs = useRef<Record<string, RefObject<HTMLDivElement>>>({})
 
     useEffect(() => {
-        const link = document.createElement('link')
-        link.href = 'https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Roboto:wght@400;700&family=Open+Sans:wght@400;700&family=Lato:wght@400;700&family=Montserrat:wght@400;700&family=Oswald:wght@400;700&family=Merriweather:wght@400;700&family=Playfair+Display:wght@400;700&display=swap'
-        link.rel = 'stylesheet'
-        document.head.appendChild(link)
+        const links = GOOGLE_FONTS.map(font => {
+            const link = document.createElement('link')
+            link.href = font.url
+            link.rel = 'stylesheet'
+            document.head.appendChild(link)
+            return link
+        })
+
         return () => {
-            document.head.removeChild(link)
+            links.forEach(link => {
+                if (link.parentNode) {
+                    document.head.removeChild(link)
+                }
+            })
         }
     }, [])
 

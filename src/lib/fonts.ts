@@ -45,4 +45,24 @@ export const GOOGLE_FONTS: FontDefinition[] = [
         family: 'Playfair Display',
         url: 'https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap',
     },
+    {
+        name: 'Fuzzy Bubbles',
+        family: 'Fuzzy Bubbles',
+        url: 'https://fonts.googleapis.com/css2?family=Fuzzy+Bubbles:wght@400;700&display=swap',
+    },
+    {
+        name: 'Playwrite Tanzania',
+        family: 'Playwrite Tanzania',
+        url: 'https://fonts.googleapis.com/css2?family=Playwrite+Tanzania:wght@400;700&display=swap',
+    },
+    {
+        name: 'Edu NSW ACT Foundation',
+        family: 'Edu NSW ACT Foundation',
+        url: 'https://fonts.googleapis.com/css2?family=Edu+NSW+ACT+Foundation:wght@400;700&display=swap',
+    },
+    {
+        name: 'Edu QLD Beginner',
+        family: 'Edu QLD Beginner',
+        url: 'https://fonts.googleapis.com/css2?family=Edu+QLD+Beginner:wght@400;700&display=swap',
+    },
 ]
