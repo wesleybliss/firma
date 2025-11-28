@@ -91,10 +91,12 @@ function App() {
                                     onFieldUpdate={actions.updateTextField}
                                     onFieldRemove={actions.removeTextField}
                                     onFieldPositionUpdate={actions.updateFieldPosition}
+                                    onFieldDimensionsUpdate={actions.updateFieldDimensions}
                                     getNodeRef={actions.getNodeRef}
                                     signatureFields={state.signatureFields}
                                     onSignatureRemove={actions.removeSignatureField}
                                     onSignaturePositionUpdate={actions.updateSignaturePosition}
+                                    onSignatureDimensionsUpdate={actions.updateSignatureDimensions}
                                 />
                             </div>
                         </main>

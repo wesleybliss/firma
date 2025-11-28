@@ -1,6 +1,6 @@
 import React from 'react'
 import { Document, Page, pdfjs } from 'react-pdf'
-import Draggable from 'react-draggable'
+import { Rnd } from 'react-rnd'
 import { PanelsTopLeft, Trash2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { TextField, SignatureField } from '@/types'
@@ -55,10 +55,12 @@ interface PDFCanvasProps {
     onFieldUpdate: (id: string, text: string) => void
     onFieldRemove: (id: string) => void
     onFieldPositionUpdate: (id: string, position: { x: number; y: number }) => void
+    onFieldDimensionsUpdate: (id: string, dimensions: { width: number; height: number }) => void
     getNodeRef: (id: string) => React.RefObject<HTMLDivElement>
     signatureFields: SignatureField[]
     onSignatureRemove: (id: string) => void
     onSignaturePositionUpdate: (id: string, position: { x: number; y: number }) => void
+    onSignatureDimensionsUpdate: (id: string, dimensions: { width: number; height: number }) => void
 }
 
 export function PDFCanvas({
@@ -75,10 +77,12 @@ export function PDFCanvas({
     onFieldUpdate,
     onFieldRemove,
     onFieldPositionUpdate,
+    onFieldDimensionsUpdate,
     getNodeRef,
     signatureFields,
     onSignatureRemove,
     onSignaturePositionUpdate,
+    onSignatureDimensionsUpdate,
 }: PDFCanvasProps) {
     const scaledWidth = pdfDimensions.width * scale
     const scaledHeight = pdfDimensions.height * scale
@@ -114,30 +118,47 @@ export function PDFCanvas({
                                 }}
                             >
                                 {textFields.filter(f => f.page === currentPage).map(field => {
-                                    const nodeRef = getNodeRef(field.id)
                                     const isActive = activeFieldId === field.id
                                     const showChrome = isActive || field.isNew
 
                                     return (
-                                        <Draggable
+                                        <Rnd
                                             key={`${field.id}-${scale}`}
-                                            nodeRef={nodeRef}
-                                            handle=".drag-handle"
-                                            defaultPosition={{
+                                            position={{
                                                 x: field.x * scaledWidth,
                                                 y: field.y * scaledHeight,
                                             }}
-                                            onStop={(_, data) => onFieldPositionUpdate(field.id, data)}
+                                            size={{
+                                                width: field.width * scale,
+                                                height: field.height * scale,
+                                            }}
+                                            onDragStop={(e, d) => {
+                                                onFieldPositionUpdate(field.id, { x: d.x, y: d.y })
+                                            }}
+                                            onResizeStop={(e, direction, ref, delta, position) => {
+                                                onFieldDimensionsUpdate(field.id, {
+                                                    width: parseInt(ref.style.width) / scale,
+                                                    height: parseInt(ref.style.height) / scale,
+                                                })
+                                                onFieldPositionUpdate(field.id, position)
+                                            }}
                                             bounds="parent"
+                                            dragHandleClassName="drag-handle"
+                                            enableResizing={showChrome}
+                                            disableDragging={!showChrome}
+                                            className={cn(
+                                                'pointer-events-auto !border-none !outline-none',
+                                                showChrome && '!cursor-auto'
+                                            )}
+                                            style={{ border: 'none' }}
                                         >
                                             <div
-                                                ref={nodeRef}
                                                 onClick={(e) => {
                                                     e.stopPropagation()
                                                     onFieldClick(field.id)
                                                 }}
                                                 className={cn(
-                                                    'pointer-events-auto absolute flex items-center gap-1 rounded p-1 transition-colors',
+                                                    'flex h-full w-full items-center gap-1 rounded p-1 transition-colors',
                                                     showChrome
                                                         ? 'z-50 border border-sky-500 bg-white shadow-sm ring-1 ring-sky-500'
                                                         : 'z-10 border border-transparent hover:border-slate-300 hover:bg-white/50'
@@ -152,10 +173,9 @@ export function PDFCanvas({
                                                     onFocus={() => onFieldClick(field.id)}
                                                     onClick={() => onFieldClick(field.id)}
                                                     onChange={event => onFieldUpdate(field.id, event.target.value)}
-                                                    className="h-6 min-w-[80px] max-w-[300px] border-0 bg-transparent p-0 text-sm text-slate-900 placeholder:text-slate-400 focus:ring-0"
+                                                    className="h-full flex-1 border-0 bg-transparent p-0 text-sm text-slate-900 placeholder:text-slate-400 focus:ring-0 focus:outline-none outline-none"
                                                     placeholder="Type here..."
                                                     style={{
-                                                        width: `${Math.max(field.text.length, 10)}ch`,
                                                         fontFamily: field.fontFamily,
                                                         fontSize: `${field.fontSize}px`,
                                                         color: field.color,
@@ -179,7 +199,7 @@ export function PDFCanvas({
                                                     </button>
                                                 )}
                                             </div>
-                                        </Draggable>
+                                        </Rnd>
                                     )
                                 })}
                             </div>
@@ -194,38 +214,51 @@ export function PDFCanvas({
                                 }}
                             >
                                 {signatureFields.filter(f => f.page === currentPage).map(field => {
-                                    const nodeRef = getNodeRef(field.id)
                                     const isActive = activeFieldId === field.id
                                     const showChrome = isActive || field.isNew
 
                                     return (
-                                        <Draggable
+                                        <Rnd
                                             key={`${field.id}-${scale}`}
-                                            nodeRef={nodeRef}
-                                            handle=".drag-handle"
-                                            defaultPosition={{
+                                            position={{
                                                 x: field.x * scaledWidth,
                                                 y: field.y * scaledHeight,
                                             }}
-                                            onStop={(_, data) => onSignaturePositionUpdate(field.id, data)}
+                                            size={{
+                                                width: field.width * scale,
+                                                height: field.height * scale,
+                                            }}
+                                            onDragStop={(_e, d) => {
+                                                onSignaturePositionUpdate(field.id, { x: d.x, y: d.y })
+                                            }}
+                                            onResizeStop={(_e, _direction, ref, _delta, position) => {
+                                                onSignatureDimensionsUpdate(field.id, {
+                                                    width: parseInt(ref.style.width) / scale,
+                                                    height: parseInt(ref.style.height) / scale,
+                                                })
+                                                onSignaturePositionUpdate(field.id, position)
+                                            }}
                                             bounds="parent"
+                                            dragHandleClassName="drag-handle"
+                                            enableResizing={showChrome}
+                                            disableDragging={!showChrome}
+                                            lockAspectRatio={true}
+                                            className={cn(
+                                                'pointer-events-auto',
+                                                showChrome && '!cursor-auto'
+                                            )}
                                         >
                                             <div
-                                                ref={nodeRef}
                                                 onClick={(e) => {
                                                     e.stopPropagation()
                                                     onFieldClick(field.id)
                                                 }}
                                                 className={cn(
-                                                    'pointer-events-auto absolute flex items-center gap-1 rounded p-1 transition-colors',
+                                                    'relative h-full w-full rounded p-1 transition-colors',
                                                     showChrome
                                                         ? 'z-50 border border-sky-500 bg-white/10 shadow-sm ring-1 ring-sky-500'
                                                         : 'z-10 border border-transparent hover:border-slate-300 hover:bg-white/10'
                                                 )}
-                                                style={{
-                                                    width: field.width * scale,
-                                                    height: field.height * scale,
-                                                }}
                                             >
                                                 <div className={cn("drag-handle absolute -left-3 -top-3 cursor-grab p-1 text-slate-400 hover:text-slate-600 active:cursor-grabbing", !showChrome && "opacity-0 group-hover:opacity-100")}>
                                                     <div className="rounded-full bg-white p-1 shadow-sm ring-1 ring-slate-200">
@@ -252,7 +285,7 @@ export function PDFCanvas({
                                                     </button>
                                                 )}
                                             </div>
-                                        </Draggable>
+                                        </Rnd>
                                     )
                                 })}
                             </div>

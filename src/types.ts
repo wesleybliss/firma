@@ -3,6 +3,8 @@ export type TextField = {
     text: string
     x: number
     y: number
+    width: number
+    height: number
     isNew?: boolean
     fontFamily: string
     fontSize: number

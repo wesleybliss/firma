@@ -81,6 +81,8 @@ export function useFirma() {
             text: 'New text',
             x: 0.5,
             y: 0.35,
+            width: 120,
+            height: 40,
             isNew: true,
             fontFamily: 'Inter',
             fontSize: 16,
@@ -130,6 +132,21 @@ export function useFirma() {
                         ...field,
                         x: clamp(position.x / width, 0, 1),
                         y: clamp(position.y / height, 0, 1),
+                        isNew: false,
+                    }
+                    : field
+            )
+        )
+    }
+
+    const updateFieldDimensions = (id: string, dimensions: { width: number; height: number }) => {
+        setTextFields(previous =>
+            previous.map(field =>
+                field.id === id
+                    ? {
+                        ...field,
+                        width: dimensions.width,
+                        height: dimensions.height,
                         isNew: false,
                     }
                     : field
@@ -205,6 +222,21 @@ export function useFirma() {
                         ...field,
                         x: clamp(position.x / width, 0, 1),
                         y: clamp(position.y / height, 0, 1),
+                        isNew: false,
+                    }
+                    : field
+            )
+        )
+    }
+
+    const updateSignatureDimensions = (id: string, dimensions: { width: number; height: number }) => {
+        setSignatureFields(prev =>
+            prev.map(field =>
+                field.id === id
+                    ? {
+                        ...field,
+                        width: dimensions.width,
+                        height: dimensions.height,
                         isNew: false,
                     }
                     : field
@@ -428,8 +460,10 @@ export function useFirma() {
             placeSignature,
             removeSignatureField,
             updateSignaturePosition,
+            updateSignatureDimensions,
             updateFieldProperty,
             updateFieldPosition,
+            updateFieldDimensions,
             handleDownload,
             onDocumentLoadSuccess,
             onPageLoadSuccess,
