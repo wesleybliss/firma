@@ -89,10 +89,12 @@ export function PDFCanvas({
 
     return (
         <div
-            className="relative flex flex-1 items-center justify-center rounded-3xl border border-slate-200 bg-white/80 p-6 shadow-2xl backdrop-blur"
+            className="relative flex flex-1 items-center justify-center rounded-3xl
+                border border-slate-200 bg-white/80 p-6 shadow-2xl backdrop-blur"
             onClick={onCanvasClick}
         >
-            <div className="relative h-full w-full overflow-auto rounded-2xl border border-slate-200/60 bg-slate-50 p-6 shadow-inner">
+            <div className="relative h-full w-full overflow-auto rounded-2xl
+                border border-slate-200/60 bg-slate-50 p-6 shadow-inner">
                 <div className="flex justify-center">
                     <div
                         className="relative inline-block"
@@ -164,7 +166,9 @@ export function PDFCanvas({
                                                         : 'z-10 border border-transparent hover:border-slate-300 hover:bg-white/50'
                                                 )}
                                             >
-                                                <div className={cn("drag-handle cursor-grab p-0.5 text-slate-400 hover:text-slate-600 active:cursor-grabbing", !showChrome && "opacity-0 group-hover:opacity-100")}>
+                                                <div className={cn("drag-handle cursor-grab p-0.5 text-slate-400",
+                                                    "hover:text-slate-600 active:cursor-grabbing",
+                                                    !showChrome && "opacity-0 group-hover:opacity-100")}>
                                                     <PanelsTopLeft className="size-3" />
                                                 </div>
                                                 <input
@@ -173,7 +177,9 @@ export function PDFCanvas({
                                                     onFocus={() => onFieldClick(field.id)}
                                                     onClick={() => onFieldClick(field.id)}
                                                     onChange={event => onFieldUpdate(field.id, event.target.value)}
-                                                    className="h-full flex-1 border-0 bg-transparent p-0 text-sm text-slate-900 placeholder:text-slate-400 focus:ring-0 focus:outline-none outline-none"
+                                                    className="h-full flex-1 border-0 bg-transparent p-0 text-sm
+                                                        text-slate-900 placeholder:text-slate-400 focus:ring-0
+                                                        focus:outline-none outline-none"
                                                     placeholder="Type here..."
                                                     style={{
                                                         fontFamily: field.fontFamily,
@@ -193,7 +199,8 @@ export function PDFCanvas({
                                                             e.stopPropagation();
                                                             onFieldRemove(field.id);
                                                         }}
-                                                        className="ml-1 rounded-sm p-0.5 text-slate-400 hover:bg-red-50 hover:text-red-500"
+                                                        className="ml-1 rounded-sm p-0.5 text-slate-400 hover:bg-red-50
+                                                            hover:text-red-500"
                                                     >
                                                         <Trash2 className="size-3" />
                                                     </button>
@@ -260,7 +267,9 @@ export function PDFCanvas({
                                                         : 'z-10 border border-transparent hover:border-slate-300 hover:bg-white/10'
                                                 )}
                                             >
-                                                <div className={cn("drag-handle absolute -left-3 -top-3 cursor-grab p-1 text-slate-400 hover:text-slate-600 active:cursor-grabbing", !showChrome && "opacity-0 group-hover:opacity-100")}>
+                                                <div className={cn("drag-handle absolute -left-3 -top-3 cursor-grab p-1",
+                                                    "text-slate-400 hover:text-slate-600 active:cursor-grabbing",
+                                                    !showChrome && "opacity-0 group-hover:opacity-100")}>
                                                     <div className="rounded-full bg-white p-1 shadow-sm ring-1 ring-slate-200">
                                                         <PanelsTopLeft className="size-3" />
                                                     </div>
@@ -279,7 +288,8 @@ export function PDFCanvas({
                                                             e.stopPropagation();
                                                             onSignatureRemove(field.id);
                                                         }}
-                                                        className="absolute -right-3 -top-3 rounded-full bg-white p-1 text-slate-400 shadow-sm ring-1 ring-slate-200 hover:bg-red-50 hover:text-red-500"
+                                                        className="absolute -right-3 -top-3 rounded-full bg-white p-1 text-slate-400
+                                                            shadow-sm ring-1 ring-slate-200 hover:bg-red-50 hover:text-red-500"
                                                     >
                                                         <Trash2 className="size-3" />
                                                     </button>
