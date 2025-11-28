@@ -38,6 +38,7 @@ When you download the PDF, `pdf-lib` is used to add the text fields to the PDF. 
 
 ## Future Features
 
+-   **Configuration**: Add a screen to configure static fields like name and company.
 -   **Date Formats**: When a date field is selected, show options for formatting in the sidebar.
 -   **Signature Fields**: Add signature fields to your PDF documents.
 -   **Image Fields**: Add image fields to your PDF documents.
