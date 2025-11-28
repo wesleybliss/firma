@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
-import { Button } from '@/components/ui/button'
+import { Button, buttonVariants } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Input } from '@/components/ui/input'
@@ -145,10 +145,8 @@ export function SignatureManager({
             <div className="flex items-center justify-between">
                 <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Signatures</p>
                 <Dialog open={isOpen} onOpenChange={setIsOpen}>
-                    <DialogTrigger asChild>
-                        <Button variant="ghost" size="icon-sm">
-                            <Plus className="size-4" />
-                        </Button>
+                    <DialogTrigger className={buttonVariants({ variant: "ghost", size: "icon-sm" })}>
+                        <Plus className="size-4" />
                     </DialogTrigger>
                     <DialogContent className="sm:max-w-md">
                         <DialogHeader>
