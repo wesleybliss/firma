@@ -1,14 +1,14 @@
-import { Download, Plus, Sparkles, UploadCloud } from 'lucide-react'
+import { Download, Plus, Sparkles, UploadCloud, User, Hash, Mail, Phone, Building, Type, Calendar } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { TextProperties } from '@/components/TextProperties'
 import { SignatureManager } from '@/components/SignatureManager'
-import { TextField, Signature } from '@/types'
+import { TextField, Signature, FieldType } from '@/types'
 
 interface SidebarProps {
     fileName: string | null
     textFields: TextField[]
     activeFieldId: string | null
-    onAddTextField: () => void
+    onAddTextField: (fieldType?: FieldType) => void
     onRemoveTextField: (id: string) => void
     onUpdateFieldProperty: (id: string, property: keyof TextField, value: any) => void
     signatures: Signature[]
@@ -43,10 +43,39 @@ export function Sidebar({
                             <p className="text-xs text-slate-500">{textFields.length} field{textFields.length === 1 ? '' : 's'}</p>
                         </div>
                     </div>
-                    <Button variant="ghost" size="sm" className="w-full justify-start" onClick={onAddTextField}>
-                        <Plus className="size-4" />
-                        Drop a new text field
-                    </Button>
+                    <div className="mt-6 space-y-1">
+                        <p className="text-[10px] font-medium uppercase tracking-wider text-slate-500">Add Field</p>
+                        <div className="grid grid-cols-2 gap-1">
+                            <Button variant="ghost" size="sm" className="justify-start" onClick={() => onAddTextField('text')}>
+                                <Type className="size-3" />
+                                <span className="text-xs">Text</span>
+                            </Button>
+                            <Button variant="ghost" size="sm" className="justify-start" onClick={() => onAddTextField('date')}>
+                                <Calendar className="size-3" />
+                                <span className="text-xs">Date</span>
+                            </Button>
+                            <Button variant="ghost" size="sm" className="justify-start" onClick={() => onAddTextField('fullName')}>
+                                <User className="size-3" />
+                                <span className="text-xs">Name</span>
+                            </Button>
+                            <Button variant="ghost" size="sm" className="justify-start" onClick={() => onAddTextField('initials')}>
+                                <Hash className="size-3" />
+                                <span className="text-xs">Initials</span>
+                            </Button>
+                            <Button variant="ghost" size="sm" className="justify-start" onClick={() => onAddTextField('email')}>
+                                <Mail className="size-3" />
+                                <span className="text-xs">Email</span>
+                            </Button>
+                            <Button variant="ghost" size="sm" className="justify-start" onClick={() => onAddTextField('phone')}>
+                                <Phone className="size-3" />
+                                <span className="text-xs">Phone</span>
+                            </Button>
+                            <Button variant="ghost" size="sm" className="justify-start" onClick={() => onAddTextField('company')}>
+                                <Building className="size-3" />
+                                <span className="text-xs">Company</span>
+                            </Button>
+                        </div>
+                    </div>
                 </div>
             </section>
 

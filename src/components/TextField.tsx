@@ -1,9 +1,9 @@
 import React from 'react'
 import { Rnd } from 'react-rnd'
-import { PanelsTopLeft, Trash2 } from 'lucide-react'
+import { PanelsTopLeft, Trash2, User, Hash, Mail, Phone, Building, Calendar } from 'lucide-react'
 
 import { cn } from '@/lib/utils'
-import type { TextField as TextFieldType } from '@/types'
+import type { TextField as TextFieldType, FieldType } from '@/types'
 
 interface TextFieldProps {
     field: TextFieldType
@@ -31,6 +31,44 @@ export function TextField({
     onFieldDimensionsUpdate,
 }: TextFieldProps) {
     const showChrome = isActive || field.isNew
+
+    const getFieldIcon = (fieldType: FieldType) => {
+        switch (fieldType) {
+            case 'date':
+                return <Calendar className="size-3" />
+            case 'fullName':
+                return <User className="size-3" />
+            case 'initials':
+                return <Hash className="size-3" />
+            case 'email':
+                return <Mail className="size-3" />
+            case 'phone':
+                return <Phone className="size-3" />
+            case 'company':
+                return <Building className="size-3" />
+            default:
+                return null
+        }
+    }
+
+    const getFieldLabel = (fieldType: FieldType) => {
+        switch (fieldType) {
+            case 'date':
+                return 'Date'
+            case 'fullName':
+                return 'Full Name'
+            case 'initials':
+                return 'Initials'
+            case 'email':
+                return 'Email'
+            case 'phone':
+                return 'Phone'
+            case 'company':
+                return 'Company'
+            default:
+                return null
+        }
+    }
 
     return (
         <Rnd
@@ -67,6 +105,12 @@ export function TextField({
                         : 'z-10 border border-transparent hover:border-slate-300 hover:bg-white/50'
                 )}
             >
+                {showChrome && field.fieldType !== 'text' && (
+                    <div className="flex items-center gap-1 rounded bg-sky-100 px-1.5 py-0.5 text-[10px] font-medium text-sky-700">
+                        {getFieldIcon(field.fieldType)}
+                        <span>{getFieldLabel(field.fieldType)}</span>
+                    </div>
+                )}
                 <div
                     className={cn(
                         'drag-handle cursor-grab p-0.5 text-slate-400',

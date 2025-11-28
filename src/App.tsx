@@ -1,3 +1,4 @@
+import Navbar from '@/components/Navbar'
 import { Download, FileText, MousePointer2, Type, UploadCloud } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Toaster } from '@/components/ui/sonner'
@@ -11,8 +12,11 @@ function App() {
     const { state, actions } = useFirma()
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-100 via-white to-slate-200 text-slate-900">
+        <div className="min-h-screen bg-gradient-to-br from-slate-100
+            via-white to-slate-200 text-slate-900">
+
             <Toaster richColors />
+
             <input
                 ref={state.fileInputRef}
                 type="file"
@@ -20,35 +24,9 @@ function App() {
                 onChange={actions.handleFileUpload}
                 className="hidden"
             />
-            <div className="flex h-screen flex-col">
-                <header className="border-b border-slate-200 bg-white/80 backdrop-blur">
-                    <div className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between px-4 sm:px-6">
-                        <div className="flex items-center gap-3">
-                            <div className="flex size-10 items-center justify-center rounded-2xl bg-slate-900 text-white">
-                                <FileText className="size-5" />
-                            </div>
-                            <div>
-                                <p className="text-sm font-semibold tracking-tight text-slate-900">Firma</p>
-                                <p className="text-xs text-slate-500">Fill, align, and export PDFs in seconds</p>
-                            </div>
-                        </div>
 
-                        <div className="flex items-center gap-2">
-                            <Button variant="outline" size="sm" onClick={actions.openFileDialog}>
-                                <UploadCloud className="size-4" />
-                                {state.pdfFile ? 'Replace PDF' : 'Choose PDF'}
-                            </Button>
-                            <Button variant="outline" size="sm" onClick={actions.addTextField} disabled={!state.pdfFile}>
-                                <Type className="size-4" />
-                                Add Text
-                            </Button>
-                            <Button size="sm" onClick={actions.handleDownload} disabled={!state.pdfFile || state.textFields.length === 0}>
-                                <Download className="size-4" />
-                                Export
-                            </Button>
-                        </div>
-                    </div>
-                </header>
+            <div className="flex h-screen flex-col">
+                <Navbar state={state} actions={actions} />
 
                 {state.pdfFile ? (
                     <div className="flex flex-1 overflow-hidden">
@@ -67,7 +45,7 @@ function App() {
 
                         <main className="flex-1 overflow-hidden px-4 py-6 sm:px-6">
                             <div className="mx-auto flex h-full max-w-5xl flex-col gap-6">
-                                <Toolbar
+                                {/* <Toolbar
                                     scale={state.scale}
                                     currentPage={state.currentPage}
                                     numPages={state.numPages}
@@ -75,7 +53,7 @@ function App() {
                                     onZoomAdjust={actions.adjustZoom}
                                     onZoomReset={actions.resetZoom}
                                     onPageChange={actions.changePage}
-                                />
+                                /> */}
 
                                 <PDFCanvas
                                     pdfFile={state.pdfFile}
@@ -120,7 +98,18 @@ function App() {
                                                     }`}
                                             >
                                                 <div className="mb-3 flex items-center justify-between">
-                                                    <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Field {index + 1}</p>
+                                                    <div className="flex items-center gap-2">
+                                                        <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Field {index + 1}</p>
+                                                        {field.fieldType !== 'text' && (
+                                                            <span className="rounded bg-sky-100 px-1.5 py-0.5 text-[10px] font-medium text-sky-700">
+                                                                {field.fieldType === 'date' ? 'Date' :
+                                                                    field.fieldType === 'fullName' ? 'Name' :
+                                                                        field.fieldType === 'initials' ? 'Initials' :
+                                                                            field.fieldType === 'email' ? 'Email' :
+                                                                                field.fieldType === 'phone' ? 'Phone' : 'Company'}
+                                                            </span>
+                                                        )}
+                                                    </div>
                                                     <Button variant="ghost" size="icon-sm" onClick={() => actions.removeTextField(field.id)}>
                                                         <div className="size-4 text-slate-400">
                                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-trash-2"><path d="M3 6h18" /><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" /><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" /><line x1="10" x2="10" y1="11" y2="17" /><line x1="14" x2="14" y1="11" y2="17" /></svg>

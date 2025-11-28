@@ -22,7 +22,7 @@ export function Toolbar({
     onPageChange,
 }: ToolbarProps) {
     return (
-        <div className="flex flex-col justify-between gap-4 rounded-2xl border border-slate-200 bg-white/90 p-6 shadow-lg backdrop-blur md:flex-row md:items-center">
+        <div className="flex flex-col justify-between gap-4 p-2 md:flex-row md:items-center">
             <div className="flex items-center gap-3">
                 <Button variant="outline" size="icon-sm" onClick={() => onZoomAdjust(-0.1)} disabled={scale <= 0.5}>
                     <ZoomOut className="size-4" />

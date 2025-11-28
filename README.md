@@ -35,3 +35,11 @@ Text fields are managed in the React state. When you add a new text field, it's 
 `react-draggable` is used to make the text fields draggable. When you drag a text field, its x/y coordinates are updated in the state.
 
 When you download the PDF, `pdf-lib` is used to add the text fields to the PDF. The text fields are drawn directly onto the PDF page using the coordinates from the state. The resulting PDF is then downloaded to your computer.
+
+## Future Features
+
+-   **Date Formats**: When a date field is selected, show options for formatting in the sidebar.
+-   **Signature Fields**: Add signature fields to your PDF documents.
+-   **Image Fields**: Add image fields to your PDF documents.
+-   **Watermarker**: Add a watermarker to your PDF documents.
+-   **Stamp Fields**: Add stamp fields to your PDF documents.

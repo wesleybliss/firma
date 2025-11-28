@@ -2,7 +2,7 @@ import { useState, useRef, useEffect, useCallback, createRef, type ChangeEvent, 
 import { PDFDocument, StandardFonts, rgb } from 'pdf-lib'
 import fontkit from '@pdf-lib/fontkit'
 import { toast } from 'sonner'
-import { TextField, Signature, SignatureField } from '@/types'
+import { TextField, Signature, SignatureField, FieldType } from '@/types'
 import { GOOGLE_FONTS } from '@/lib/fonts'
 
 const clamp = (value: number, min: number, max: number) => Math.min(Math.max(value, min), max)
@@ -70,33 +70,64 @@ export function useFirma() {
         return nodeRefs.current[id]
     }
 
-    const addTextField = () => {
+    const getFieldDefaults = (fieldType: FieldType) => {
+        switch (fieldType) {
+            case 'date': {
+                const today = new Date()
+                const formatted = today.toLocaleDateString('en-US', { 
+                    month: '2-digit', 
+                    day: '2-digit', 
+                    year: 'numeric' 
+                })
+                return { text: formatted, width: 140, height: 40, fontSize: 14 }
+            }
+            case 'fullName':
+                return { text: 'Full Name', width: 200, height: 40, fontSize: 16 }
+            case 'initials':
+                return { text: 'AB', width: 60, height: 40, fontSize: 16 }
+            case 'email':
+                return { text: 'email@example.com', width: 220, height: 40, fontSize: 14 }
+            case 'phone':
+                return { text: '(555) 000-0000', width: 160, height: 40, fontSize: 14 }
+            case 'company':
+                return { text: 'Company Name', width: 200, height: 40, fontSize: 16 }
+            case 'text':
+            default:
+                return { text: 'New text', width: 120, height: 40, fontSize: 16 }
+        }
+    }
+
+    const addTextField = (fieldType: FieldType = 'text') => {
         if (!pdfDimensions.width || !pdfDimensions.height) {
             toast.error('Choose a PDF before adding text')
             return
         }
 
+        const defaults = getFieldDefaults(fieldType)
         const newField: TextField = {
             id: crypto.randomUUID(),
-            text: 'New text',
+            text: defaults.text,
             x: 0.5,
             y: 0.35,
-            width: 120,
-            height: 40,
+            width: defaults.width,
+            height: defaults.height,
             isNew: true,
             fontFamily: 'Inter',
-            fontSize: 16,
+            fontSize: defaults.fontSize,
             color: '#000000',
             isBold: false,
             isItalic: false,
             isUnderline: false,
             isStrikethrough: false,
             page: currentPage,
+            fieldType,
         }
 
         setTextFields(previous => [...previous, newField])
         setActiveFieldId(newField.id)
-        toast.info('Text field added to the canvas')
+        
+        const fieldTypeLabel = fieldType === 'text' ? 'Text field' : `${fieldType.charAt(0).toUpperCase() + fieldType.slice(1)} field`
+        toast.info(`${fieldTypeLabel} added to the canvas`)
     }
 
     const removeTextField = (id: string) => {

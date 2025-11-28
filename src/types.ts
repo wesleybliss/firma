@@ -1,3 +1,5 @@
+export type FieldType = 'text' | 'date' | 'fullName' | 'initials' | 'email' | 'phone' | 'company'
+
 export type TextField = {
     id: string
     text: string
@@ -14,6 +16,7 @@ export type TextField = {
     isUnderline: boolean
     isStrikethrough: boolean
     page: number
+    fieldType: FieldType
 }
 
 export type Signature = {
