@@ -1,7 +1,8 @@
 import { Download, Plus, Sparkles, UploadCloud } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { TextProperties } from '@/components/TextProperties'
-import { TextField } from '@/types'
+import { SignatureManager } from '@/components/SignatureManager'
+import { TextField, Signature } from '@/types'
 
 interface SidebarProps {
     fileName: string | null
@@ -10,6 +11,10 @@ interface SidebarProps {
     onAddTextField: () => void
     onRemoveTextField: (id: string) => void
     onUpdateFieldProperty: (id: string, property: keyof TextField, value: any) => void
+    signatures: Signature[]
+    onAddSignature: (signature: Signature) => void
+    onRemoveSignature: (id: string) => void
+    onPlaceSignature: (id: string) => void
 }
 
 export function Sidebar({
@@ -19,6 +24,10 @@ export function Sidebar({
     onAddTextField,
     onRemoveTextField,
     onUpdateFieldProperty,
+    signatures,
+    onAddSignature,
+    onRemoveSignature,
+    onPlaceSignature,
 }: SidebarProps) {
     const activeField = textFields.find(f => f.id === activeFieldId)
 
@@ -40,6 +49,13 @@ export function Sidebar({
                     </Button>
                 </div>
             </section>
+
+            <SignatureManager
+                signatures={signatures}
+                onAddSignature={onAddSignature}
+                onRemoveSignature={onRemoveSignature}
+                onPlaceSignature={onPlaceSignature}
+            />
 
             {activeField ? (
                 <TextProperties

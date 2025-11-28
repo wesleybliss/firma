@@ -3,7 +3,7 @@ import { Document, Page, pdfjs } from 'react-pdf'
 import Draggable from 'react-draggable'
 import { PanelsTopLeft, Trash2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { TextField } from '@/types'
+import { TextField, SignatureField } from '@/types'
 
 import 'react-pdf/dist/Page/TextLayer.css'
 
@@ -56,6 +56,9 @@ interface PDFCanvasProps {
     onFieldRemove: (id: string) => void
     onFieldPositionUpdate: (id: string, position: { x: number; y: number }) => void
     getNodeRef: (id: string) => React.RefObject<HTMLDivElement>
+    signatureFields: SignatureField[]
+    onSignatureRemove: (id: string) => void
+    onSignaturePositionUpdate: (id: string, position: { x: number; y: number }) => void
 }
 
 export function PDFCanvas({
@@ -73,6 +76,9 @@ export function PDFCanvas({
     onFieldRemove,
     onFieldPositionUpdate,
     getNodeRef,
+    signatureFields,
+    onSignatureRemove,
+    onSignaturePositionUpdate,
 }: PDFCanvasProps) {
     const scaledWidth = pdfDimensions.width * scale
     const scaledHeight = pdfDimensions.height * scale
@@ -168,6 +174,79 @@ export function PDFCanvas({
                                                             onFieldRemove(field.id);
                                                         }}
                                                         className="ml-1 rounded-sm p-0.5 text-slate-400 hover:bg-red-50 hover:text-red-500"
+                                                    >
+                                                        <Trash2 className="size-3" />
+                                                    </button>
+                                                )}
+                                            </div>
+                                        </Draggable>
+                                    )
+                                })}
+                            </div>
+                        )}
+
+                        {pdfDimensions.width > 0 && (
+                            <div
+                                className="pointer-events-none absolute left-0 top-0"
+                                style={{
+                                    width: scaledWidth,
+                                    height: scaledHeight,
+                                }}
+                            >
+                                {signatureFields.filter(f => f.page === currentPage).map(field => {
+                                    const nodeRef = getNodeRef(field.id)
+                                    const isActive = activeFieldId === field.id
+                                    const showChrome = isActive || field.isNew
+
+                                    return (
+                                        <Draggable
+                                            key={`${field.id}-${scale}`}
+                                            nodeRef={nodeRef}
+                                            handle=".drag-handle"
+                                            defaultPosition={{
+                                                x: field.x * scaledWidth,
+                                                y: field.y * scaledHeight,
+                                            }}
+                                            onStop={(_, data) => onSignaturePositionUpdate(field.id, data)}
+                                            bounds="parent"
+                                        >
+                                            <div
+                                                ref={nodeRef}
+                                                onClick={(e) => {
+                                                    e.stopPropagation()
+                                                    onFieldClick(field.id)
+                                                }}
+                                                className={cn(
+                                                    'pointer-events-auto absolute flex items-center gap-1 rounded p-1 transition-colors',
+                                                    showChrome
+                                                        ? 'z-50 border border-sky-500 bg-white/10 shadow-sm ring-1 ring-sky-500'
+                                                        : 'z-10 border border-transparent hover:border-slate-300 hover:bg-white/10'
+                                                )}
+                                                style={{
+                                                    width: field.width * scale,
+                                                    height: field.height * scale,
+                                                }}
+                                            >
+                                                <div className={cn("drag-handle absolute -left-3 -top-3 cursor-grab p-1 text-slate-400 hover:text-slate-600 active:cursor-grabbing", !showChrome && "opacity-0 group-hover:opacity-100")}>
+                                                    <div className="rounded-full bg-white p-1 shadow-sm ring-1 ring-slate-200">
+                                                        <PanelsTopLeft className="size-3" />
+                                                    </div>
+                                                </div>
+
+                                                <img
+                                                    src={field.dataUrl}
+                                                    alt="Signature"
+                                                    className="h-full w-full object-contain"
+                                                    draggable={false}
+                                                />
+
+                                                {showChrome && (
+                                                    <button
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            onSignatureRemove(field.id);
+                                                        }}
+                                                        className="absolute -right-3 -top-3 rounded-full bg-white p-1 text-slate-400 shadow-sm ring-1 ring-slate-200 hover:bg-red-50 hover:text-red-500"
                                                     >
                                                         <Trash2 className="size-3" />
                                                     </button>

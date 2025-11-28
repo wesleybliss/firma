@@ -2,7 +2,7 @@ import { useState, useRef, useEffect, useCallback, createRef, type ChangeEvent, 
 import { PDFDocument, StandardFonts, rgb } from 'pdf-lib'
 import fontkit from '@pdf-lib/fontkit'
 import { toast } from 'sonner'
-import { TextField } from '@/types'
+import { TextField, Signature, SignatureField } from '@/types'
 import { GOOGLE_FONTS } from '@/lib/fonts'
 
 const clamp = (value: number, min: number, max: number) => Math.min(Math.max(value, min), max)
@@ -11,6 +11,8 @@ export function useFirma() {
     const [pdfFile, setPdfFile] = useState<string | null>(null)
     const [fileName, setFileName] = useState<string | null>(null)
     const [textFields, setTextFields] = useState<TextField[]>([])
+    const [signatures, setSignatures] = useState<Signature[]>([])
+    const [signatureFields, setSignatureFields] = useState<SignatureField[]>([])
     const [activeFieldId, setActiveFieldId] = useState<string | null>(null)
     const [scale, setScale] = useState(1)
     const [pdfDimensions, setPdfDimensions] = useState({ width: 0, height: 0 })
@@ -52,6 +54,7 @@ export function useFirma() {
             setPdfFile(reader.result as string)
             setFileName(file.name)
             setTextFields([])
+            setSignatureFields([])
             setActiveFieldId(null)
             setScale(1)
             toast.success('PDF is ready to edit')
@@ -134,6 +137,81 @@ export function useFirma() {
         )
     }
 
+    const addSignature = (signature: Signature) => {
+        setSignatures(prev => [...prev, signature])
+        toast.success('Signature saved')
+    }
+
+    const removeSignature = (id: string) => {
+        setSignatures(prev => prev.filter(s => s.id !== id))
+        toast.success('Signature deleted')
+    }
+
+    const placeSignature = (signatureId: string) => {
+        if (!pdfDimensions.width || !pdfDimensions.height) {
+            toast.error('Choose a PDF before adding a signature')
+            return
+        }
+
+        const signature = signatures.find(s => s.id === signatureId)
+        if (!signature) return
+
+        const newField: SignatureField = {
+            id: crypto.randomUUID(),
+            signatureId,
+            dataUrl: signature.dataUrl,
+            x: 0.5,
+            y: 0.35,
+            width: 150,
+            height: 75,
+            page: currentPage,
+            isNew: true,
+        }
+
+        const img = new Image()
+        img.onload = () => {
+            const aspectRatio = img.width / img.height
+            const adjustedHeight = 150 / aspectRatio
+
+            setSignatureFields(prev => prev.map(f =>
+                f.id === newField.id ? { ...f, height: adjustedHeight } : f
+            ))
+        }
+        img.src = signature.dataUrl
+
+        setSignatureFields(prev => [...prev, newField])
+        setActiveFieldId(newField.id)
+        toast.info('Signature added to canvas')
+    }
+
+    const removeSignatureField = (id: string) => {
+        setSignatureFields(prev => prev.filter(f => f.id !== id))
+        delete nodeRefs.current[id]
+        if (activeFieldId === id) {
+            setActiveFieldId(null)
+        }
+    }
+
+    const updateSignaturePosition = (id: string, position: { x: number; y: number }) => {
+        if (!pdfDimensions.width || !pdfDimensions.height) return
+
+        const width = pdfDimensions.width * scale
+        const height = pdfDimensions.height * scale
+
+        setSignatureFields(prev =>
+            prev.map(field =>
+                field.id === id
+                    ? {
+                        ...field,
+                        x: clamp(position.x / width, 0, 1),
+                        y: clamp(position.y / height, 0, 1),
+                        isNew: false,
+                    }
+                    : field
+            )
+        )
+    }
+
     const hexToRgb = (hex: string) => {
         const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
         return result
@@ -178,6 +256,15 @@ export function useFirma() {
                     fieldsByPage[field.page] = []
                 }
                 fieldsByPage[field.page].push(field)
+            })
+
+            // Group signatures by page
+            const signaturesByPage: Record<number, SignatureField[]> = {}
+            signatureFields.forEach(field => {
+                if (!signaturesByPage[field.page]) {
+                    signaturesByPage[field.page] = []
+                }
+                signaturesByPage[field.page].push(field)
             })
 
             const pages = pdfDoc.getPages()
@@ -239,6 +326,31 @@ export function useFirma() {
                 }
             }
 
+            for (const [pageIndex, fields] of Object.entries(signaturesByPage)) {
+                const page = pages[Number(pageIndex) - 1]
+                if (!page) continue
+
+                for (const field of fields) {
+                    const imageBytes = await fetch(field.dataUrl).then(res => res.arrayBuffer())
+                    let image
+                    if (field.dataUrl.startsWith('data:image/png')) {
+                        image = await pdfDoc.embedPng(imageBytes)
+                    } else {
+                        image = await pdfDoc.embedJpg(imageBytes)
+                    }
+
+                    const pdfX = clamp(field.x, 0, 1) * width
+                    const pdfY = height - clamp(field.y, 0, 1) * height - field.height
+
+                    page.drawImage(image, {
+                        x: pdfX,
+                        y: pdfY,
+                        width: field.width,
+                        height: field.height,
+                    })
+                }
+            }
+
             const pdfBytes = await pdfDoc.save()
             const blob = new Blob([pdfBytes as any], { type: 'application/pdf' })
             const url = URL.createObjectURL(blob)
@@ -287,6 +399,7 @@ export function useFirma() {
         if (e.target === e.currentTarget || (e.target as HTMLElement).closest('.react-pdf__Page')) {
             setActiveFieldId(null)
             setTextFields(previous => previous.map(field => ({ ...field, isNew: false })))
+            setSignatureFields(previous => previous.map(field => ({ ...field, isNew: false })))
         }
     }
 
@@ -295,6 +408,8 @@ export function useFirma() {
             pdfFile,
             fileName,
             textFields,
+            signatures,
+            signatureFields,
             activeFieldId,
             scale,
             pdfDimensions,
@@ -308,6 +423,11 @@ export function useFirma() {
             addTextField,
             removeTextField,
             updateTextField,
+            addSignature,
+            removeSignature,
+            placeSignature,
+            removeSignatureField,
+            updateSignaturePosition,
             updateFieldProperty,
             updateFieldPosition,
             handleDownload,

@@ -13,3 +13,22 @@ export type TextField = {
     isStrikethrough: boolean
     page: number
 }
+
+export type Signature = {
+    id: string
+    dataUrl: string
+    type: 'draw' | 'type' | 'upload'
+    createdAt: number
+}
+
+export type SignatureField = {
+    id: string
+    signatureId: string
+    dataUrl: string
+    x: number
+    y: number
+    width: number
+    height: number
+    page: number
+    isNew?: boolean
+}

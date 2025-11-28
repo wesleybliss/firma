@@ -59,6 +59,10 @@ function App() {
                             onAddTextField={actions.addTextField}
                             onRemoveTextField={actions.removeTextField}
                             onUpdateFieldProperty={actions.updateFieldProperty}
+                            signatures={state.signatures}
+                            onAddSignature={actions.addSignature}
+                            onRemoveSignature={actions.removeSignature}
+                            onPlaceSignature={actions.placeSignature}
                         />
 
                         <main className="flex-1 overflow-hidden px-4 py-6 sm:px-6">
@@ -88,6 +92,9 @@ function App() {
                                     onFieldRemove={actions.removeTextField}
                                     onFieldPositionUpdate={actions.updateFieldPosition}
                                     getNodeRef={actions.getNodeRef}
+                                    signatureFields={state.signatureFields}
+                                    onSignatureRemove={actions.removeSignatureField}
+                                    onSignaturePositionUpdate={actions.updateSignaturePosition}
                                 />
                             </div>
                         </main>
