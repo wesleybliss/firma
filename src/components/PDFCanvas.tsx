@@ -3,7 +3,8 @@ import { Document, Page, pdfjs } from 'react-pdf'
 import { Rnd } from 'react-rnd'
 import { PanelsTopLeft, Trash2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { TextField, SignatureField } from '@/types'
+import { TextField as TextFieldComponent } from './TextField'
+import { TextField as TextFieldType, SignatureField } from '@/types'
 
 import 'react-pdf/dist/Page/TextLayer.css'
 
@@ -45,7 +46,7 @@ interface PDFCanvasProps {
     pdfFile: string | null
     scale: number
     currentPage: number
-    textFields: TextField[]
+    textFields: TextFieldType[]
     activeFieldId: string | null
     pdfDimensions: { width: number; height: number }
     onDocumentLoadSuccess: (pdf: any) => void
@@ -117,93 +118,23 @@ export function PDFCanvas({
                                     height: scaledHeight,
                                 }}
                             >
-                                {textFields.filter(f => f.page === currentPage).map(field => {
-                                    const isActive = activeFieldId === field.id
-                                    const showChrome = isActive || field.isNew
-
-                                    return (
-                                        <Rnd
+                                {textFields
+                                    .filter(field => field.page === currentPage)
+                                    .map(field => (
+                                        <TextFieldComponent
                                             key={`${field.id}-${scale}`}
-                                            position={{
-                                                x: field.x * scaledWidth,
-                                                y: field.y * scaledHeight,
-                                            }}
-                                            onDragStop={(_e, d) => {
-                                                onFieldPositionUpdate(field.id, { x: d.x, y: d.y })
-                                            }}
-                                            onResizeStop={(_e, _direction, ref, _delta, position) => {
-                                                onFieldDimensionsUpdate(field.id, {
-                                                    width: parseInt(ref.style.width) / scale,
-                                                    height: parseInt(ref.style.height) / scale,
-                                                })
-                                                onFieldPositionUpdate(field.id, position)
-                                            }}
-                                            bounds="parent"
-                                            dragHandleClassName="drag-handle"
-                                            enableResizing={false}
-                                            disableDragging={!showChrome}
-                                            className={cn(
-                                                'pointer-events-auto !border-none !outline-none',
-                                                showChrome && '!cursor-auto'
-                                            )}
-                                            style={{ border: 'none' }}
-                                        >
-                                            <div
-                                                onClick={(e) => {
-                                                    e.stopPropagation()
-                                                    onFieldClick(field.id)
-                                                }}
-                                                className={cn(
-                                                    'flex h-full w-full items-center gap-1 rounded p-1 transition-colors',
-                                                    showChrome
-                                                        ? 'z-50 border border-sky-500 bg-white shadow-sm ring-1 ring-sky-500'
-                                                        : 'z-10 border border-transparent hover:border-slate-300 hover:bg-white/50'
-                                                )}
-                                            >
-                                                <div className={cn("drag-handle cursor-grab p-0.5 text-slate-400",
-                                                    "hover:text-slate-600 active:cursor-grabbing",
-                                                    !showChrome && "opacity-0 group-hover:opacity-100")}>
-                                                    <PanelsTopLeft className="size-3" />
-                                                </div>
-                                                <input
-                                                    id={`field-${field.id}`}
-                                                    value={field.text}
-                                                    onFocus={() => onFieldClick(field.id)}
-                                                    onClick={() => onFieldClick(field.id)}
-                                                    onChange={event => onFieldUpdate(field.id, event.target.value)}
-                                                    className="h-full flex-1 border-0 bg-transparent p-0 text-sm
-                                                        text-slate-900 placeholder:text-slate-400 focus:ring-0
-                                                        focus:outline-none outline-none"
-                                                    placeholder="Type here..."
-                                                    style={{
-                                                        width: `${Math.max(field.text.length, 10)}ch`,
-                                                        fontFamily: field.fontFamily,
-                                                        fontSize: `${field.fontSize}px`,
-                                                        color: field.color,
-                                                        fontWeight: field.isBold ? 'bold' : 'normal',
-                                                        fontStyle: field.isItalic ? 'italic' : 'normal',
-                                                        textDecoration: [
-                                                            field.isUnderline ? 'underline' : '',
-                                                            field.isStrikethrough ? 'line-through' : ''
-                                                        ].filter(Boolean).join(' ')
-                                                    }}
-                                                />
-                                                {showChrome && (
-                                                    <button
-                                                        onClick={(e) => {
-                                                            e.stopPropagation();
-                                                            onFieldRemove(field.id);
-                                                        }}
-                                                        className="ml-1 rounded-sm p-0.5 text-slate-400 hover:bg-red-50
-                                                            hover:text-red-500"
-                                                    >
-                                                        <Trash2 className="size-3" />
-                                                    </button>
-                                                )}
-                                            </div>
-                                        </Rnd>
-                                    )
-                                })}
+                                            field={field}
+                                            scale={scale}
+                                            scaledWidth={scaledWidth}
+                                            scaledHeight={scaledHeight}
+                                            isActive={activeFieldId === field.id}
+                                            onFieldClick={onFieldClick}
+                                            onFieldUpdate={onFieldUpdate}
+                                            onFieldRemove={onFieldRemove}
+                                            onFieldPositionUpdate={onFieldPositionUpdate}
+                                            onFieldDimensionsUpdate={onFieldDimensionsUpdate}
+                                        />
+                                    ))}
                             </div>
                         )}
 
