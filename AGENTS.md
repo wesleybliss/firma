@@ -49,4 +49,7 @@ As an AI agent, you can interact with and modify this project in the following w
     -   Upgrading dependencies and resolving any compatibility issues.
     -   Adding unit or integration tests to ensure code quality.
 
+-   **Miscellaneous**: Things to keep in mind:
+    -   Never modify Shadcnui components in the `src/components/ui/` directory. If there's no other way to achieve the desired functionality, ask the user what to do.
+
 When making changes, please adhere to the existing coding style and conventions. All logic is contained within the `src/App.tsx` component, which serves as the main entry point for the application's functionality.
