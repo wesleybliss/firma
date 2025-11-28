@@ -56,7 +56,6 @@ interface PDFCanvasProps {
     onFieldRemove: (id: string) => void
     onFieldPositionUpdate: (id: string, position: { x: number; y: number }) => void
     onFieldDimensionsUpdate: (id: string, dimensions: { width: number; height: number }) => void
-    getNodeRef: (id: string) => React.RefObject<HTMLDivElement>
     signatureFields: SignatureField[]
     onSignatureRemove: (id: string) => void
     onSignaturePositionUpdate: (id: string, position: { x: number; y: number }) => void
@@ -78,7 +77,6 @@ export function PDFCanvas({
     onFieldRemove,
     onFieldPositionUpdate,
     onFieldDimensionsUpdate,
-    getNodeRef,
     signatureFields,
     onSignatureRemove,
     onSignaturePositionUpdate,
@@ -130,14 +128,10 @@ export function PDFCanvas({
                                                 x: field.x * scaledWidth,
                                                 y: field.y * scaledHeight,
                                             }}
-                                            size={{
-                                                width: field.width * scale,
-                                                height: field.height * scale,
-                                            }}
-                                            onDragStop={(e, d) => {
+                                            onDragStop={(_e, d) => {
                                                 onFieldPositionUpdate(field.id, { x: d.x, y: d.y })
                                             }}
-                                            onResizeStop={(e, direction, ref, delta, position) => {
+                                            onResizeStop={(_e, _direction, ref, _delta, position) => {
                                                 onFieldDimensionsUpdate(field.id, {
                                                     width: parseInt(ref.style.width) / scale,
                                                     height: parseInt(ref.style.height) / scale,
@@ -146,7 +140,7 @@ export function PDFCanvas({
                                             }}
                                             bounds="parent"
                                             dragHandleClassName="drag-handle"
-                                            enableResizing={showChrome}
+                                            enableResizing={false}
                                             disableDragging={!showChrome}
                                             className={cn(
                                                 'pointer-events-auto !border-none !outline-none',
@@ -182,6 +176,7 @@ export function PDFCanvas({
                                                         focus:outline-none outline-none"
                                                     placeholder="Type here..."
                                                     style={{
+                                                        width: `${Math.max(field.text.length, 10)}ch`,
                                                         fontFamily: field.fontFamily,
                                                         fontSize: `${field.fontSize}px`,
                                                         color: field.color,
