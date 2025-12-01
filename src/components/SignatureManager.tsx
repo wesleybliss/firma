@@ -7,20 +7,16 @@ import { Label } from '@/components/ui/label'
 import { Signature } from '@/types'
 import { Pen, Type, Upload, Trash2, Plus } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { useSignaturesStore } from '@/store/signatures'
 
 interface SignatureManagerProps {
-    signatures: Signature[]
-    onAddSignature: (signature: Signature) => void
-    onRemoveSignature: (id: string) => void
     onPlaceSignature: (id: string) => void
 }
 
 export function SignatureManager({
-    signatures,
-    onAddSignature,
-    onRemoveSignature,
     onPlaceSignature,
 }: SignatureManagerProps) {
+    const { signatures, addSignature, removeSignature } = useSignaturesStore()
     const [isOpen, setIsOpen] = useState(false)
     const [activeTab, setActiveTab] = useState('draw')
     const [typedName, setTypedName] = useState('')
@@ -72,7 +68,7 @@ export function SignatureManager({
         const canvas = canvasRef.current
         if (!canvas) return
         const dataUrl = canvas.toDataURL('image/png')
-        onAddSignature({
+        addSignature({
             id: crypto.randomUUID(),
             dataUrl,
             type: 'draw',
@@ -96,7 +92,7 @@ export function SignatureManager({
         ctx.fillText(typedName, canvas.width / 2, canvas.height / 2)
 
         const dataUrl = canvas.toDataURL('image/png')
-        onAddSignature({
+        addSignature({
             id: crypto.randomUUID(),
             dataUrl,
             type: 'type',
@@ -112,7 +108,7 @@ export function SignatureManager({
 
         const reader = new FileReader()
         reader.onloadend = () => {
-            onAddSignature({
+            addSignature({
                 id: crypto.randomUUID(),
                 dataUrl: reader.result as string,
                 type: 'upload',
@@ -235,7 +231,7 @@ export function SignatureManager({
                                 className="absolute right-1 top-1 h-6 w-6 opacity-0 transition-opacity group-hover:opacity-100"
                                 onClick={(e) => {
                                     e.stopPropagation()
-                                    onRemoveSignature(signature.id)
+                                    removeSignature(signature.id)
                                 }}
                             >
                                 <Trash2 className="size-3 text-red-500" />

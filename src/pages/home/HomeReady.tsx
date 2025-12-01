@@ -19,9 +19,6 @@ const AppReady = ({
                 onAddTextField={actions.addTextField}
                 onRemoveTextField={actions.removeTextField}
                 onUpdateFieldProperty={actions.updateFieldProperty}
-                signatures={state.signatures}
-                onAddSignature={actions.addSignature}
-                onRemoveSignature={actions.removeSignature}
                 onPlaceSignature={actions.placeSignature}
             />
 

@@ -13,9 +13,6 @@ interface SidebarProps {
     onAddTextField: (fieldType?: FieldType) => void
     onRemoveTextField: (id: string) => void
     onUpdateFieldProperty: (id: string, property: keyof TextField, value: any) => void
-    signatures: Signature[]
-    onAddSignature: (signature: Signature) => void
-    onRemoveSignature: (id: string) => void
     onPlaceSignature: (id: string) => void
 }
 
@@ -26,9 +23,6 @@ export function Sidebar({
     onAddTextField,
     onRemoveTextField,
     onUpdateFieldProperty,
-    signatures,
-    onAddSignature,
-    onRemoveSignature,
     onPlaceSignature,
 }: SidebarProps) {
     const activeField = textFields.find(f => f.id === activeFieldId)
@@ -58,7 +52,12 @@ export function Sidebar({
                 )}
             >
                 <section>
-                    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Overview</p>
+                    <div className="flex items-center justify-between gap-2">
+                        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Overview</p>
+                        <Button variant="ghost" size="icon" onClick={() => console.log('@todo')}>
+                            <Settings className="size-4" />
+                        </Button>
+                    </div>
                     <div className="mt-4 space-y-2 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
                         <div className="flex items-start gap-3">
                             <Sparkles className="mt-1 size-4 text-slate-400" />
@@ -70,9 +69,6 @@ export function Sidebar({
                         <div className="mt-6 space-y-1">
                             <div className="flex items-center justify-between gap-2">
                                 <p className="text-[10px] font-medium uppercase tracking-wider text-slate-500">Add Field</p>
-                                <Button variant="ghost" size="icon" onClick={() => console.log('@todo')}>
-                                    <Settings className="size-3" />
-                                </Button>
                             </div>
                             <div className="grid grid-cols-2 gap-1">
                                 <Button variant="ghost" size="sm" className="justify-start" onClick={() => onAddTextField('text')}>
@@ -109,9 +105,6 @@ export function Sidebar({
                 </section>
 
                 <SignatureManager
-                    signatures={signatures}
-                    onAddSignature={onAddSignature}
-                    onRemoveSignature={onRemoveSignature}
                     onPlaceSignature={onPlaceSignature}
                 />
 

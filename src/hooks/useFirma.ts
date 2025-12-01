@@ -4,6 +4,7 @@ import fontkit from '@pdf-lib/fontkit'
 import { toast } from 'sonner'
 import { TextField, Signature, SignatureField, FieldType } from '@/types'
 import { GOOGLE_FONTS } from '@/lib/fonts'
+import { useSignaturesStore } from '@/store/signatures'
 
 const clamp = (value: number, min: number, max: number) => Math.min(Math.max(value, min), max)
 
@@ -11,7 +12,6 @@ export function useFirma() {
     const [pdfFile, setPdfFile] = useState<string | null>(null)
     const [fileName, setFileName] = useState<string | null>(null)
     const [textFields, setTextFields] = useState<TextField[]>([])
-    const [signatures, setSignatures] = useState<Signature[]>([])
     const [signatureFields, setSignatureFields] = useState<SignatureField[]>([])
     const [activeFieldId, setActiveFieldId] = useState<string | null>(null)
     const [scale, setScale] = useState(1)
@@ -20,6 +20,8 @@ export function useFirma() {
     const [currentPage, setCurrentPage] = useState<number>(1)
     const fileInputRef = useRef<HTMLInputElement>(null)
     const nodeRefs = useRef<Record<string, RefObject<HTMLDivElement>>>({})
+
+    const { signatures } = useSignaturesStore()
 
     useEffect(() => {
         const links = GOOGLE_FONTS.map(font => {
@@ -191,16 +193,6 @@ export function useFirma() {
                     : field
             )
         )
-    }
-
-    const addSignature = (signature: Signature) => {
-        setSignatures(prev => [...prev, signature])
-        toast.success('Signature saved')
-    }
-
-    const removeSignature = (id: string) => {
-        setSignatures(prev => prev.filter(s => s.id !== id))
-        toast.success('Signature deleted')
     }
 
     const placeSignature = (signatureId: string) => {
@@ -494,8 +486,6 @@ export function useFirma() {
             addTextField,
             removeTextField,
             updateTextField,
-            addSignature,
-            removeSignature,
             placeSignature,
             removeSignatureField,
             updateSignaturePosition,

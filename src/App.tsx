@@ -1,7 +1,6 @@
 import Navbar from '@/components/Navbar'
 import { Toaster } from '@/components/ui/sonner'
-import AppLanding from '@/components/AppLanding'
-import AppReady from '@/components/AppReady'
+import HomePage from './pages/home'
 import { useFirma } from '@/hooks/useFirma'
 
 function App() {
@@ -23,12 +22,7 @@ function App() {
 
             <div className="flex h-screen flex-col">
                 <Navbar state={state} actions={actions} />
-
-                {state.pdfFile ? (
-                    <AppReady state={state} actions={actions} />
-                ) : (
-                    <AppLanding actions={actions} />
-                )}
+                <HomePage state={state} actions={actions} />
             </div>
         </div>
     )

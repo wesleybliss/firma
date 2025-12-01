@@ -10,9 +10,6 @@ interface SidebarPrimaryProps {
     activeFieldId: string | null
     onAddTextField: (fieldType?: FieldType) => void
     onUpdateFieldProperty: (id: string, property: keyof TextField, value: any) => void
-    signatures: Signature[]
-    onAddSignature: (signature: Signature) => void
-    onRemoveSignature: (id: string) => void
     onPlaceSignature: (id: string) => void
 }
 
@@ -22,9 +19,6 @@ const SidebarPrimary = ({
     activeFieldId,
     onAddTextField,
     onUpdateFieldProperty,
-    signatures,
-    onAddSignature,
-    onRemoveSignature,
     onPlaceSignature,
 }: SidebarPrimaryProps) => {
     const activeField = textFields.find(f => f.id === activeFieldId)
@@ -82,9 +76,6 @@ const SidebarPrimary = ({
         </section>
 
         <SignatureManager
-            signatures={signatures}
-            onAddSignature={onAddSignature}
-            onRemoveSignature={onRemoveSignature}
             onPlaceSignature={onPlaceSignature}
         />
 
