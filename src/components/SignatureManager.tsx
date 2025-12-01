@@ -5,7 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Signature } from '@/types'
-import { Pen, Type, Upload, Trash2, Plus } from 'lucide-react'
+import { Pen, Type, Upload, Trash2, Plus, ChevronDown } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useSignaturesStore } from '@/store/signatures'
 
@@ -20,6 +20,7 @@ export function SignatureManager({
     const [isOpen, setIsOpen] = useState(false)
     const [activeTab, setActiveTab] = useState('draw')
     const [typedName, setTypedName] = useState('')
+    const [showAll, setShowAll] = useState(false)
     const canvasRef = useRef<HTMLCanvasElement>(null)
     const [isDrawing, setIsDrawing] = useState(false)
 
@@ -218,26 +219,39 @@ export function SignatureManager({
                         No signatures yet
                     </div>
                 ) : (
-                    signatures.map(signature => (
-                        <div
-                            key={signature.id}
-                            className="group relative flex cursor-pointer items-center justify-center rounded-lg border border-slate-200 bg-white p-2 transition-all hover:border-sky-500 hover:shadow-sm"
-                            onClick={() => onPlaceSignature(signature.id)}
-                        >
-                            <img src={signature.dataUrl} alt="Signature" className="h-8 max-w-full object-contain" />
+                    <>
+                        {(showAll ? signatures : signatures.slice(0, 3)).map(signature => (
+                            <div
+                                key={signature.id}
+                                className="group relative flex cursor-pointer items-center justify-center rounded-lg border border-slate-200 bg-white p-2 transition-all hover:border-sky-500 hover:shadow-sm"
+                                onClick={() => onPlaceSignature(signature.id)}
+                            >
+                                <img src={signature.dataUrl} alt="Signature" className="h-8 max-w-full object-contain" />
+                                <Button
+                                    variant="ghost"
+                                    size="icon-sm"
+                                    className="absolute right-1 top-1 h-6 w-6 opacity-0 transition-opacity group-hover:opacity-100"
+                                    onClick={(e) => {
+                                        e.stopPropagation()
+                                        removeSignature(signature.id)
+                                    }}
+                                >
+                                    <Trash2 className="size-3 text-red-500" />
+                                </Button>
+                            </div>
+                        ))}
+                        {signatures.length > 3 && (
                             <Button
                                 variant="ghost"
-                                size="icon-sm"
-                                className="absolute right-1 top-1 h-6 w-6 opacity-0 transition-opacity group-hover:opacity-100"
-                                onClick={(e) => {
-                                    e.stopPropagation()
-                                    removeSignature(signature.id)
-                                }}
+                                size="sm"
+                                className="w-full justify-center text-xs font-medium"
+                                onClick={() => setShowAll(!showAll)}
                             >
-                                <Trash2 className="size-3 text-red-500" />
+                                {showAll ? 'Show Less' : `Show All (${signatures.length})`}
+                                <ChevronDown className={`ml-1 size-3 transition-transform ${showAll ? 'rotate-180' : ''}`} />
                             </Button>
-                        </div>
-                    ))
+                        )}
+                    </>
                 )}
             </div>
         </div>
