@@ -1,6 +1,10 @@
-import { ChevronLeft, ChevronRight, ZoomIn, ZoomOut } from 'lucide-react'
+import { ChevronLeft, ChevronRight, ZoomIn, ZoomOut, SearchCode } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Slider } from '@/components/ui/slider'
+
+const ZOOM_MIN = 0.5
+const ZOOM_MAX = 2
+const ZOOM_STEP = 0.1
 
 interface ToolbarProps {
     scale: number
@@ -24,20 +28,25 @@ export function Toolbar({
     return (
         <div className="flex flex-col justify-between gap-4 p-2 md:flex-row md:items-center">
             <div className="flex items-center gap-3">
-                <Button variant="outline" size="icon-sm" onClick={() => onZoomAdjust(-0.1)} disabled={scale <= 0.5}>
+                <Button variant="outline" size="icon-sm" onClick={() => onZoomAdjust(-0.1)} disabled={scale <= ZOOM_MIN}>
                     <ZoomOut className="size-4" />
                 </Button>
                 <Slider
                     className="w-40"
-                    min={0.5}
-                    max={2}
-                    step={0.1}
+                    min={ZOOM_MIN}
+                    max={ZOOM_MAX}
+                    step={ZOOM_STEP}
                     value={[scale]}
                     onValueChange={onZoomChange}
                 />
                 <Button variant="outline" size="icon-sm" onClick={() => onZoomAdjust(0.1)} disabled={scale >= 2}>
                     <ZoomIn className="size-4" />
                 </Button>
+
+                <Button variant="outline" size="icon-sm" onClick={() => onZoomAdjust(ZOOM_MAX)} disabled={scale <= 0.5}>
+                    <SearchCode className="size-4" />
+                </Button>
+
                 <Button variant="ghost" size="sm" onClick={onZoomReset} disabled={scale === 1}>
                     Reset
                 </Button>
