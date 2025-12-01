@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import { Download, Plus, Settings, Sparkles, UploadCloud, User, Hash, Mail, Phone, Building, Type, Calendar, ChevronLeft, ChevronRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { TextProperties } from '@/components/TextProperties'
@@ -54,9 +55,11 @@ export function Sidebar({
                 <section>
                     <div className="flex items-center justify-between gap-2">
                         <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Overview</p>
-                        <Button variant="ghost" size="icon" onClick={() => console.log('@todo')}>
-                            <Settings className="size-4" />
-                        </Button>
+                        <Link to="/settings">
+                            <Button variant="ghost" size="icon">
+                                <Settings className="size-4" />
+                            </Button>
+                        </Link>
                     </div>
                     <div className="mt-4 space-y-2 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
                         <div className="flex items-start gap-3">

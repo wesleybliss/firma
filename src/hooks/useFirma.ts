@@ -5,6 +5,7 @@ import { toast } from 'sonner'
 import { TextField, Signature, SignatureField, FieldType } from '@/types'
 import { GOOGLE_FONTS } from '@/lib/fonts'
 import { useSignaturesStore } from '@/store/signatures'
+import { useUserStore } from '@/store/user'
 
 const clamp = (value: number, min: number, max: number) => Math.min(Math.max(value, min), max)
 
@@ -22,6 +23,7 @@ export function useFirma() {
     const nodeRefs = useRef<Record<string, RefObject<HTMLDivElement>>>({})
 
     const { signatures } = useSignaturesStore()
+    const user = useUserStore()
 
     useEffect(() => {
         const links = GOOGLE_FONTS.map(font => {
@@ -84,23 +86,23 @@ export function useFirma() {
         switch (fieldType) {
             case 'date': {
                 const today = new Date()
-                const formatted = today.toLocaleDateString('en-US', { 
-                    month: '2-digit', 
-                    day: '2-digit', 
-                    year: 'numeric' 
+                const formatted = today.toLocaleDateString('en-US', {
+                    month: '2-digit',
+                    day: '2-digit',
+                    year: 'numeric'
                 })
                 return { text: formatted, width: 140, height: 40, fontSize: 14 }
             }
             case 'fullName':
-                return { text: 'Full Name', width: 200, height: 40, fontSize: 16 }
+                return { text: user.name || 'Full Name', width: 200, height: 40, fontSize: 16 }
             case 'initials':
-                return { text: 'AB', width: 60, height: 40, fontSize: 16 }
+                return { text: user.initials || 'AB', width: 60, height: 40, fontSize: 16 }
             case 'email':
-                return { text: 'email@example.com', width: 220, height: 40, fontSize: 14 }
+                return { text: user.email || 'email@example.com', width: 220, height: 40, fontSize: 14 }
             case 'phone':
-                return { text: '(555) 000-0000', width: 160, height: 40, fontSize: 14 }
+                return { text: user.phone || '(555) 000-0000', width: 160, height: 40, fontSize: 14 }
             case 'company':
-                return { text: 'Company Name', width: 200, height: 40, fontSize: 16 }
+                return { text: user.company || 'Company Name', width: 200, height: 40, fontSize: 16 }
             case 'text':
             default:
                 return { text: 'New text', width: 120, height: 40, fontSize: 16 }
@@ -135,7 +137,7 @@ export function useFirma() {
 
         setTextFields(previous => [...previous, newField])
         setActiveFieldId(newField.id)
-        
+
         const fieldTypeLabel = fieldType === 'text' ? 'Text field' : `${fieldType.charAt(0).toUpperCase() + fieldType.slice(1)} field`
         toast.info(`${fieldTypeLabel} added to the canvas`)
     }
