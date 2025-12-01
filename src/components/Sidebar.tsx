@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Download, Plus, Sparkles, UploadCloud, User, Hash, Mail, Phone, Building, Type, Calendar, ChevronLeft, ChevronRight } from 'lucide-react'
+import { Download, Plus, Settings, Sparkles, UploadCloud, User, Hash, Mail, Phone, Building, Type, Calendar, ChevronLeft, ChevronRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { TextProperties } from '@/components/TextProperties'
 import { SignatureManager } from '@/components/SignatureManager'
@@ -68,7 +68,12 @@ export function Sidebar({
                             </div>
                         </div>
                         <div className="mt-6 space-y-1">
-                            <p className="text-[10px] font-medium uppercase tracking-wider text-slate-500">Add Field</p>
+                            <div className="flex items-center justify-between gap-2">
+                                <p className="text-[10px] font-medium uppercase tracking-wider text-slate-500">Add Field</p>
+                                <Button variant="ghost" size="icon" onClick={() => console.log('@todo')}>
+                                    <Settings className="size-3" />
+                                </Button>
+                            </div>
                             <div className="grid grid-cols-2 gap-1">
                                 <Button variant="ghost" size="sm" className="justify-start" onClick={() => onAddTextField('text')}>
                                     <Type className="size-3" />
