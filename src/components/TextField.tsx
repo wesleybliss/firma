@@ -73,7 +73,7 @@ export function TextField({
 
     const fontStyles = {
         fontFamily: field.fontFamily,
-        fontSize: `${field.fontSize}px`,
+        fontSize: `${field.fontSize * scale}px`,
         fontWeight: field.isBold ? 'bold' : 'normal',
         fontStyle: field.isItalic ? 'italic' : 'normal',
     }

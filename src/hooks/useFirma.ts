@@ -2,10 +2,14 @@ import { useState, useRef, useEffect, useCallback, createRef, type ChangeEvent, 
 import { PDFDocument, StandardFonts, rgb } from 'pdf-lib'
 import fontkit from '@pdf-lib/fontkit'
 import { toast } from 'sonner'
-import { TextField, Signature, SignatureField, FieldType } from '@/types'
+import { TextField, SignatureField, FieldType } from '@/types'
 import { GOOGLE_FONTS } from '@/lib/fonts'
 import { useSignaturesStore } from '@/store/signatures'
 import { useUserStore } from '@/store/user'
+
+// Text seems to render higher in the export than in the editor,
+// so this just accounts for it. @todo Might need a more accurate solution later
+const ARBITRARY_FIELD_Y_OFFSET = 4
 
 const clamp = (value: number, min: number, max: number) => Math.min(Math.max(value, min), max)
 
@@ -91,18 +95,18 @@ export function useFirma() {
                     day: '2-digit',
                     year: 'numeric'
                 })
-                return { text: formatted, width: 140, height: 40, fontSize: 14 }
+                return { text: formatted, width: 140, height: 40, fontSize: 12 }
             }
             case 'fullName':
-                return { text: user.name || 'Full Name', width: 200, height: 40, fontSize: 16 }
+                return { text: user.name || 'Full Name', width: 200, height: 40, fontSize: 12 }
             case 'initials':
-                return { text: user.initials || 'AB', width: 60, height: 40, fontSize: 16 }
+                return { text: user.initials || 'AB', width: 60, height: 40, fontSize: 12 }
             case 'email':
-                return { text: user.email || 'email@example.com', width: 220, height: 40, fontSize: 14 }
+                return { text: user.email || 'email@example.com', width: 220, height: 40, fontSize: 12 }
             case 'phone':
-                return { text: user.phone || '(555) 000-0000', width: 160, height: 40, fontSize: 14 }
+                return { text: user.phone || '(555) 000-0000', width: 160, height: 40, fontSize: 12 }
             case 'company':
-                return { text: user.company || 'Company Name', width: 200, height: 40, fontSize: 16 }
+                return { text: user.company || 'Company Name', width: 200, height: 40, fontSize: 12 }
             case 'checkbox':
                 return { text: '☐', width: 24, height: 24, fontSize: 16 }
             case 'radio':
@@ -374,8 +378,8 @@ export function useFirma() {
                     const color = hexToRgb(field.color)
 
                     const pdfX = clamp(field.x, 0, 1) * width
-                    const pdfY = height - clamp(field.y, 0, 1) * height - fontSize
-                    // return console.log('drawText', field.text, { pdfX, pdfY, fontSize, font, color })
+                    const pdfY = height - clamp(field.y, 0, 1) * height - fontSize - ARBITRARY_FIELD_Y_OFFSET
+
                     page.drawText(field.text, {
                         x: pdfX,
                         y: pdfY,
