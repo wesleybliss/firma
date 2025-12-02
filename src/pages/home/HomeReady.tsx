@@ -1,4 +1,4 @@
-import { PDFCanvas } from '@/components/PDFCanvas'
+import { PDFCanvas } from '@/components/Document/PDFCanvas'
 import Sidebar from '@/components/Sidebar'
 import InspectorSidebar from '@/components/InspectorSidebar'
 
@@ -24,16 +24,6 @@ const AppReady = ({
 
             <main className="flex-1 overflow-hidden">
                 <div className="flex h-full flex-col gap-6">
-                    {/* <Toolbar
-                        scale={state.scale}
-                        currentPage={state.currentPage}
-                        numPages={state.numPages}
-                        onZoomChange={actions.handleZoomChange}
-                        onZoomAdjust={actions.adjustZoom}
-                        onZoomReset={actions.resetZoom}
-                        onPageChange={actions.changePage}
-                    /> */}
-
                     <PDFCanvas
                         pdfFile={state.pdfFile}
                         scale={state.scale}

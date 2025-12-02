@@ -103,6 +103,12 @@ export function useFirma() {
                 return { text: user.phone || '(555) 000-0000', width: 160, height: 40, fontSize: 14 }
             case 'company':
                 return { text: user.company || 'Company Name', width: 200, height: 40, fontSize: 16 }
+            case 'checkbox':
+                return { text: '☐', width: 24, height: 24, fontSize: 16 }
+            case 'radio':
+                return { text: '○', width: 24, height: 24, fontSize: 16 }
+            case 'x':
+                return { text: '✕', width: 24, height: 24, fontSize: 16 }
             case 'text':
             default:
                 return { text: 'New text', width: 120, height: 40, fontSize: 16 }
