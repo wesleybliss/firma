@@ -366,7 +366,7 @@ export function useFirma() {
 
                     const pdfX = clamp(field.x, 0, 1) * width
                     const pdfY = height - clamp(field.y, 0, 1) * height - fontSize
-
+                    // return console.log('drawText', field.text, { pdfX, pdfY, fontSize, font, color })
                     page.drawText(field.text, {
                         x: pdfX,
                         y: pdfY,

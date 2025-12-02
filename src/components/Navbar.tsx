@@ -1,4 +1,4 @@
-import { Download, FileText, Type, UploadCloud, User, Hash, Mail, Phone, Building, Calendar } from 'lucide-react'
+import { Download, FileText, UploadCloud } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Toolbar } from '@/components/Toolbar'
 
@@ -34,36 +34,6 @@ const Navbar = ({ state, actions }: { state: any, actions: any }) => {
                         <UploadCloud className="size-4" />
                         {state.pdfFile ? 'Replace PDF' : 'Choose PDF'}
                     </Button>
-                    {/* <div className="flex items-center gap-1">
-                        <Button variant="outline" size="sm" onClick={() => actions.addTextField('text')} disabled={!state.pdfFile}>
-                            <Type className="size-4" />
-                            Text
-                        </Button>
-                        <Button variant="outline" size="sm" onClick={() => actions.addTextField('date')} disabled={!state.pdfFile}>
-                            <Calendar className="size-4" />
-                            Date
-                        </Button>
-                        <Button variant="outline" size="sm" onClick={() => actions.addTextField('fullName')} disabled={!state.pdfFile}>
-                            <User className="size-4" />
-                            Name
-                        </Button>
-                        <Button variant="outline" size="sm" onClick={() => actions.addTextField('initials')} disabled={!state.pdfFile}>
-                            <Hash className="size-4" />
-                            Initials
-                        </Button>
-                        <Button variant="outline" size="sm" onClick={() => actions.addTextField('email')} disabled={!state.pdfFile}>
-                            <Mail className="size-4" />
-                            Email
-                        </Button>
-                        <Button variant="outline" size="sm" onClick={() => actions.addTextField('phone')} disabled={!state.pdfFile}>
-                            <Phone className="size-4" />
-                            Phone
-                        </Button>
-                        <Button variant="outline" size="sm" onClick={() => actions.addTextField('company')} disabled={!state.pdfFile}>
-                            <Building className="size-4" />
-                            Company
-                        </Button>
-                    </div> */}
                     <Button size="sm" onClick={actions.handleDownload} disabled={!state.pdfFile || state.textFields.length === 0}>
                         <Download className="size-4" />
                         Export
