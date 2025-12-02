@@ -31,6 +31,15 @@ export function TextField({
     onFieldDimensionsUpdate,
 }: TextFieldProps) {
     const showChrome = isActive || field.isNew
+    const spanRef = React.useRef<HTMLSpanElement>(null)
+    const [width, setWidth] = React.useState(0)
+
+    React.useLayoutEffect(() => {
+        if (spanRef.current) {
+            // Add a small buffer (e.g., 2px) to prevent jitter and ensure cursor visibility
+            setWidth(spanRef.current.offsetWidth + 2)
+        }
+    }, [field.text, field.fontFamily, field.fontSize, field.isBold, field.isItalic])
 
     const getFieldIcon = (fieldType: FieldType) => {
         switch (fieldType) {
@@ -53,6 +62,8 @@ export function TextField({
 
     const getFieldLabel = (fieldType: FieldType) => {
         switch (fieldType) {
+            case 'text':
+                return 'Text'
             case 'date':
                 return 'Date'
             case 'fullName':
@@ -93,6 +104,14 @@ export function TextField({
             className={cn('pointer-events-auto !border-none !outline-none', showChrome && '!cursor-auto')}
             style={{ border: 'none' }}
         >
+            {showChrome && field.fieldType && (
+                <div className="drag-handle cursor-grab active:cursor-grabbing absolute left-0
+                    -top-5 flex items-center gap-1 rounded bg-sky-100
+                    px-1.5 py-0.5 text-[10px] font-medium text-sky-700">
+                    {getFieldIcon(field.fieldType)}
+                    <span>{getFieldLabel(field.fieldType)}</span>
+                </div>
+            )}
             <div
                 onClick={event => {
                     event.stopPropagation()
@@ -101,16 +120,18 @@ export function TextField({
                 className={cn(
                     'flex h-full w-full items-center gap-1 rounded p-1 transition-colors',
                     showChrome
-                        ? 'z-50 border border-sky-500 bg-white shadow-sm ring-1 ring-sky-500'
+                        ? 'z-50 border border-sky-500 bg-white/40 shadow-sm ring-1 ring-sky-500'
                         : 'z-10 border border-transparent hover:border-slate-300 hover:bg-white/50'
                 )}
             >
-                {showChrome && field.fieldType !== 'text' && (
-                    <div className="flex items-center gap-1 rounded bg-sky-100 px-1.5 py-0.5 text-[10px] font-medium text-sky-700">
+                {/* {showChrome && field.fieldType && (
+                    <div className="flex items-center gap-1 rounded bg-sky-100
+                        px-1.5 py-0.5 text-[10px] font-medium text-sky-700
+                        transform-gpu -translate-y-7">
                         {getFieldIcon(field.fieldType)}
                         <span>{getFieldLabel(field.fieldType)}</span>
                     </div>
-                )}
+                )} */}
                 <div
                     className={cn(
                         'drag-handle cursor-grab p-0.5 text-slate-400',
@@ -126,10 +147,11 @@ export function TextField({
                     onFocus={() => onFieldClick(field.id)}
                     onClick={() => onFieldClick(field.id)}
                     onChange={event => onFieldUpdate(field.id, event.target.value)}
-                    className="h-full flex-1 border-0 bg-transparent p-0 text-sm text-slate-900 placeholder:text-slate-400 focus:ring-0 focus:outline-none"
+                    className="h-full flex-1 border-0 bg-transparent p-0 text-sm text-slate-900
+                        placeholder:text-slate-400 focus:ring-0 focus:outline-none"
                     placeholder="Type here..."
                     style={{
-                        width: `${Math.max(field.text.length, 10)}ch`,
+                        width: width ? `${width}px` : `${Math.max(field.text.length, 10)}ch`,
                         fontFamily: field.fontFamily,
                         fontSize: `${field.fontSize}px`,
                         color: field.color,
@@ -143,6 +165,18 @@ export function TextField({
                             .join(' '),
                     }}
                 />
+                <span
+                    ref={spanRef}
+                    className="invisible absolute whitespace-pre"
+                    style={{
+                        fontFamily: field.fontFamily,
+                        fontSize: `${field.fontSize}px`,
+                        fontWeight: field.isBold ? 'bold' : 'normal',
+                        fontStyle: field.isItalic ? 'italic' : 'normal',
+                    }}
+                >
+                    {field.text || 'Type here...'}
+                </span>
                 {showChrome && (
                     <button
                         onClick={event => {
