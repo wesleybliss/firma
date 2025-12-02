@@ -297,6 +297,15 @@ export function useFirma() {
             const url = `https://fonts.googleapis.com/css2?family=${fontFamily.replace(/ /g, '+')}:ital,wght@${style},${weight}&display=swap`
 
             const css = await fetch(url).then(res => res.text())
+
+            // Try to find latin subset first
+            const latinMatch = css.match(/\/\* latin \*\/[\s\S]*?src: url\((.+?)\) format\('woff2'\)/)
+
+            if (latinMatch) {
+                return await fetch(latinMatch[1]).then(res => res.arrayBuffer())
+            }
+
+            // Fallback to any woff2
             const match = css.match(/src: url\((.+?)\) format\('woff2'\)/)
 
             if (!match) {
