@@ -1,4 +1,3 @@
-import React from 'react'
 import { Rnd } from 'react-rnd'
 import { PanelsTopLeft, Trash2, User, Hash, Mail, Phone, Building, Calendar } from 'lucide-react'
 
@@ -31,15 +30,6 @@ export function TextField({
     onFieldDimensionsUpdate,
 }: TextFieldProps) {
     const showChrome = isActive || field.isNew
-    const spanRef = React.useRef<HTMLSpanElement>(null)
-    const [width, setWidth] = React.useState(0)
-
-    React.useLayoutEffect(() => {
-        if (spanRef.current) {
-            // Add a small buffer (e.g., 2px) to prevent jitter and ensure cursor visibility
-            setWidth(spanRef.current.offsetWidth + 2)
-        }
-    }, [field.text, field.fontFamily, field.fontSize, field.isBold, field.isItalic])
 
     const getFieldIcon = (fieldType: FieldType) => {
         switch (fieldType) {
@@ -79,6 +69,13 @@ export function TextField({
             default:
                 return null
         }
+    }
+
+    const fontStyles = {
+        fontFamily: field.fontFamily,
+        fontSize: `${field.fontSize}px`,
+        fontWeight: field.isBold ? 'bold' : 'normal',
+        fontStyle: field.isItalic ? 'italic' : 'normal',
     }
 
     return (
@@ -124,14 +121,6 @@ export function TextField({
                         : 'z-10 border border-transparent hover:border-slate-300 hover:bg-white/50'
                 )}
             >
-                {/* {showChrome && field.fieldType && (
-                    <div className="flex items-center gap-1 rounded bg-sky-100
-                        px-1.5 py-0.5 text-[10px] font-medium text-sky-700
-                        transform-gpu -translate-y-7">
-                        {getFieldIcon(field.fieldType)}
-                        <span>{getFieldLabel(field.fieldType)}</span>
-                    </div>
-                )} */}
                 <div
                     className={cn(
                         'drag-handle cursor-grab p-0.5 text-slate-400',
@@ -141,42 +130,40 @@ export function TextField({
                 >
                     <PanelsTopLeft className="size-3" />
                 </div>
-                <input
-                    id={`field-${field.id}`}
-                    value={field.text}
-                    onFocus={() => onFieldClick(field.id)}
-                    onClick={() => onFieldClick(field.id)}
-                    onChange={event => onFieldUpdate(field.id, event.target.value)}
-                    className="h-full flex-1 border-0 bg-transparent p-0 text-sm text-slate-900
-                        placeholder:text-slate-400 focus:ring-0 focus:outline-none"
-                    placeholder="Type here..."
-                    style={{
-                        width: width ? `${width}px` : `${Math.max(field.text.length, 10)}ch`,
-                        fontFamily: field.fontFamily,
-                        fontSize: `${field.fontSize}px`,
-                        color: field.color,
-                        fontWeight: field.isBold ? 'bold' : 'normal',
-                        fontStyle: field.isItalic ? 'italic' : 'normal',
-                        textDecoration: [
-                            field.isUnderline ? 'underline' : '',
-                            field.isStrikethrough ? 'line-through' : '',
-                        ]
-                            .filter(Boolean)
-                            .join(' '),
-                    }}
-                />
-                <span
-                    ref={spanRef}
-                    className="invisible absolute whitespace-pre"
-                    style={{
-                        fontFamily: field.fontFamily,
-                        fontSize: `${field.fontSize}px`,
-                        fontWeight: field.isBold ? 'bold' : 'normal',
-                        fontStyle: field.isItalic ? 'italic' : 'normal',
-                    }}
-                >
-                    {field.text || 'Type here...'}
-                </span>
+
+                {/* CSS Grid container for auto-sizing */}
+                <div className="relative grid flex-1">
+                    {/* Hidden span to dictate width */}
+                    <span
+                        className="invisible col-start-1 row-start-1 whitespace-pre px-0.5"
+                        style={fontStyles}
+                    >
+                        {field.text || 'Type here...'}
+                    </span>
+
+                    {/* Input overlay */}
+                    <input
+                        id={`field-${field.id}`}
+                        value={field.text}
+                        onFocus={() => onFieldClick(field.id)}
+                        onClick={() => onFieldClick(field.id)}
+                        onChange={event => onFieldUpdate(field.id, event.target.value)}
+                        className="col-start-1 row-start-1 h-full w-full border-0 bg-transparent p-0 px-0.5 text-slate-900
+                            placeholder:text-slate-400 focus:ring-0 focus:outline-none"
+                        placeholder="Type here..."
+                        style={{
+                            ...fontStyles,
+                            color: field.color,
+                            textDecoration: [
+                                field.isUnderline ? 'underline' : '',
+                                field.isStrikethrough ? 'line-through' : '',
+                            ]
+                                .filter(Boolean)
+                                .join(' '),
+                        }}
+                    />
+                </div>
+
                 {showChrome && (
                     <button
                         onClick={event => {

@@ -1,5 +1,5 @@
 import { PDFCanvas } from '@/components/PDFCanvas'
-import { Sidebar } from '@/components/Sidebar'
+import Sidebar from '@/components/Sidebar'
 import InspectorSidebar from '@/components/InspectorSidebar'
 
 const AppReady = ({
