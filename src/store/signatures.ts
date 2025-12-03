@@ -20,8 +20,8 @@ export const useSignaturesStore = create<SignaturesState>()(
     (set, get) => ({
       signatures: [],
       addSignature: (signature) => {
-        set((state) => ({ 
-          signatures: [...state.signatures, signature] 
+        set((state) => ({
+          signatures: [...state.signatures, signature]
         }))
         const user = useAuthStore.getState().user
         if (user) {
@@ -29,7 +29,7 @@ export const useSignaturesStore = create<SignaturesState>()(
         }
       },
       removeSignature: (id) => {
-        set((state) => ({ 
+        set((state) => ({
           signatures: state.signatures.filter(signature => signature.id !== id)
         }))
         const user = useAuthStore.getState().user
@@ -46,7 +46,7 @@ export const useSignaturesStore = create<SignaturesState>()(
       },
       syncWithFirestore: (userId: string) => {
         const userRef = doc(db, 'users', userId)
-        
+
         // Listen for real-time updates from Firestore
         const unsubscribe = onSnapshot(userRef, (snapshot) => {
           if (snapshot.exists()) {
@@ -54,11 +54,14 @@ export const useSignaturesStore = create<SignaturesState>()(
             if (data.signatures) {
               set({ signatures: data.signatures })
             }
+          } else {
+            // If document doesn't exist, push local signatures to Firestore
+            get().saveToFirestore(userId)
           }
         }, (error) => {
           console.error('Error syncing signatures:', error)
         })
-        
+
         return unsubscribe
       },
       saveToFirestore: async (userId: string) => {

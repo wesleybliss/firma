@@ -68,7 +68,7 @@ export const useUserStore = create<UserStore>()(
             },
             syncWithFirestore: (userId: string) => {
                 const userRef = doc(db, 'users', userId)
-                
+
                 // Listen for real-time updates from Firestore
                 const unsubscribe = onSnapshot(userRef, (snapshot) => {
                     if (snapshot.exists()) {
@@ -80,11 +80,14 @@ export const useUserStore = create<UserStore>()(
                             phone: data.phone || '',
                             company: data.company || '',
                         })
+                    } else {
+                        // If document doesn't exist, push local data to Firestore
+                        get().saveToFirestore(userId)
                     }
                 }, (error) => {
                     console.error('Error syncing user data:', error)
                 })
-                
+
                 return unsubscribe
             },
             saveToFirestore: async (userId: string) => {
