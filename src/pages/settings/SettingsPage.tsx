@@ -8,10 +8,13 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useUserStore } from '@/store/user'
 import { useSignaturesStore } from '@/store/signatures'
+import { useDefaultsStore } from '@/store/defaults'
+import { GOOGLE_FONTS } from '@/lib/fonts'
 
 const SettingsPage = () => {
     const userStore = useUserStore()
     const { signatures, addSignature, removeSignature } = useSignaturesStore()
+    const { fontFamily, fontSize, setFontFamily, setFontSize } = useDefaultsStore()
 
     // Signature Dialog State
     const [isDialogOpen, setIsDialogOpen] = useState(false)
@@ -191,6 +194,40 @@ const SettingsPage = () => {
                                 value={userStore.company}
                                 onChange={(e) => userStore.setCompany(e.target.value)}
                                 placeholder="Acme Inc."
+                            />
+                        </div>
+                    </div>
+                </section>
+
+                <section className="space-y-4">
+                    <h2 className="text-lg font-semibold text-slate-900">
+                        Default Font Settings
+                    </h2>
+                    <div className="grid grid-cols-2 gap-4 rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+                        <div className="grid gap-2">
+                            <Label htmlFor="font-family">Font Family</Label>
+                            <select
+                                id="font-family"
+                                value={fontFamily}
+                                onChange={(e) => setFontFamily(e.target.value)}
+                                className="flex h-10 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm ring-offset-white file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-slate-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                            >
+                                {GOOGLE_FONTS.map((font) => (
+                                    <option key={font.family} value={font.family}>
+                                        {font.name}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                        <div className="grid gap-2">
+                            <Label htmlFor="font-size">Font Size</Label>
+                            <Input
+                                id="font-size"
+                                type="number"
+                                min="8"
+                                max="72"
+                                value={fontSize}
+                                onChange={(e) => setFontSize(Number(e.target.value))}
                             />
                         </div>
                     </div>
