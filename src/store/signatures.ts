@@ -53,6 +53,10 @@ export const useSignaturesStore = create<SignaturesState>()(
             const data = snapshot.data()
             if (data.signatures) {
               set({ signatures: data.signatures })
+            } else {
+              // If signatures field is missing in Firestore (but doc exists), push local signatures
+              // This handles the case where a user exists but hasn't synced signatures yet
+              get().saveToFirestore(userId)
             }
           } else {
             // If document doesn't exist, push local signatures to Firestore
