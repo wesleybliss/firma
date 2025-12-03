@@ -17,7 +17,6 @@ const AppReady = ({
                 textFields={state.textFields}
                 activeFieldId={state.activeFieldId}
                 onAddTextField={actions.addTextField}
-                onRemoveTextField={actions.removeTextField}
                 onUpdateFieldProperty={actions.updateFieldProperty}
                 onPlaceSignature={actions.placeSignature}
             />
@@ -34,7 +33,6 @@ const AppReady = ({
                         onDocumentLoadSuccess={actions.onDocumentLoadSuccess}
                         onPageLoadSuccess={actions.onPageLoadSuccess}
                         onCanvasClick={actions.handleCanvasClick}
-                        onZoomAdjust={actions.adjustZoom}
                         onFieldClick={actions.setActiveFieldId}
                         onFieldUpdate={actions.updateTextField}
                         onFieldRemove={actions.removeTextField}
