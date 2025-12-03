@@ -1,8 +1,17 @@
-import { Download, FileText, UploadCloud, LogIn, LogOut } from 'lucide-react'
+import { Download, FileText, UploadCloud, LogIn, LogOut, Settings } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Toolbar } from '@/components/Toolbar'
 import { useAuthStore } from '@/store/auth'
 import { toast } from 'sonner'
+import { Link } from 'react-router-dom'
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 
 const Navbar = ({ state, actions }: { state: any, actions: any }) => {
     const { user, signInWithGoogle, signOut } = useAuthStore()
@@ -51,31 +60,6 @@ const Navbar = ({ state, actions }: { state: any, actions: any }) => {
                 />}
 
                 <div className="flex items-center gap-2">
-                    {user ? (
-                        <>
-                            <div className="flex items-center gap-2 mr-2">
-                                {user.photoURL && (
-                                    <img 
-                                        src={user.photoURL} 
-                                        alt={user.displayName || 'User'}
-                                        className="size-8 rounded-full"
-                                    />
-                                )}
-                                <span className="text-sm text-slate-700 hidden sm:inline">
-                                    {user.displayName || user.email}
-                                </span>
-                            </div>
-                            <Button variant="ghost" size="sm" onClick={handleSignOut}>
-                                <LogOut className="size-4" />
-                                Sign out
-                            </Button>
-                        </>
-                    ) : (
-                        <Button variant="outline" size="sm" onClick={handleSignIn}>
-                            <LogIn className="size-4" />
-                            Sign in with Google
-                        </Button>
-                    )}
                     <Button variant="outline" size="sm" onClick={actions.openFileDialog}>
                         <UploadCloud className="size-4" />
                         {state.pdfFile ? 'Replace PDF' : 'Choose PDF'}
@@ -84,6 +68,46 @@ const Navbar = ({ state, actions }: { state: any, actions: any }) => {
                         <Download className="size-4" />
                         Export
                     </Button>
+                    {user ? (
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Button variant="ghost" className="flex items-center gap-2 px-2 hover:bg-slate-100 data-[state=open]:bg-slate-100">
+                                    {user.photoURL ? (
+                                        <img
+                                            src={user.photoURL}
+                                            alt={user.displayName || 'User'}
+                                            className="size-6 rounded-full"
+                                        />
+                                    ) : (
+                                        <div className="size-6 rounded-full bg-slate-200" />
+                                    )}
+                                    <span className="text-sm font-medium text-slate-700 hidden sm:inline">
+                                        {user.displayName || user.email}
+                                    </span>
+                                </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end" className="w-56">
+                                <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem asChild>
+                                    <Link to="/settings" className="cursor-pointer w-full flex items-center">
+                                        <Settings className="mr-2 size-4" />
+                                        <span>Settings</span>
+                                    </Link>
+                                </DropdownMenuItem>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer text-red-600 focus:text-red-600 focus:bg-red-50">
+                                    <LogOut className="mr-2 size-4" />
+                                    <span>Sign out</span>
+                                </DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    ) : (
+                        <Button variant="outline" size="sm" onClick={handleSignIn}>
+                            <LogIn className="size-4" />
+                            Sign in with Google
+                        </Button>
+                    )}
                 </div>
             </div>
         </header>
