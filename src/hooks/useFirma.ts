@@ -6,10 +6,7 @@ import { TextField, SignatureField, FieldType } from '@/types'
 import { GOOGLE_FONTS } from '@/lib/fonts'
 import { useSignaturesStore } from '@/store/signatures'
 import { useUserStore } from '@/store/user'
-
-// Text seems to render higher in the export than in the editor,
-// so this just accounts for it. @todo Might need a more accurate solution later
-const ARBITRARY_FIELD_Y_OFFSET = 4
+import { ZOOM_MAX, ARBITRARY_FIELD_Y_OFFSET } from '@/lib/constants'
 
 const clamp = (value: number, min: number, max: number) => Math.min(Math.max(value, min), max)
 
@@ -19,7 +16,7 @@ export function useFirma() {
     const [textFields, setTextFields] = useState<TextField[]>([])
     const [signatureFields, setSignatureFields] = useState<SignatureField[]>([])
     const [activeFieldId, setActiveFieldId] = useState<string | null>(null)
-    const [scale, setScale] = useState(1)
+    const [scale, setScale] = useState(ZOOM_MAX)
     const [pdfDimensions, setPdfDimensions] = useState({ width: 0, height: 0 })
     const [numPages, setNumPages] = useState<number>(0)
     const [currentPage, setCurrentPage] = useState<number>(1)
@@ -72,7 +69,7 @@ export function useFirma() {
             setTextFields([])
             setSignatureFields([])
             setActiveFieldId(null)
-            setScale(1)
+            setScale(ZOOM_MAX)
             toast.success('PDF is ready to edit')
         }
         reader.readAsDataURL(file)
@@ -108,9 +105,9 @@ export function useFirma() {
             case 'company':
                 return { text: user.company || 'Company Name', width: 200, height: 40, fontSize: 12 }
             case 'checkbox':
-                return { text: '☐', width: 24, height: 24, fontSize: 16 }
+                return { text: '✓', width: 14, height: 24, fontSize: 16 }
             case 'radio':
-                return { text: '○', width: 24, height: 24, fontSize: 16 }
+                return { text: '⏺', width: 24, height: 24, fontSize: 16 }
             case 'x':
                 return { text: '✕', width: 24, height: 24, fontSize: 16 }
             case 'text':

@@ -34,6 +34,7 @@ const AppReady = ({
                         onDocumentLoadSuccess={actions.onDocumentLoadSuccess}
                         onPageLoadSuccess={actions.onPageLoadSuccess}
                         onCanvasClick={actions.handleCanvasClick}
+                        onZoomAdjust={actions.adjustZoom}
                         onFieldClick={actions.setActiveFieldId}
                         onFieldUpdate={actions.updateTextField}
                         onFieldRemove={actions.removeTextField}

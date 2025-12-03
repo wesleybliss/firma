@@ -1,10 +1,7 @@
 import { ChevronLeft, ChevronRight, ZoomIn, ZoomOut, SearchCode } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Slider } from '@/components/ui/slider'
-
-const ZOOM_MIN = 0.5
-const ZOOM_MAX = 2
-const ZOOM_STEP = 0.1
+import { ZOOM_MIN, ZOOM_MAX, ZOOM_STEP } from '@/lib/constants'
 
 interface ToolbarProps {
     scale: number

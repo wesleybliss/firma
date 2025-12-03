@@ -1,7 +1,6 @@
-import React from 'react'
+import React, { memo } from 'react'
 import { Document, Page, pdfjs } from 'react-pdf'
 import { TextField as TextFieldType, SignatureField } from '@/types'
-
 import 'react-pdf/dist/Page/TextLayer.css'
 import FieldsOverlay from './FieldsOverlay'
 
@@ -15,7 +14,7 @@ interface PDFViewerProps {
     onPageLoadSuccess: (page: any) => void
 }
 
-const PDFViewer = React.memo(({ file, scale, pageNumber, onDocumentLoadSuccess, onPageLoadSuccess }: PDFViewerProps) => {
+const PDFViewer = memo(({ file, scale, pageNumber, onDocumentLoadSuccess, onPageLoadSuccess }: PDFViewerProps) => {
     return (
         <Document
             file={file}

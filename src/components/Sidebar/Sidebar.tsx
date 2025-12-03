@@ -1,6 +1,5 @@
 import { useState } from 'react'
-import { Download, Plus, UploadCloud, ChevronLeft, ChevronRight } from 'lucide-react'
-import { Button } from '@/components/ui/button'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { TextProperties } from '@/components/TextProperties'
 import { SignatureManager } from '@/components/SignatureManager'
 import { TextField, FieldType } from '@/types'

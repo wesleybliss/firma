@@ -30,6 +30,7 @@ export function TextField({
     onFieldDimensionsUpdate,
 }: TextFieldProps) {
     const showChrome = isActive || field.isNew
+    const isCompact = ['checkbox', 'radio', 'x'].includes(field.fieldType)
 
     const getFieldIcon = (fieldType: FieldType) => {
         switch (fieldType) {
@@ -66,6 +67,12 @@ export function TextField({
                 return 'Phone'
             case 'company':
                 return 'Company'
+            case 'checkbox':
+                return 'Checkbox'
+            case 'radio':
+                return 'Radio'
+            case 'x':
+                return 'X-Mark'
             default:
                 return null
         }
@@ -84,6 +91,10 @@ export function TextField({
                 x: field.x * scaledWidth,
                 y: field.y * scaledHeight,
             }}
+            size={isCompact ? {
+                width: field.width * scale,
+                height: field.height * scale,
+            } : undefined}
             onDragStop={(_event, data) => {
                 onFieldPositionUpdate(field.id, { x: data.x, y: data.y })
             }}
@@ -104,7 +115,8 @@ export function TextField({
             {showChrome && field.fieldType && (
                 <div className="drag-handle cursor-grab active:cursor-grabbing absolute left-0
                     -top-5 flex items-center gap-1 rounded bg-sky-100
-                    px-1.5 py-0.5 text-[10px] font-medium text-sky-700">
+                    px-1.5 py-0.5 text-[10px] font-medium text-sky-700"
+                    style={{ whiteSpace: 'nowrap' }}>
                     {getFieldIcon(field.fieldType)}
                     <span>{getFieldLabel(field.fieldType)}</span>
                 </div>
@@ -138,7 +150,7 @@ export function TextField({
                         className="invisible col-start-1 row-start-1 whitespace-pre px-0.5"
                         style={fontStyles}
                     >
-                        {field.text || 'Type here...'}
+                        {field.text || ' '}
                     </span>
 
                     {/* Input overlay */}
@@ -148,9 +160,10 @@ export function TextField({
                         onFocus={() => onFieldClick(field.id)}
                         onClick={() => onFieldClick(field.id)}
                         onChange={event => onFieldUpdate(field.id, event.target.value)}
-                        className="col-start-1 row-start-1 h-full w-full border-0 bg-transparent p-0 px-0.5 text-slate-900
-                            placeholder:text-slate-400 focus:ring-0 focus:outline-none"
-                        placeholder="Type here..."
+                        className={cn("col-start-1 row-start-1 h-full w-full border-0 bg-transparent p-0 text-slate-900 placeholder:text-slate-400 focus:ring-0 focus:outline-none",
+                            isCompact ? "text-center cursor-default" : "px-0.5"
+                        )}
+                        placeholder={isCompact ? "" : "Type here..."}
                         style={{
                             ...fontStyles,
                             color: field.color,
@@ -170,7 +183,9 @@ export function TextField({
                             event.stopPropagation()
                             onFieldRemove(field.id)
                         }}
-                        className="rounded-full p-1 text-slate-400 hover:text-red-500"
+                        className={cn("rounded-full p-1 text-slate-400 hover:text-red-500",
+                            isCompact && "absolute -right-3 -top-3 bg-white shadow-sm ring-1 ring-slate-200"
+                        )}
                     >
                         <Trash2 className="size-3" />
                     </button>
