@@ -1,12 +1,24 @@
+import { useEffect } from 'react'
 import Navbar from '@/components/Navbar'
 import { Toaster } from '@/components/ui/sonner'
 import HomePage from './pages/home'
 import SettingsPage from './pages/settings/SettingsPage'
 import { useFirma } from '@/hooks/useFirma'
+import { useFirebaseSync } from '@/hooks/useFirebaseSync'
+import { useAuthStore } from '@/store/auth'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
 function App() {
     const { state, actions } = useFirma()
+    const initializeAuth = useAuthStore((state) => state.initialize)
+    
+    // Initialize Firebase authentication
+    useEffect(() => {
+        initializeAuth()
+    }, [initializeAuth])
+    
+    // Set up real-time sync with Firestore
+    useFirebaseSync()
 
     return (
         <BrowserRouter>

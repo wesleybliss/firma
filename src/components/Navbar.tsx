@@ -1,8 +1,29 @@
-import { Download, FileText, UploadCloud } from 'lucide-react'
+import { Download, FileText, UploadCloud, LogIn, LogOut } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Toolbar } from '@/components/Toolbar'
+import { useAuthStore } from '@/store/auth'
+import { toast } from 'sonner'
 
 const Navbar = ({ state, actions }: { state: any, actions: any }) => {
+    const { user, signInWithGoogle, signOut } = useAuthStore()
+
+    const handleSignIn = async () => {
+        try {
+            await signInWithGoogle()
+            toast.success('Signed in successfully')
+        } catch {
+            toast.error('Failed to sign in')
+        }
+    }
+
+    const handleSignOut = async () => {
+        try {
+            await signOut()
+            toast.success('Signed out successfully')
+        } catch {
+            toast.error('Failed to sign out')
+        }
+    }
 
     return (
         <header className="w-full border-b border-slate-200 bg-white/80 backdrop-blur">
@@ -30,6 +51,31 @@ const Navbar = ({ state, actions }: { state: any, actions: any }) => {
                 />}
 
                 <div className="flex items-center gap-2">
+                    {user ? (
+                        <>
+                            <div className="flex items-center gap-2 mr-2">
+                                {user.photoURL && (
+                                    <img 
+                                        src={user.photoURL} 
+                                        alt={user.displayName || 'User'}
+                                        className="size-8 rounded-full"
+                                    />
+                                )}
+                                <span className="text-sm text-slate-700 hidden sm:inline">
+                                    {user.displayName || user.email}
+                                </span>
+                            </div>
+                            <Button variant="ghost" size="sm" onClick={handleSignOut}>
+                                <LogOut className="size-4" />
+                                Sign out
+                            </Button>
+                        </>
+                    ) : (
+                        <Button variant="outline" size="sm" onClick={handleSignIn}>
+                            <LogIn className="size-4" />
+                            Sign in with Google
+                        </Button>
+                    )}
                     <Button variant="outline" size="sm" onClick={actions.openFileDialog}>
                         <UploadCloud className="size-4" />
                         {state.pdfFile ? 'Replace PDF' : 'Choose PDF'}
