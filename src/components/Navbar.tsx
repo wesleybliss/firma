@@ -40,8 +40,8 @@ const Navbar = ({ state, actions }: { state: any, actions: any }) => {
             <div className="w-full flex h-16 items-center justify-between px-4 sm:px-6">
 
                 <div className="flex items-center gap-3">
-                    <div className="flex size-10 items-center justify-center rounded-2xl bg-slate-900 text-white">
-                        <FileText className="size-5" />
+                    <div className="flex size-10 items-center justify-center rounded-2xl bg-slate-200 text-white">
+                        <img src="/favicon-96x96.png" alt="Firma" className="size-6" />
                     </div>
                     <div>
                         <p className="text-sm font-semibold tracking-tight text-slate-900">Firma</p>
