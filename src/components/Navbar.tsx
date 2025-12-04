@@ -1,4 +1,4 @@
-import { Download, FileText, UploadCloud, LogIn, LogOut, Settings } from 'lucide-react'
+import { Download, UploadCloud, LogIn, LogOut, Settings } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Toolbar } from '@/components/Toolbar'
 import { useAuthStore } from '@/store/auth'
@@ -12,6 +12,8 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import ThemeToggle from '@/components/ThemeToggle'
+import { APP_NAME } from '@/lib/constants'
 
 const Navbar = ({ state, actions }: { state: any, actions: any }) => {
     const { user, signInWithGoogle, signOut } = useAuthStore()
@@ -35,17 +37,19 @@ const Navbar = ({ state, actions }: { state: any, actions: any }) => {
     }
 
     return (
-        <header className="w-full border-b border-slate-200 bg-white/80 backdrop-blur">
+        <header className="w-full border-b border-slate-200 dark:border-slate-700 bg-white/80 dark:bg-slate-900/80 backdrop-blur">
 
             <div className="w-full flex h-16 items-center justify-between px-4 sm:px-6">
 
                 <div className="flex items-center gap-3">
-                    <div className="flex size-10 items-center justify-center rounded-2xl bg-slate-200 text-white">
-                        <img src="/favicon-96x96.png" alt="Firma" className="size-6" />
+                    <div className="flex size-10 items-center justify-center rounded-2xl bg-slate-200 dark:bg-slate-700 text-white">
+                        <img src="/favicon-96x96.png" alt={APP_NAME} className="size-6" />
                     </div>
                     <div>
-                        <p className="text-sm font-semibold tracking-tight text-slate-900">Firma</p>
-                        <p className="text-xs text-slate-500">Fill, align, and export PDFs in seconds</p>
+                        <p className="text-sm font-semibold tracking-tight text-slate-900 dark:text-slate-100">
+                            {APP_NAME}
+                        </p>
+                        <p className="text-xs text-slate-500 dark:text-slate-400">Fill, align, and export PDFs in seconds</p>
                     </div>
                 </div>
 
@@ -68,10 +72,11 @@ const Navbar = ({ state, actions }: { state: any, actions: any }) => {
                         <Download className="size-4" />
                         Export
                     </Button>
+                    <ThemeToggle />
                     {user ? (
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
-                                <Button variant="ghost" className="flex items-center gap-2 px-2 hover:bg-slate-100 data-[state=open]:bg-slate-100">
+                                <Button variant="ghost" className="flex items-center gap-2 px-2 hover:bg-slate-100 dark:hover:bg-slate-700 data-[state=open]:bg-slate-100 dark:data-[state=open]:bg-slate-700">
                                     {user.photoURL ? (
                                         <img
                                             src={user.photoURL}
@@ -81,13 +86,16 @@ const Navbar = ({ state, actions }: { state: any, actions: any }) => {
                                     ) : (
                                         <div className="size-6 rounded-full bg-slate-200" />
                                     )}
-                                    <span className="text-sm font-medium text-slate-700 hidden sm:inline">
+                                    {/* <span className="text-sm font-medium text-slate-700 dark:text-slate-100 hidden sm:inline">
                                         {user.displayName || user.email}
-                                    </span>
+                                    </span> */}
                                 </Button>
                             </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end" className="w-56">
-                                <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                            <DropdownMenuContent align="end" className="w-56 dark:bg-slate-900">
+                                <DropdownMenuLabel>
+                                    <h5 className="text-base font-semibold">{user.displayName || 'Anonymous'}</h5>
+                                    <span className="text-xs text-slate-500 dark:text-slate-400">{user.email}</span>
+                                </DropdownMenuLabel>
                                 <DropdownMenuSeparator />
                                 <DropdownMenuItem asChild>
                                     <Link to="/settings" className="cursor-pointer w-full flex items-center">

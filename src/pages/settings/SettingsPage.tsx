@@ -141,13 +141,13 @@ const SettingsPage = () => {
                 <Link to="/" className={buttonVariants({ variant: "ghost", size: "icon" })}>
                     <ChevronLeft className="size-5" />
                 </Link>
-                <h1 className="text-2xl font-bold text-slate-900">Settings</h1>
+                <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">Settings</h1>
             </div>
 
             <div className="space-y-8">
                 <section className="space-y-4">
-                    <h2 className="text-lg font-semibold text-slate-900">Profile Information</h2>
-                    <div className="grid gap-4 rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+                    <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">Profile Information</h2>
+                    <div className="grid gap-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800 p-6 shadow-sm">
                         <div className="grid gap-2">
                             <Label htmlFor="name">Full Name</Label>
                             <Input
@@ -200,17 +200,17 @@ const SettingsPage = () => {
                 </section>
 
                 <section className="space-y-4">
-                    <h2 className="text-lg font-semibold text-slate-900">
+                    <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
                         Default Font Settings
                     </h2>
-                    <div className="grid grid-cols-2 gap-4 rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+                    <div className="grid grid-cols-2 gap-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800 p-6 shadow-sm">
                         <div className="grid gap-2">
                             <Label htmlFor="font-family">Font Family</Label>
                             <select
                                 id="font-family"
                                 value={fontFamily}
                                 onChange={(e) => setFontFamily(e.target.value)}
-                                className="flex h-10 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm ring-offset-white file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-slate-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                                className="flex h-10 w-full rounded-md border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800 px-3 py-2 text-sm ring-offset-white file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-slate-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                             >
                                 {GOOGLE_FONTS.map((font) => (
                                     <option key={font.family} value={font.family}>
@@ -235,7 +235,7 @@ const SettingsPage = () => {
 
                 <section className="space-y-4">
                     <div className="flex items-center justify-between">
-                        <h2 className="text-lg font-semibold text-slate-900">Signatures</h2>
+                        <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">Signatures</h2>
                         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                             <DialogTrigger asChild>
                                 <Button size="sm">
@@ -247,7 +247,7 @@ const SettingsPage = () => {
                                 <DialogHeader>
                                     <DialogTitle>Add Signature</DialogTitle>
                                 </DialogHeader>
-                                <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+                                <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full dark:border-slate-800">
                                     <TabsList className="grid w-full grid-cols-3">
                                         <TabsTrigger value="draw">Draw</TabsTrigger>
                                         <TabsTrigger value="type">Type</TabsTrigger>
