@@ -2,6 +2,7 @@ import { useState, useRef, useEffect, useCallback, createRef, type ChangeEvent, 
 import { PDFDocument, StandardFonts, rgb } from 'pdf-lib'
 import fontkit from '@pdf-lib/fontkit'
 import { toast } from 'sonner'
+import { v4 as uuidv4 } from 'uuid'
 import { TextField, SignatureField, FieldType } from '@/types'
 import { GOOGLE_FONTS } from '@/lib/fonts'
 import { useSignaturesStore } from '@/store/signatures'
@@ -124,7 +125,7 @@ export function useFirma() {
 
         const defaults = getFieldDefaults(fieldType)
         const newField: TextField = {
-            id: crypto.randomUUID(),
+            id: uuidv4(),
             text: defaults.text,
             x: 0.5,
             y: 0.35,
@@ -214,7 +215,7 @@ export function useFirma() {
         if (!signature) return
 
         const newField: SignatureField = {
-            id: crypto.randomUUID(),
+            id: uuidv4(),
             signatureId,
             dataUrl: signature.dataUrl,
             x: 0.5,

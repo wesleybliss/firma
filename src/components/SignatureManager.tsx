@@ -1,13 +1,13 @@
 import { useState, useRef, useEffect } from 'react'
+import { v4 as uuidv4 } from 'uuid'
 import { Button, buttonVariants } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Signature } from '@/types'
-import { Pen, Type, Upload, Trash2, Plus, ChevronDown } from 'lucide-react'
-import { cn } from '@/lib/utils'
+import { Upload, Trash2, Plus, ChevronDown } from 'lucide-react'
 import { useSignaturesStore } from '@/store/signatures'
+import { toast } from 'sonner'
 
 interface SignatureManagerProps {
     onPlaceSignature: (id: string) => void
@@ -66,17 +66,24 @@ export function SignatureManager({
     }
 
     const saveDrawing = () => {
-        const canvas = canvasRef.current
-        if (!canvas) return
-        const dataUrl = canvas.toDataURL('image/png')
-        addSignature({
-            id: crypto.randomUUID(),
-            dataUrl,
-            type: 'draw',
-            createdAt: Date.now(),
-        })
-        setIsOpen(false)
-        clearCanvas()
+        try {
+            const canvas = canvasRef.current
+            if (!canvas) {
+                toast.error('Failed to save signature: Canvas not found')
+                return
+            }
+            const dataUrl = canvas.toDataURL('image/png')
+            addSignature({
+                id: uuidv4(),
+                dataUrl,
+                type: 'draw',
+                createdAt: Date.now(),
+            })
+            setIsOpen(false)
+            clearCanvas()
+        } catch (e: any) {
+            toast.error('Failed to save signature: ' + (e?.message || 'Unknown error'))
+        }
     }
 
     const saveTyped = () => {
@@ -94,7 +101,7 @@ export function SignatureManager({
 
         const dataUrl = canvas.toDataURL('image/png')
         addSignature({
-            id: crypto.randomUUID(),
+            id: uuidv4(),
             dataUrl,
             type: 'type',
             createdAt: Date.now(),
@@ -110,7 +117,7 @@ export function SignatureManager({
         const reader = new FileReader()
         reader.onloadend = () => {
             addSignature({
-                id: crypto.randomUUID(),
+                id: uuidv4(),
                 dataUrl: reader.result as string,
                 type: 'upload',
                 createdAt: Date.now(),
@@ -162,6 +169,7 @@ export function SignatureManager({
                                         width={400}
                                         height={200}
                                         className="w-full cursor-crosshair touch-none rounded bg-white"
+                                        style={{ background: 'transparent' }}
                                         onMouseDown={startDrawing}
                                         onMouseMove={draw}
                                         onMouseUp={stopDrawing}

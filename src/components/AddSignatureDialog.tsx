@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
+import { v4 as uuidv4 } from 'uuid'
 import { Plus, Upload } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -63,7 +64,7 @@ export function AddSignatureDialog() {
         if (!canvas) return
         const dataUrl = canvas.toDataURL('image/png')
         addSignature({
-            id: crypto.randomUUID(),
+            id: uuidv4(),
             dataUrl,
             type: 'draw',
             createdAt: Date.now(),
@@ -87,7 +88,7 @@ export function AddSignatureDialog() {
 
         const dataUrl = canvas.toDataURL('image/png')
         addSignature({
-            id: crypto.randomUUID(),
+            id: uuidv4(),
             dataUrl,
             type: 'type',
             createdAt: Date.now(),
@@ -103,7 +104,7 @@ export function AddSignatureDialog() {
         const reader = new FileReader()
         reader.onloadend = () => {
             addSignature({
-                id: crypto.randomUUID(),
+                id: uuidv4(),
                 dataUrl: reader.result as string,
                 type: 'upload',
                 createdAt: Date.now(),
