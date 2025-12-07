@@ -1,2 +1,3 @@
 name = "firma"
 compatibility_date = "2025-12-03"
+pages_build_output_dir = "./dist"
