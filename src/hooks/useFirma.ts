@@ -9,7 +9,7 @@ import { useSignaturesStore } from '@/store/signatures'
 import { useUserStore } from '@/store/user'
 import { useDefaultsStore } from '@/store/defaults'
 import { formatDate } from '@/lib/dateUtils'
-import { ZOOM_MAX, ARBITRARY_FIELD_Y_OFFSET } from '@/lib/constants'
+import { ZOOM_MAX, ARBITRARY_FIELD_X_OFFSET, ARBITRARY_FIELD_Y_OFFSET } from '@/lib/constants'
 
 const clamp = (value: number, min: number, max: number) => Math.min(Math.max(value, min), max)
 
@@ -374,7 +374,7 @@ export function useFirma() {
                     const fontSize = field.fontSize
                     const color = hexToRgb(field.color)
 
-                    const pdfX = clamp(field.x, 0, 1) * width
+                    const pdfX = clamp(field.x, 0, 1) * width + ARBITRARY_FIELD_X_OFFSET
                     const pdfY = height - clamp(field.y, 0, 1) * height - fontSize - ARBITRARY_FIELD_Y_OFFSET
 
                     page.drawText(field.text, {
