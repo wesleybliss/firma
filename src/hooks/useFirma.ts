@@ -10,6 +10,8 @@ import { useUserStore } from '@/store/user'
 import { useDefaultsStore } from '@/store/defaults'
 import { formatDate } from '@/lib/dateUtils'
 import { ZOOM_MAX, ARBITRARY_FIELD_X_OFFSET, ARBITRARY_FIELD_Y_OFFSET } from '@/lib/constants'
+import { hashFile } from '@/lib/utils'
+import { useDocumentsStore } from '@/store/documents'
 
 const clamp = (value: number, min: number, max: number) => Math.min(Math.max(value, min), max)
 
@@ -23,12 +25,14 @@ export function useFirma() {
     const [pdfDimensions, setPdfDimensions] = useState({ width: 0, height: 0 })
     const [numPages, setNumPages] = useState<number>(0)
     const [currentPage, setCurrentPage] = useState<number>(1)
+    const [pdfHash, setPdfHash] = useState<string | null>(null)
     const fileInputRef = useRef<HTMLInputElement>(null)
     const nodeRefs = useRef<Record<string, RefObject<HTMLDivElement>>>({})
 
     const { signatures } = useSignaturesStore()
     const user = useUserStore()
     const { dateFormat } = useDefaultsStore()
+    const { saveDocumentState, loadDocumentState } = useDocumentsStore()
 
     useEffect(() => {
         const links = GOOGLE_FONTS.map(font => {
@@ -58,25 +62,60 @@ export function useFirma() {
         }
     }, [activeFieldId])
 
+    useEffect(() => {
+        if (!pdfHash || !fileName) return
+
+        const timeoutId = setTimeout(() => {
+            saveDocumentState(pdfHash, {
+                hash: pdfHash,
+                textFields,
+                signatureFields,
+                lastModified: Date.now(),
+                fileName
+            })
+        }, 500)
+
+        return () => clearTimeout(timeoutId)
+    }, [textFields, signatureFields, pdfHash, fileName, saveDocumentState])
+
     const openFileDialog = () => {
         fileInputRef.current?.click()
     }
 
-    const handleFileUpload = (event: ChangeEvent<HTMLInputElement>) => {
+    const handleFileUpload = async (event: ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0]
         if (!file) return
 
-        const reader = new FileReader()
-        reader.onloadend = () => {
-            setPdfFile(reader.result as string)
-            setFileName(file.name)
-            setTextFields([])
-            setSignatureFields([])
-            setActiveFieldId(null)
-            setScale(ZOOM_MAX)
-            toast.success('PDF is ready to edit')
+        try {
+            const hash = await hashFile(file)
+            setPdfHash(hash)
+
+            const savedState = await loadDocumentState(hash)
+
+            const reader = new FileReader()
+            reader.onloadend = () => {
+                setPdfFile(reader.result as string)
+                setFileName(file.name)
+
+                if (savedState) {
+                    setTextFields(savedState.textFields)
+                    setSignatureFields(savedState.signatureFields)
+                    toast.success('Restored previous session')
+                } else {
+                    setTextFields([])
+                    setSignatureFields([])
+                    toast.success('PDF is ready to edit')
+                }
+
+                setActiveFieldId(null)
+                setScale(ZOOM_MAX)
+            }
+            reader.readAsDataURL(file)
+        } catch (error) {
+            console.error('Error processing file:', error)
+            toast.error('Error opening file')
         }
-        reader.readAsDataURL(file)
+
         event.target.value = ''
     }
 
