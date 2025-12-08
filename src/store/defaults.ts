@@ -5,14 +5,17 @@ import { createStoreName } from '@/store/store'
 export type DefaultsState = {
     fontFamily: string
     fontSize: number
+    dateFormat: string
     setFontFamily: (fontFamily: string) => void
     setFontSize: (fontSize: number) => void
+    setDateFormat: (dateFormat: string) => void
     resetDefaults: () => void
 }
 
 const DEFAULT_SETTINGS = {
     fontFamily: 'Inter',
     fontSize: 12,
+    dateFormat: 'MM/DD/YYYY',
 }
 
 export const useDefaultsStore = create<DefaultsState>()(
@@ -21,6 +24,7 @@ export const useDefaultsStore = create<DefaultsState>()(
             ...DEFAULT_SETTINGS,
             setFontFamily: (fontFamily: string) => set({ fontFamily }),
             setFontSize: (fontSize: number) => set({ fontSize }),
+            setDateFormat: (dateFormat: string) => set({ dateFormat }),
             resetDefaults: () => set(DEFAULT_SETTINGS),
         }),
         {

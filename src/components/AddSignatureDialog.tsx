@@ -141,7 +141,9 @@ export function AddSignatureDialog() {
             </DialogTrigger>
             <DialogContent className="sm:max-w-md dark:bg-slate-900 dark:border-slate-800">
                 <DialogHeader>
-                    <DialogTitle className="dark:text-slate-100">Add Signature</DialogTitle>
+                    <DialogTitle className="dark:text-slate-100">
+                        Add Signature
+                    </DialogTitle>
                 </DialogHeader>
                 <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
                     <TabsList className="grid w-full grid-cols-3 dark:bg-slate-800 dark:text-slate-400">

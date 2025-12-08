@@ -9,11 +9,12 @@ import { useUserStore } from '@/store/user'
 import { useSignaturesStore } from '@/store/signatures'
 import { useDefaultsStore } from '@/store/defaults'
 import { GOOGLE_FONTS } from '@/lib/fonts'
+import { DATE_FORMATS } from '@/lib/dateUtils'
 
 const SettingsPage = () => {
     const userStore = useUserStore()
     const { signatures, removeSignature } = useSignaturesStore()
-    const { fontFamily, fontSize, setFontFamily, setFontSize } = useDefaultsStore()
+    const { fontFamily, fontSize, dateFormat, setFontFamily, setFontSize, setDateFormat } = useDefaultsStore()
 
     return (
         <div className="container mx-auto max-w-2xl px-4 py-8">
@@ -28,16 +29,16 @@ const SettingsPage = () => {
                 <section className="space-y-4">
                     <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">Profile Information</h2>
                     <div className="grid gap-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800 p-6 shadow-sm">
-                        <div className="grid gap-2">
-                            <Label htmlFor="name">Full Name</Label>
-                            <Input
-                                id="name"
-                                value={userStore.name}
-                                onChange={(e) => userStore.setName(e.target.value)}
-                                placeholder="John Doe"
-                            />
-                        </div>
                         <div className="grid grid-cols-2 gap-4">
+                            <div className="grid gap-2">
+                                <Label htmlFor="name">Full Name</Label>
+                                <Input
+                                    id="name"
+                                    value={userStore.name}
+                                    onChange={(e) => userStore.setName(e.target.value)}
+                                    placeholder="John Doe"
+                                />
+                            </div>
                             <div className="grid gap-2">
                                 <Label htmlFor="initials">Initials</Label>
                                 <Input
@@ -47,6 +48,8 @@ const SettingsPage = () => {
                                     placeholder="JD"
                                 />
                             </div>
+                        </div>
+                        <div className="grid grid-cols-2 gap-4">
                             <div className="grid gap-2">
                                 <Label htmlFor="phone">Phone</Label>
                                 <Input
@@ -56,25 +59,42 @@ const SettingsPage = () => {
                                     placeholder="(555) 000-0000"
                                 />
                             </div>
+                            <div className="grid gap-2">
+                                <Label htmlFor="date-format">Date Format</Label>
+                                <select
+                                    id="date-format"
+                                    value={dateFormat}
+                                    onChange={(e) => setDateFormat(e.target.value)}
+                                    className="flex h-10 w-full rounded-md border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800 px-3 py-2 text-sm ring-offset-white file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-slate-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                                >
+                                    {DATE_FORMATS.map((format) => (
+                                        <option key={format.value} value={format.value}>
+                                            {format.label} ({format.value})
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
                         </div>
-                        <div className="grid gap-2">
-                            <Label htmlFor="email">Email</Label>
-                            <Input
-                                id="email"
-                                type="email"
-                                value={userStore.email}
-                                onChange={(e) => userStore.setEmail(e.target.value)}
-                                placeholder="john@example.com"
-                            />
-                        </div>
-                        <div className="grid gap-2">
-                            <Label htmlFor="company">Company</Label>
-                            <Input
-                                id="company"
-                                value={userStore.company}
-                                onChange={(e) => userStore.setCompany(e.target.value)}
-                                placeholder="Acme Inc."
-                            />
+                        <div className="grid grid-cols-2 gap-4">
+                            <div className="grid gap-2">
+                                <Label htmlFor="email">Email</Label>
+                                <Input
+                                    id="email"
+                                    type="email"
+                                    value={userStore.email}
+                                    onChange={(e) => userStore.setEmail(e.target.value)}
+                                    placeholder="john@example.com"
+                                />
+                            </div>
+                            <div className="grid gap-2">
+                                <Label htmlFor="company">Company</Label>
+                                <Input
+                                    id="company"
+                                    value={userStore.company}
+                                    onChange={(e) => userStore.setCompany(e.target.value)}
+                                    placeholder="Acme Inc."
+                                />
+                            </div>
                         </div>
                     </div>
                 </section>

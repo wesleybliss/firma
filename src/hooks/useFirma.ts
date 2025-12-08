@@ -7,6 +7,8 @@ import { TextField, SignatureField, FieldType } from '@/types'
 import { GOOGLE_FONTS } from '@/lib/fonts'
 import { useSignaturesStore } from '@/store/signatures'
 import { useUserStore } from '@/store/user'
+import { useDefaultsStore } from '@/store/defaults'
+import { formatDate } from '@/lib/dateUtils'
 import { ZOOM_MAX, ARBITRARY_FIELD_Y_OFFSET } from '@/lib/constants'
 
 const clamp = (value: number, min: number, max: number) => Math.min(Math.max(value, min), max)
@@ -26,6 +28,7 @@ export function useFirma() {
 
     const { signatures } = useSignaturesStore()
     const user = useUserStore()
+    const { dateFormat } = useDefaultsStore()
 
     useEffect(() => {
         const links = GOOGLE_FONTS.map(font => {
@@ -88,11 +91,7 @@ export function useFirma() {
         switch (fieldType) {
             case 'date': {
                 const today = new Date()
-                const formatted = today.toLocaleDateString('en-US', {
-                    month: '2-digit',
-                    day: '2-digit',
-                    year: 'numeric'
-                })
+                const formatted = formatDate(today, dateFormat)
                 return { text: formatted, width: 140, height: 40, fontSize: 12 }
             }
             case 'fullName':
