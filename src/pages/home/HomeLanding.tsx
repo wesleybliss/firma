@@ -1,6 +1,7 @@
 import { Download, FileText, MousePointer2, Type, UploadCloud } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { FeatureCard } from '@/components/FeatureCard'
+import BraveDebug from '@/components/BraveDebug'
 
 const AppLanding = ({
     actions,
@@ -11,6 +12,7 @@ const AppLanding = ({
     return (
         <main className="flex flex-1 items-center justify-center px-4 py-16 sm:px-6">
             <div className="relative w-full max-w-4xl space-y-12">
+                {/* <BraveDebug /> */}
                 <div className="pointer-events-none absolute -inset-24 rounded-[3rem]
                     bg-[radial-gradient(circle_at_top,_rgba(45,212,191,0.12),_transparent_55%),_radial-gradient(circle_at_bottom,_rgba(59,130,246,0.1),_transparent_60%)]
                     " />

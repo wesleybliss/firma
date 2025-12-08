@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { TextProperties } from '@/components/TextProperties'
-import { SignatureManager } from '@/components/SignatureManager'
+import SignatureManager from '@/components/SignatureManager'
 import { TextField, FieldType } from '@/types'
 import { cn } from '@/lib/utils'
 import OverviewSection from './OverviewSection'

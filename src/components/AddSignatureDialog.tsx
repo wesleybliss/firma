@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useSignaturesStore } from '@/store/signatures'
+import StyledCanvas from './StyledCanvas'
 
 export function AddSignatureDialog() {
     const { addSignature } = useSignaturesStore()
@@ -150,11 +151,11 @@ export function AddSignatureDialog() {
                     </TabsList>
                     <TabsContent value="draw" className="space-y-4 py-4">
                         <div className="rounded-md border border-slate-200 bg-white p-1 dark:border-slate-800">
-                            <canvas
+                            <StyledCanvas
                                 ref={canvasRef}
                                 width={400}
                                 height={200}
-                                className="w-full cursor-crosshair touch-none rounded bg-white"
+                                className="w-full cursor-crosshair touch-none rounded"
                                 onMouseDown={startDrawing}
                                 onMouseMove={draw}
                                 onMouseUp={stopDrawing}
