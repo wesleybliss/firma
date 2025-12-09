@@ -37,19 +37,23 @@ const Navbar = ({ state, actions }: { state: any, actions: any }) => {
     }
 
     return (
-        <header className="w-full border-b border-slate-200 dark:border-slate-700 bg-white/80 dark:bg-slate-900/80 backdrop-blur">
+        <header className="w-full border-b border-slate-200
+            dark:border-slate-700 bg-white/80 dark:bg-slate-900/80 backdrop-blur">
 
             <div className="w-full flex h-16 items-center justify-between px-4 sm:px-6">
 
                 <div className="flex items-center gap-3">
-                    <div className="flex size-10 items-center justify-center rounded-2xl bg-slate-200 dark:bg-slate-700 text-white">
+                    <div className="flex size-10 items-center justify-center
+                        rounded-2xl bg-slate-200 dark:bg-slate-700 text-white">
                         <img src="/favicon-96x96.png" alt={APP_NAME} className="size-6" />
                     </div>
                     <div>
                         <p className="text-sm font-semibold tracking-tight text-slate-900 dark:text-slate-100">
                             {APP_NAME}
                         </p>
-                        <p className="text-xs text-slate-500 dark:text-slate-400">Fill, align, and export PDFs in seconds</p>
+                        <p className="text-xs text-slate-500 dark:text-slate-400">
+                            Fill, align, and export PDFs in seconds
+                        </p>
                     </div>
                 </div>
 
@@ -60,14 +64,17 @@ const Navbar = ({ state, actions }: { state: any, actions: any }) => {
                     onZoomChange={actions.handleZoomChange}
                     onZoomAdjust={actions.adjustZoom}
                     onZoomReset={actions.resetZoom}
-                    onPageChange={actions.changePage}/>}
+                    onPageChange={actions.changePage} />}
 
                 <div className="flex items-center gap-2">
                     <Button variant="outline" size="sm" onClick={actions.openFileDialog}>
                         <UploadCloud className="size-4" />
                         {state.pdfFile ? 'Replace PDF' : 'Choose PDF'}
                     </Button>
-                    <Button size="sm" onClick={actions.handleDownload} disabled={!state.pdfFile || state.textFields.length === 0}>
+                    <Button
+                        size="sm"
+                        onClick={actions.handleDownload}
+                        disabled={!state.pdfFile || state.textFields.length === 0}>
                         <Download className="size-4" />
                         Export
                     </Button>
@@ -75,16 +82,21 @@ const Navbar = ({ state, actions }: { state: any, actions: any }) => {
                     {user ? (
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
-                                <Button variant="ghost" className="flex items-center gap-2 px-2 hover:bg-slate-100 dark:hover:bg-slate-700 data-[state=open]:bg-slate-100 dark:data-[state=open]:bg-slate-700">
+                                <Button
+                                    variant="ghost"
+                                    className="flex items-center gap-2 px-2 hover:bg-slate-100
+                                        dark:hover:bg-slate-700 data-[state=open]:bg-slate-100
+                                        dark:data-[state=open]:bg-slate-700">
                                     {user.photoURL ? (
                                         <img
                                             src={user.photoURL}
                                             alt={user.displayName || 'User'}
-                                            className="size-6 rounded-full"/>
+                                            className="size-6 rounded-full" />
                                     ) : (
                                         <div className="size-6 rounded-full bg-slate-200" />
                                     )}
-                                    {/* <span className="text-sm font-medium text-slate-700 dark:text-slate-100 hidden sm:inline">
+                                    {/* <span className="text-sm font-medium
+                                        text-slate-700 dark:text-slate-100 hidden sm:inline">
                                         {user.displayName || user.email}
                                     </span> */}
                                 </Button>
@@ -102,7 +114,9 @@ const Navbar = ({ state, actions }: { state: any, actions: any }) => {
                                     </Link>
                                 </DropdownMenuItem>
                                 <DropdownMenuSeparator />
-                                <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer text-red-600 focus:text-red-600 focus:bg-red-50">
+                                <DropdownMenuItem
+                                    onClick={handleSignOut}
+                                    className="cursor-pointer text-red-600 focus:text-red-600 focus:bg-red-50">
                                     <LogOut className="mr-2 size-4" />
                                     <span>Sign out</span>
                                 </DropdownMenuItem>

@@ -25,7 +25,8 @@ const OverviewSection = ({
                 </Link>
             </div>
 
-            <div className="mt-4 space-y-2 rounded-2xl border border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-800 p-5 shadow-sm">
+            <div className="mt-4 space-y-2 rounded-2xl border border-slate-200
+                bg-white dark:border-slate-700 dark:bg-slate-800 p-5 shadow-sm">
                 <div className="flex items-start gap-3">
                     <Sparkles className="mt-1 size-4 text-slate-400" />
                     <div>

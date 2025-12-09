@@ -112,10 +112,11 @@ export function TextField({
             className={cn('pointer-events-auto !border-none !outline-none', showChrome && '!cursor-auto')}
             style={{ border: 'none' }}>
             {showChrome && field.fieldType && (
-                <div className="drag-handle cursor-grab active:cursor-grabbing absolute left-0
-                    -top-5 flex items-center gap-1 rounded bg-sky-100
-                    px-1.5 py-0.5 text-[10px] font-medium text-sky-700"
-                style={{ whiteSpace: 'nowrap' }}>
+                <div
+                    className="drag-handle cursor-grab active:cursor-grabbing absolute left-0
+                        -top-5 flex items-center gap-1 rounded bg-sky-100
+                        px-1.5 py-0.5 text-[10px] font-medium text-sky-700"
+                    style={{ whiteSpace: 'nowrap' }}>
                     {getFieldIcon(field.fieldType)}
                     <span>{getFieldLabel(field.fieldType)}</span>
                 </div>
@@ -156,7 +157,8 @@ export function TextField({
                         onFocus={() => onFieldClick(field.id)}
                         onClick={() => onFieldClick(field.id)}
                         onChange={event => onFieldUpdate(field.id, event.target.value)}
-                        className={cn('absolute inset-0 h-full w-full border-0 bg-transparent p-0 text-slate-900 placeholder:text-slate-400 focus:ring-0 focus:outline-none',
+                        className={cn('absolute inset-0 h-full w-full border-0 bg-transparent',
+                            'p-0 text-slate-900 placeholder:text-slate-400 focus:ring-0 focus:outline-none',
                             isCompact ? 'text-center cursor-default' : 'px-0.5',
                         )}
                         placeholder={isCompact ? '' : 'Type here...'}

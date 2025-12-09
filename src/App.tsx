@@ -25,7 +25,8 @@ function App() {
         <ThemeProvider defaultTheme="system" storageKey="firma-ui-theme">
             <BrowserRouter>
                 <div className="min-h-screen bg-gradient-to-br from-slate-100
-                    via-white to-slate-200 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 text-slate-900 dark:text-slate-100">
+                    via-white to-slate-200 dark:from-slate-900 dark:via-slate-800
+                    dark:to-slate-900 text-slate-900 dark:text-slate-100">
 
                     <Toaster richColors />
 

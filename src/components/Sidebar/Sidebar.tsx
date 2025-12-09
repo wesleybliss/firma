@@ -40,8 +40,9 @@ const Sidebar = ({
                 onClick={toggleCollapsed}
                 aria-label={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
                 className="absolute right-0 top-1/2 flex h-8 w-8 translate-x-1/2 -translate-y-1/2
-                    items-center justify-center rounded-full border border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-800
-                    text-slate-600 dark:text-slate-400 shadow-sm transition-colors hover:bg-slate-50 dark:hover:bg-slate-700 focus-visible:outline
+                    items-center justify-center rounded-full border border-slate-200 bg-white
+                    dark:border-slate-700 dark:bg-slate-800 text-slate-600 dark:text-slate-400
+                    shadow-sm transition-colors hover:bg-slate-50 dark:hover:bg-slate-700 focus-visible:outline
                     focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400 z-10">
                 {isCollapsed
                     ? <ChevronRight className="size-4" />
@@ -55,18 +56,18 @@ const Sidebar = ({
                 )}>
                 <OverviewSection
                     fileName={fileName}
-                    textFields={textFields}/>
+                    textFields={textFields} />
                 <FieldsSection
-                    onAddTextField={onAddTextField}/>
+                    onAddTextField={onAddTextField} />
                 <SignatureManager
-                    onPlaceSignature={onPlaceSignature}/>
+                    onPlaceSignature={onPlaceSignature} />
 
                 {/* @todo: move this to the right side, above the inspector */}
                 {activeField && (
                     <TextProperties
                         field={activeField}
                         onUpdate={(property, value) => onUpdateFieldProperty(
-                            activeField.id, property, value)}/>
+                            activeField.id, property, value)} />
                 )}
             </div>
         </aside>

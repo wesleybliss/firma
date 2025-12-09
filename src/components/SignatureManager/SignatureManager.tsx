@@ -83,16 +83,25 @@ const SignatureManager = ({
                                         value={vm.typedName}
                                         onChange={e => vm.setTypedName(e.target.value)} />
                                 </div>
-                                <div className="flex h-32 items-center justify-center rounded-md border border-slate-200 bg-slate-50">
+                                <div className="flex h-32 items-center justify-center
+                                    rounded-md border border-slate-200 bg-slate-50">
                                     <p className="text-4xl" style={{ fontFamily: '"Dancing Script", cursive' }}>
                                         {vm.typedName || 'Preview'}
                                     </p>
                                 </div>
-                                <Button className="w-full" onClick={vm.saveTyped} disabled={!vm.typedName}>Create Signature</Button>
+                                <Button
+                                    className="w-full"
+                                    onClick={vm.saveTyped}
+                                    disabled={!vm.typedName}>
+                                    Create Signature
+                                </Button>
                             </TabsContent>
                             <TabsContent value="upload" className="space-y-4 py-4">
-                                <div className="flex h-40 w-full items-center justify-center rounded-md border-2 border-dashed border-slate-200 bg-slate-50 hover:bg-slate-100">
-                                    <Label htmlFor="signature-upload" className="flex cursor-pointer flex-col items-center gap-2">
+                                <div className="flex h-40 w-full items-center justify-center rounded-md
+                                    border-2 border-dashed border-slate-200 bg-slate-50 hover:bg-slate-100">
+                                    <Label
+                                        htmlFor="signature-upload"
+                                        className="flex cursor-pointer flex-col items-center gap-2">
                                         <Upload className="size-8 text-slate-400" />
                                         <span className="text-sm text-slate-500">Click to upload image</span>
                                         <Input
@@ -111,7 +120,8 @@ const SignatureManager = ({
 
             <div className="space-y-2">
                 {vm.signatures.length === 0 ? (
-                    <div className="rounded-lg border border-dashed border-slate-200 p-4 text-center text-xs text-slate-500">
+                    <div className="rounded-lg border border-dashed border-slate-200
+                        p-4 text-center text-xs text-slate-500">
                         No signatures yet
                     </div>
                 ) : (
@@ -130,7 +140,8 @@ const SignatureManager = ({
                                 className="w-full justify-center text-xs font-medium"
                                 onClick={() => vm.setShowAll(!vm.showAll)}>
                                 {vm.showAll ? 'Show Less' : `Show All (${vm.signatures.length})`}
-                                <ChevronDown className={`ml-1 size-3 transition-transform ${vm.showAll ? 'rotate-180' : ''}`} />
+                                <ChevronDown
+                                    className={`ml-1 size-3 transition-transform ${vm.showAll ? 'rotate-180' : ''}`} />
                             </Button>
                         )}
                     </>

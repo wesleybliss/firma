@@ -148,9 +148,21 @@ export function AddSignatureDialog() {
                 </DialogHeader>
                 <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
                     <TabsList className="grid w-full grid-cols-3 dark:bg-slate-800 dark:text-slate-400">
-                        <TabsTrigger value="draw" className="dark:data-[state=active]:bg-slate-950 dark:data-[state=active]:text-slate-100">Draw</TabsTrigger>
-                        <TabsTrigger value="type" className="dark:data-[state=active]:bg-slate-950 dark:data-[state=active]:text-slate-100">Type</TabsTrigger>
-                        <TabsTrigger value="upload" className="dark:data-[state=active]:bg-slate-950 dark:data-[state=active]:text-slate-100">Upload</TabsTrigger>
+                        <TabsTrigger
+                            value="draw"
+                            className="dark:data-[state=active]:bg-slate-950 dark:data-[state=active]:text-slate-100">
+                            Draw
+                        </TabsTrigger>
+                        <TabsTrigger
+                            value="type"
+                            className="dark:data-[state=active]:bg-slate-950 dark:data-[state=active]:text-slate-100">
+                            Type
+                        </TabsTrigger>
+                        <TabsTrigger
+                            value="upload"
+                            className="dark:data-[state=active]:bg-slate-950 dark:data-[state=active]:text-slate-100">
+                            Upload
+                        </TabsTrigger>
                     </TabsList>
                     <TabsContent value="draw" className="space-y-4 py-4">
                         <div className="rounded-md border border-slate-200 bg-white p-1 dark:border-slate-800">
@@ -168,7 +180,13 @@ export function AddSignatureDialog() {
                                 onTouchEnd={stopDrawing} />
                         </div>
                         <div className="flex justify-between">
-                            <Button variant="outline" size="sm" onClick={clearCanvas} className="dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800">Clear</Button>
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={clearCanvas}
+                                className="dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800">
+                                Clear
+                            </Button>
                             <Button size="sm" onClick={saveDrawing}>Create Signature</Button>
                         </div>
                     </TabsContent>
@@ -180,9 +198,11 @@ export function AddSignatureDialog() {
                                 placeholder="John Doe"
                                 value={typedName}
                                 onChange={e => setTypedName(e.target.value)}
-                                className="dark:bg-slate-950 dark:border-slate-800 dark:text-slate-100 dark:placeholder:text-slate-500" />
+                                className="dark:bg-slate-950 dark:border-slate-800
+                                    dark:text-slate-100 dark:placeholder:text-slate-500" />
                         </div>
-                        <div className="flex h-32 items-center justify-center rounded-md border border-slate-200 bg-slate-50 dark:border-slate-800">
+                        <div className="flex h-32 items-center justify-center rounded-md
+                            border border-slate-200 bg-slate-50 dark:border-slate-800">
                             <p className="text-4xl" style={{ fontFamily: '"Dancing Script", cursive' }}>
                                 {typedName || 'Preview'}
                             </p>
@@ -190,10 +210,16 @@ export function AddSignatureDialog() {
                         <Button className="w-full" onClick={saveTyped} disabled={!typedName}>Create Signature</Button>
                     </TabsContent>
                     <TabsContent value="upload" className="space-y-4 py-4">
-                        <div className="flex h-40 w-full items-center justify-center rounded-md border-2 border-dashed border-slate-200 bg-slate-50 hover:bg-slate-100 dark:border-slate-800 dark:bg-slate-950 dark:hover:bg-slate-900">
-                            <Label htmlFor="signature-upload-settings" className="flex cursor-pointer flex-col items-center gap-2">
+                        <div className="flex h-40 w-full items-center justify-center
+                            rounded-md border-2 border-dashed border-slate-200 bg-slate-50
+                            hover:bg-slate-100 dark:border-slate-800 dark:bg-slate-950 dark:hover:bg-slate-900">
+                            <Label
+                                htmlFor="signature-upload-settings"
+                                className="flex cursor-pointer flex-col items-center gap-2">
                                 <Upload className="size-8 text-slate-400" />
-                                <span className="text-sm text-slate-500 dark:text-slate-400">Click to upload image</span>
+                                <span className="text-sm text-slate-500 dark:text-slate-400">
+                                    Click to upload image
+                                </span>
                                 <Input
                                     id="signature-upload-settings"
                                     type="file"

@@ -25,7 +25,10 @@ export function Toolbar({
     return (
         <div className="flex flex-col justify-between gap-4 p-2 md:flex-row md:items-center">
             <div className="flex items-center gap-3">
-                <Button variant="outline" size="icon-sm" onClick={() => onZoomAdjust(-0.1)} disabled={scale <= ZOOM_MIN}>
+                <Button
+                    variant="outline"
+                    size="icon-sm"
+                    onClick={() => onZoomAdjust(-0.1)} disabled={scale <= ZOOM_MIN}>
                     <ZoomOut className="size-4" />
                 </Button>
                 <Slider
@@ -34,7 +37,7 @@ export function Toolbar({
                     max={ZOOM_MAX}
                     step={ZOOM_STEP}
                     value={[scale]}
-                    onValueChange={onZoomChange}/>
+                    onValueChange={onZoomChange} />
                 <Button variant="outline" size="icon-sm" onClick={() => onZoomAdjust(0.1)} disabled={scale >= 2}>
                     <ZoomIn className="size-4" />
                 </Button>
@@ -55,7 +58,10 @@ export function Toolbar({
                 <span className="text-sm font-medium text-slate-900">
                     Page {currentPage} of {numPages}
                 </span>
-                <Button variant="outline" size="icon-sm" onClick={() => onPageChange(1)} disabled={currentPage >= numPages}>
+                <Button
+                    variant="outline"
+                    size="icon-sm"
+                    onClick={() => onPageChange(1)} disabled={currentPage >= numPages}>
                     <ChevronRight className="size-4" />
                 </Button>
             </div>

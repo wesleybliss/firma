@@ -5,7 +5,11 @@ import { toast } from 'sonner'
 
 const AUTO_FILL_WHITE_CANVAS_ENABLED = false
 
-type StyledCanvasProps = { className?: string; width: number; height: number } & React.CanvasHTMLAttributes<HTMLCanvasElement>;
+type StyledCanvasProps = {
+    className?: string;
+    width: number;
+    height: number;
+} & React.CanvasHTMLAttributes<HTMLCanvasElement>
 
 const StyledCanvas = forwardRef<HTMLCanvasElement, StyledCanvasProps>(({
     className,

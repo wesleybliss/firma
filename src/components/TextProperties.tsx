@@ -17,7 +17,8 @@ export function TextProperties({ field, onUpdate }: TextPropertiesProps) {
                 <select
                     value={field.fontFamily}
                     onChange={e => onUpdate('fontFamily', e.target.value)}
-                    className="w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 focus:border-slate-900 focus:outline-none">
+                    className="w-full rounded-md border border-slate-200 bg-white
+                        px-3 py-2 text-sm text-slate-900 focus:border-slate-900 focus:outline-none">
                     {GOOGLE_FONTS.map(font => (
                         <option key={font.name} value={font.family} style={{ fontFamily: font.family }}>
                             {font.name}
@@ -36,7 +37,7 @@ export function TextProperties({ field, onUpdate }: TextPropertiesProps) {
                             onChange={e => onUpdate('fontSize', Number(e.target.value))}
                             className="h-9"
                             min={8}
-                            max={72}/>
+                            max={72} />
                         <span className="text-xs text-slate-400">px</span>
                     </div>
                 </div>
@@ -48,11 +49,14 @@ export function TextProperties({ field, onUpdate }: TextPropertiesProps) {
                                 type="color"
                                 value={field.color}
                                 onChange={e => onUpdate('color', e.target.value)}
-                                className="absolute inset-0 h-full w-full cursor-pointer opacity-0"/>
+                                className="absolute inset-0 h-full w-full cursor-pointer opacity-0" />
                             <div
-                                className="flex h-9 w-full items-center gap-2 rounded-md border border-slate-200 bg-white px-2"
+                                className="flex h-9 w-full items-center gap-2
+                                    rounded-md border border-slate-200 bg-white px-2"
                                 style={{ color: field.color }}>
-                                <div className="size-4 rounded-full border border-slate-200" style={{ backgroundColor: field.color }} />
+                                <div
+                                    className="size-4 rounded-full border border-slate-200"
+                                    style={{ backgroundColor: field.color }} />
                                 <span className="text-xs font-medium uppercase text-slate-600">{field.color}</span>
                             </div>
                         </div>

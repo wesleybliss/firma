@@ -1,5 +1,19 @@
 import { Button } from '@/components/ui/button'
-import { User, Hash, Mail, Phone, Building, Type, Calendar, SquareCheckBig, CircleDot, X } from 'lucide-react'
+import {
+    User,
+    Hash,
+    Mail,
+    Phone,
+    Building,
+    Type,
+    Calendar,
+    SquareCheckBig,
+    CircleDot,
+    X,
+} from 'lucide-react'
+
+type onAddTextFieldTypeArg = 'text' | 'date' | 'fullName' | 'initials'
+    | 'email' | 'phone' | 'company' | 'checkbox' | 'radio' | 'x'
 
 const AddFieldButton = ({
     onClick,
@@ -23,7 +37,7 @@ const AddFieldButton = ({
 const FieldsSection = ({
     onAddTextField,
 }: {
-    onAddTextField: (type: 'text' | 'date' | 'fullName' | 'initials' | 'email' | 'phone' | 'company' | 'checkbox' | 'radio' | 'x') => void
+    onAddTextField: (type: onAddTextFieldTypeArg) => void
 }) => {
     return (
         <section>

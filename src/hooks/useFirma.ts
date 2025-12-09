@@ -1,4 +1,7 @@
-import { useState, useRef, useEffect, useCallback, createRef, type ChangeEvent, type MouseEvent, type RefObject } from 'react'
+import {
+    useState, useRef, useEffect, useCallback, createRef,
+    type ChangeEvent, type MouseEvent, type RefObject,
+} from 'react'
 import { PDFDocument, StandardFonts, rgb } from 'pdf-lib'
 import fontkit from '@pdf-lib/fontkit'
 import { toast } from 'sonner'
@@ -14,6 +17,9 @@ import { hashFile } from '@/lib/utils'
 import { useDocumentsStore } from '@/store/documents'
 
 const clamp = (value: number, min: number, max: number) => Math.min(Math.max(value, min), max)
+
+const cdnFontUrlFor = (family: string, weight: string, style: string) =>
+    `https://cdn.jsdelivr.net/npm/@fontsource/${family}/files/${family}-latin-${weight}-${style}.woff2`
 
 export function useFirma() {
     const [pdfFile, setPdfFile] = useState<string | null>(null)
@@ -188,7 +194,9 @@ export function useFirma() {
         setTextFields(previous => [...previous, newField])
         setActiveFieldId(newField.id)
 
-        const fieldTypeLabel = fieldType === 'text' ? 'Text field' : `${fieldType.charAt(0).toUpperCase() + fieldType.slice(1)} field`
+        const fieldTypeLabel = fieldType === 'text'
+            ? 'Text field'
+            : `${fieldType.charAt(0).toUpperCase() + fieldType.slice(1)} field`
         toast.info(`${fieldTypeLabel} added to the canvas`)
     }
 
@@ -357,7 +365,7 @@ export function useFirma() {
             const family = fontFamily.toLowerCase().replace(/ /g, '-')
             const weight = isBold ? '700' : '400'
             const style = isItalic ? 'italic' : 'normal'
-            const cdnUrl = `https://cdn.jsdelivr.net/npm/@fontsource/${family}/files/${family}-latin-${weight}-${style}.woff2`
+            const cdnUrl = cdnFontUrlFor(family, weight, style)
 
             try {
                 const response = await fetch(cdnUrl)
@@ -371,7 +379,8 @@ export function useFirma() {
             // Fallback to Google Fonts API
             const googleWeight = isBold ? '700' : '400'
             const googleStyle = isItalic ? '1' : '0'
-            const url = `https://fonts.googleapis.com/css2?family=${fontFamily.replace(/ /g, '+')}:ital,wght@${googleStyle},${googleWeight}&display=swap`
+            const url = `https://fonts.googleapis.com/css2?family=${fontFamily.replace(/ /g, '+')}` +
+                `:ital,wght@${googleStyle},${googleWeight}&display=swap`
 
             const css = await fetch(url).then(res => res.text())
 
