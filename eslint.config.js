@@ -18,6 +18,9 @@ export default [
     },
     {
         files: ['**/*.{ts,tsx,js,jsx}'],
+        linterOptions: {
+            reportUnusedDisableDirectives: true,
+        },
         languageOptions: {
             ecmaVersion: 'latest',
             sourceType: 'module',
@@ -79,6 +82,25 @@ export default [
             'no-eq-null': 'error',
             'object-curly-spacing': ['error', 'always'],
             '@typescript-eslint/no-explicit-any': 'off', // Allow explicit any types
+
+            // Style rules (built-in ESLint)
+            'indent': [
+                'error',
+                4,
+                {
+                    SwitchCase: 1,
+                },
+            ],
+            'linebreak-style': ['error', 'unix'],
+            'quotes': ['error', 'single'],
+            'semi': ['error', 'never'],
+            'arrow-parens': ['error', 'as-needed'],
+            'lines-between-class-members': ['error', 'always', { 'exceptAfterSingleLine': true }],
+            'comma-dangle': ['error', 'always-multiline'],
+            'max-len': ['error', { 'code': 120 }],
+            'block-spacing': ['error', 'always'],
+            'space-before-blocks': ['error', 'always'],
+            'keyword-spacing': ['error', { 'before': true, 'after': true }]
         },
     },
 ]
