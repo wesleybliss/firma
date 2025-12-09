@@ -1,6 +1,6 @@
 import { Rnd } from 'react-rnd'
 import { PanelsTopLeft, Trash2, User, Hash, Mail, Phone, Building, Calendar } from 'lucide-react'
-
+import { getFieldLabel } from '@/lib/utils'
 import { cn } from '@/lib/utils'
 import type { TextField as TextFieldType, FieldType } from '@/types'
 
@@ -46,33 +46,6 @@ export function TextField({
                 return <Phone className="size-3" />
             case 'company':
                 return <Building className="size-3" />
-            default:
-                return null
-        }
-    }
-
-    const getFieldLabel = (fieldType: FieldType) => {
-        switch (fieldType) {
-            case 'text':
-                return 'Text'
-            case 'date':
-                return 'Date'
-            case 'fullName':
-                return 'Full Name'
-            case 'initials':
-                return 'Initials'
-            case 'email':
-                return 'Email'
-            case 'phone':
-                return 'Phone'
-            case 'company':
-                return 'Company'
-            case 'checkbox':
-                return 'Checkbox'
-            case 'radio':
-                return 'Radio'
-            case 'x':
-                return 'X-Mark'
             default:
                 return null
         }

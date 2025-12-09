@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { ChevronLeft, ChevronRight, FileText } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { cn } from '@/lib/utils'
+import { cn, getFieldLabel } from '@/lib/utils'
 
 const InspectorSidebar = ({
     state,
@@ -64,16 +64,10 @@ const InspectorSidebar = ({
                                             <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
                                                 Field {index + 1}
                                             </p>
-                                            {field.fieldType !== 'text' && (
-                                                <span className="rounded bg-sky-100 px-1.5 py-0.5
-                                                    text-[10px] font-medium text-sky-700">
-                                                    {field.fieldType === 'date' ? 'Date' :
-                                                        field.fieldType === 'fullName' ? 'Name' :
-                                                            field.fieldType === 'initials' ? 'Initials' :
-                                                                field.fieldType === 'email' ? 'Email' :
-                                                                    field.fieldType === 'phone' ? 'Phone' : 'Company'}
-                                                </span>
-                                            )}
+                                            <span className="rounded bg-sky-100 px-1.5 py-0.5
+                                                text-[10px] font-medium text-sky-700">
+                                                {getFieldLabel(field.fieldType)}
+                                            </span>
                                         </div>
                                         <Button
                                             variant="ghost"
