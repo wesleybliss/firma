@@ -7,17 +7,17 @@ import { useFirma } from '@/hooks/useFirma'
 import { useFirebaseSync } from '@/hooks/useFirebaseSync'
 import { useAuthStore } from '@/store/auth'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import { ThemeProvider } from '@/components/theme-provider'
+import { ThemeProvider } from '@/components/ThemeProvider'
 
 function App() {
     const { state, actions } = useFirma()
     const initializeAuth = useAuthStore((state) => state.initialize)
-    
+
     // Initialize Firebase authentication
     useEffect(() => {
         initializeAuth()
     }, [initializeAuth])
-    
+
     // Set up real-time sync with Firestore
     useFirebaseSync()
 
@@ -34,7 +34,7 @@ function App() {
                         type="file"
                         accept=".pdf"
                         onChange={actions.handleFileUpload}
-                        className="hidden"/>
+                        className="hidden" />
 
                     <div className="flex h-screen flex-col">
                         <Navbar state={state} actions={actions} />
