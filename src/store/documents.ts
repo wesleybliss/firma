@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
 import { createStoreName } from '@/store/store'
-import { doc, setDoc, getDoc } from 'firebase/firestore'
+import { doc, setDoc, getDoc, collection, onSnapshot } from 'firebase/firestore'
 import { db } from '@/lib/firebase'
 import { TextField, SignatureField } from '@/types'
 import { useAuthStore } from './auth'
@@ -21,7 +21,9 @@ type DocumentsStore = {
     // Actions
     saveDocumentState: (hash: string, state: DocumentState) => Promise<void>
     loadDocumentState: (hash: string) => Promise<DocumentState | null>
+
     clearDocumentState: (hash: string) => void
+    syncWithFirestore: (userId: string) => () => void
 }
 
 export const useDocumentsStore = create<DocumentsStore>()(
@@ -88,6 +90,57 @@ export const useDocumentsStore = create<DocumentsStore>()(
                     delete newStates[hash]
                     return { savedStates: newStates }
                 })
+            },
+
+            syncWithFirestore: (userId: string) => {
+                const collectionRef = collection(db, 'users', userId, 'documents')
+
+                const unsubscribe = onSnapshot(collectionRef, snapshot => {
+                    const remoteDocs: Record<string, DocumentState> = {}
+
+                    snapshot.forEach(doc => {
+                        const data = doc.data() as DocumentState
+                        // Use the document ID as hash if hash property is missing, though it should match
+                        const hash = doc.id
+                        remoteDocs[hash] = data
+                    })
+
+                    set(prev => {
+                        const newStates = { ...prev.savedStates }
+                        let hasChanges = false
+
+                        // Update local from remote if remote is newer
+                        Object.entries(remoteDocs).forEach(([hash, remoteState]) => {
+                            const localState = newStates[hash]
+                            if (!localState || remoteState.lastModified > localState.lastModified) {
+                                newStates[hash] = remoteState
+                                hasChanges = true
+                            }
+                        })
+
+                        // Check for local docs that need to be pushed (newer or missing on remote)
+                        // We do this inside the snapshot callback to ensure we have the latest remote state
+                        // However, we must be careful not to trigger infinite loops. 
+                        // Since setDoc updates the local cache immediately in Firestore SDK, 
+                        // and we only write if local > remote, it should converge.
+                        Object.values(newStates).forEach(localState => {
+                            const remoteState = remoteDocs[localState.hash]
+                            if (!remoteState || localState.lastModified > remoteState.lastModified) {
+                                const docRef = doc(db, 'users', userId, 'documents', localState.hash)
+                                // We don't await this as we're inside a sync callback
+                                setDoc(docRef, localState, { merge: true }).catch(err =>
+                                    console.error('Error syncing document upstream:', err)
+                                )
+                            }
+                        })
+
+                        return hasChanges ? { savedStates: newStates } : prev
+                    })
+                }, error => {
+                    console.error('Error syncing documents:', error)
+                })
+
+                return unsubscribe
             },
         }),
         {
