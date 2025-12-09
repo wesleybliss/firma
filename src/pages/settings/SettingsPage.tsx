@@ -1,36 +1,25 @@
 import { Link } from 'react-router-dom'
-import { ChevronLeft, Trash2 } from 'lucide-react'
+import { ChevronLeft } from 'lucide-react'
 import { Button, buttonVariants } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { AddSignatureDialog } from '@/components/AddSignatureDialog'
-import { useUserStore } from '@/store/user'
-import { useSignaturesStore } from '@/store/signatures'
-import { useDefaultsStore } from '@/store/defaults'
-import { GOOGLE_FONTS } from '@/lib/fonts'
-import { DATE_FORMATS } from '@/lib/dateUtils'
 import { APP_NAME } from '@/lib/constants'
 import UserSettingsPanel from './UserSettingsPanel'
 import AppSettingsPanel from './AppSettingsPanel'
 
 const SettingsPage = () => {
-    const userStore = useUserStore()
-    const { signatures, removeSignature } = useSignaturesStore()
-    const { fontFamily, fontSize, dateFormat, setFontFamily, setFontSize, setDateFormat } = useDefaultsStore()
-
     const handleReset = () => {
-        if (confirm('Are you sure you want to clear all data? This action cannot be undone.')) {
-            const keysToRemove = []
-            for (let i = 0; i < localStorage.length; i++) {
-                const key = localStorage.key(i)
-                if (key && key.startsWith(APP_NAME.toLowerCase())) {
-                    keysToRemove.push(key)
-                }
-            }
+        if (!confirm('Are you sure you want to clear all data? This action cannot be undone.'))
+            return
 
-            keysToRemove.forEach(key => localStorage.removeItem(key))
-            window.location.reload()
+        const keysToRemove = []
+        for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i)
+            if (key && key.startsWith(APP_NAME.toLowerCase())) {
+                keysToRemove.push(key)
+            }
         }
+
+        keysToRemove.forEach(key => localStorage.removeItem(key))
+        window.location.reload()
     }
 
     return (
@@ -40,7 +29,9 @@ const SettingsPage = () => {
                 <Link to="/" className={buttonVariants({ variant: 'ghost', size: 'icon' })}>
                     <ChevronLeft className="size-5" />
                 </Link>
-                <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">Settings</h1>
+                <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">
+                    Settings
+                </h1>
             </div>
 
             <div className="grid grid-cols-2 gap-8 space-y-8">
