@@ -43,7 +43,7 @@ const SettingsPage = () => {
                 <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">Settings</h1>
             </div>
 
-            <div className="grid grid-cols-2 gap-4 space-y-8">
+            <div className="grid grid-cols-2 gap-8 space-y-8">
                 <UserSettingsPanel />
                 <AppSettingsPanel />
             </div>

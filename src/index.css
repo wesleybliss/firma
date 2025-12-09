@@ -121,11 +121,11 @@
 }
 
 ::-webkit-scrollbar {
-    width: 4px;
+    width: 6px;
 }
 
 ::-webkit-scrollbar-track {
-    -webkit-box-shadow: inset 0 0 4px rgba(0 0 0 / 0.3);
+    -webkit-box-shadow: inset 0 0 6px rgba(0 0 0 / 0.3);
 }
 
 ::-webkit-scrollbar-thumb {
@@ -135,7 +135,7 @@
 
 /* Scrollbar styles for dark mode */
 .dark ::-webkit-scrollbar-track {
-    -webkit-box-shadow: inset 0 0 4px rgba(255 255 255 / 0.3);
+    -webkit-box-shadow: inset 0 0 6px rgba(255 255 255 / 0.3);
 }
 
 .dark ::-webkit-scrollbar-thumb {
