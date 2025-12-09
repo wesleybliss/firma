@@ -332,11 +332,28 @@ export function useFirma() {
 
     const fetchFontBytes = async (fontFamily: string, isBold: boolean, isItalic: boolean) => {
         try {
+            // Special handling for Inter to use official rsms.me distribution (fixes PDF spacing issues)
+            if (fontFamily === 'Inter') {
+                let filename = 'Inter-Regular.woff2'
+                if (isBold && isItalic) filename = 'Inter-BoldItalic.woff2'
+                else if (isBold) filename = 'Inter-Bold.woff2'
+                else if (isItalic) filename = 'Inter-Italic.woff2'
+
+                try {
+                    const response = await fetch(`https://rsms.me/inter/font-files/${filename}?v=3.19`)
+                    if (response.ok) {
+                        return await response.arrayBuffer()
+                    }
+                } catch (e) {
+                    console.warn('rsms.me font fetch failed, falling back', e)
+                }
+            }
+
             // Try fetching from jsDelivr (static fonts) first to avoid Variable Font issues with pdf-lib
             const family = fontFamily.toLowerCase().replace(/ /g, '-')
             const weight = isBold ? '700' : '400'
             const style = isItalic ? 'italic' : 'normal'
-            const cdnUrl = `https://cdn.jsdelivr.net/npm/@fontsource/${family}/files/${family}-latin-${weight}-${style}.woff`
+            const cdnUrl = `https://cdn.jsdelivr.net/npm/@fontsource/${family}/files/${family}-latin-${weight}-${style}.woff2`
 
             try {
                 const response = await fetch(cdnUrl)
