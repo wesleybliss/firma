@@ -62,7 +62,7 @@ const FieldsOverlay = ({
                         onFieldUpdate={onFieldUpdate}
                         onFieldRemove={onFieldRemove}
                         onFieldPositionUpdate={onFieldPositionUpdate}
-                        onFieldDimensionsUpdate={onFieldDimensionsUpdate}/>
+                        onFieldDimensionsUpdate={onFieldDimensionsUpdate} />
                 ))}
         </div>
 
@@ -92,8 +92,8 @@ const FieldsOverlay = ({
                         }}
                         onResizeStop={(_e, _direction, ref, _delta, position) => {
                             onSignatureDimensionsUpdate(field.id, {
-                                width: parseInt(ref.style.width) / scale,
-                                height: parseInt(ref.style.height) / scale,
+                                width: parseInt(ref.style.width, 10) / scale,
+                                height: parseInt(ref.style.height, 10) / scale,
                             })
                             onSignaturePositionUpdate(field.id, position)
                         }}
@@ -129,7 +129,7 @@ const FieldsOverlay = ({
                                 src={field.dataUrl}
                                 alt="Signature"
                                 className="h-full w-full object-contain"
-                                draggable={false}/>
+                                draggable={false} />
 
                             {showChrome && (
                                 <button

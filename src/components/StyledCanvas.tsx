@@ -48,4 +48,6 @@ const StyledCanvas = forwardRef<HTMLCanvasElement, StyledCanvasProps>(({
     )
 })
 
+StyledCanvas.displayName = 'StyledCanvas'
+
 export default StyledCanvas

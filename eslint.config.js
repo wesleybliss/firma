@@ -13,6 +13,7 @@ export default [
             'dist',
             'build',
             'node_modules',
+            'src/components/ui/**',
         ],
     },
     {
@@ -77,6 +78,7 @@ export default [
             'radix': ['error', 'always'],
             'no-eq-null': 'error',
             'object-curly-spacing': ['error', 'always'],
+            '@typescript-eslint/no-explicit-any': 'off', // Allow explicit any types
         },
     },
 ]

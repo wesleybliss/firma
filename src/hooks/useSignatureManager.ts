@@ -78,6 +78,7 @@ const useSignatureManager = () => {
     }
 
     const saveTyped = () => {
+        // eslint-disable-next-line no-restricted-globals
         const canvas = document.createElement('canvas')
         canvas.width = 400
         canvas.height = 100

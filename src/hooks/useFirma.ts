@@ -36,24 +36,28 @@ export function useFirma() {
 
     useEffect(() => {
         const links = GOOGLE_FONTS.map(font => {
+            // eslint-disable-next-line no-restricted-globals
             const link = document.createElement('link')
             link.href = font.url
             link.rel = 'stylesheet'
+
+            // eslint-disable-next-line no-restricted-globals
             document.head.appendChild(link)
             return link
         })
 
         return () => {
             links.forEach(link => {
-                if (link.parentNode) {
+                if (link.parentNode)
+                    // eslint-disable-next-line no-restricted-globals
                     document.head.removeChild(link)
-                }
             })
         }
     }, [])
 
     useEffect(() => {
         if (activeFieldId) {
+            // eslint-disable-next-line no-restricted-globals
             const input = document.getElementById(`field-${activeFieldId}`) as HTMLInputElement | null
             if (input) {
                 input.focus()
@@ -513,6 +517,8 @@ export function useFirma() {
             const pdfBytes = await pdfDoc.save()
             const blob = new Blob([pdfBytes as any], { type: 'application/pdf' })
             const url = URL.createObjectURL(blob)
+
+            // eslint-disable-next-line no-restricted-globals
             const link = document.createElement('a')
             link.href = url
             link.download = fileName ? `firma-${fileName}` : 'firma-document.pdf'

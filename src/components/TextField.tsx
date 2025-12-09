@@ -100,8 +100,8 @@ export function TextField({
             }}
             onResizeStop={(_event, _direction, ref, _delta, position) => {
                 onFieldDimensionsUpdate(field.id, {
-                    width: parseInt(ref.style.width) / scale,
-                    height: parseInt(ref.style.height) / scale,
+                    width: parseInt(ref.style.width, 10) / scale,
+                    height: parseInt(ref.style.height, 10) / scale,
                 })
                 onFieldPositionUpdate(field.id, position)
             }}
@@ -169,7 +169,7 @@ export function TextField({
                             ]
                                 .filter(Boolean)
                                 .join(' '),
-                        }}/>
+                        }} />
                 </div>
 
                 {showChrome && (

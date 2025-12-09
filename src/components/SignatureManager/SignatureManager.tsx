@@ -34,7 +34,7 @@ const SignatureManager = ({
                 }
             }
         }, 100)
-    }, [vm.activeTab, vm.isOpen])
+    }, [vm.activeTab, vm.isOpen, vm.canvasRef])
 
     return (
         <div className="space-y-4">
@@ -67,7 +67,7 @@ const SignatureManager = ({
                                         onMouseLeave={vm.stopDrawing}
                                         onTouchStart={vm.startDrawing}
                                         onTouchMove={vm.draw}
-                                        onTouchEnd={vm.stopDrawing}/>
+                                        onTouchEnd={vm.stopDrawing} />
                                 </div>
                                 <div className="flex justify-between">
                                     <Button variant="outline" size="sm" onClick={vm.clearCanvas}>Clear</Button>
@@ -81,7 +81,7 @@ const SignatureManager = ({
                                         id="name"
                                         placeholder="John Doe"
                                         value={vm.typedName}
-                                        onChange={(e) => vm.setTypedName(e.target.value)}/>
+                                        onChange={(e) => vm.setTypedName(e.target.value)} />
                                 </div>
                                 <div className="flex h-32 items-center justify-center rounded-md border border-slate-200 bg-slate-50">
                                     <p className="text-4xl" style={{ fontFamily: '"Dancing Script", cursive' }}>
@@ -100,7 +100,7 @@ const SignatureManager = ({
                                             type="file"
                                             accept="image/*"
                                             className="hidden"
-                                            onChange={vm.handleUpload}/>
+                                            onChange={vm.handleUpload} />
                                     </Label>
                                 </div>
                             </TabsContent>
@@ -121,7 +121,7 @@ const SignatureManager = ({
                                 key={signature.id}
                                 signature={signature}
                                 onPlaceSignature={onPlaceSignature}
-                                removeSignature={vm.removeSignature}/>
+                                removeSignature={vm.removeSignature} />
                         ))}
                         {vm.signatures.length > 3 && (
                             <Button

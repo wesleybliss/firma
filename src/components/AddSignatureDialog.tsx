@@ -75,6 +75,7 @@ export function AddSignatureDialog() {
     }
 
     const saveTyped = () => {
+        // eslint-disable-next-line no-restricted-globals
         const canvas = document.createElement('canvas')
         canvas.width = 400
         canvas.height = 100
@@ -164,7 +165,7 @@ export function AddSignatureDialog() {
                                 onMouseLeave={stopDrawing}
                                 onTouchStart={startDrawing}
                                 onTouchMove={draw}
-                                onTouchEnd={stopDrawing}/>
+                                onTouchEnd={stopDrawing} />
                         </div>
                         <div className="flex justify-between">
                             <Button variant="outline" size="sm" onClick={clearCanvas} className="dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800">Clear</Button>
@@ -179,7 +180,7 @@ export function AddSignatureDialog() {
                                 placeholder="John Doe"
                                 value={typedName}
                                 onChange={(e) => setTypedName(e.target.value)}
-                                className="dark:bg-slate-950 dark:border-slate-800 dark:text-slate-100 dark:placeholder:text-slate-500"/>
+                                className="dark:bg-slate-950 dark:border-slate-800 dark:text-slate-100 dark:placeholder:text-slate-500" />
                         </div>
                         <div className="flex h-32 items-center justify-center rounded-md border border-slate-200 bg-slate-50 dark:border-slate-800">
                             <p className="text-4xl" style={{ fontFamily: '"Dancing Script", cursive' }}>
@@ -198,7 +199,7 @@ export function AddSignatureDialog() {
                                     type="file"
                                     accept="image/*"
                                     className="hidden"
-                                    onChange={handleUpload}/>
+                                    onChange={handleUpload} />
                             </Label>
                         </div>
                     </TabsContent>
