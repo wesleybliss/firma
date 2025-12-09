@@ -332,28 +332,50 @@ export function useFirma() {
 
     const fetchFontBytes = async (fontFamily: string, isBold: boolean, isItalic: boolean) => {
         try {
+            // Try fetching from jsDelivr (static fonts) first to avoid Variable Font issues with pdf-lib
+            const family = fontFamily.toLowerCase().replace(/ /g, '-')
             const weight = isBold ? '700' : '400'
-            const style = isItalic ? '1' : '0'
-            const url = `https://fonts.googleapis.com/css2?family=${fontFamily.replace(/ /g, '+')}:ital,wght@${style},${weight}&display=swap`
+            const style = isItalic ? 'italic' : 'normal'
+            const cdnUrl = `https://cdn.jsdelivr.net/npm/@fontsource/${family}/files/${family}-latin-${weight}-${style}.woff`
+
+            try {
+                const response = await fetch(cdnUrl)
+                if (response.ok) {
+                    return await response.arrayBuffer()
+                }
+            } catch (e) {
+                console.warn('CDN font fetch failed, falling back to Google Fonts', e)
+            }
+
+            // Fallback to Google Fonts API
+            const googleWeight = isBold ? '700' : '400'
+            const googleStyle = isItalic ? '1' : '0'
+            const url = `https://fonts.googleapis.com/css2?family=${fontFamily.replace(/ /g, '+')}:ital,wght@${googleStyle},${googleWeight}&display=swap`
 
             const css = await fetch(url).then(res => res.text())
 
             // Try to find latin subset first
-            const latinMatch = css.match(/\/\* latin \*\/[\s\S]*?src: url\((.+?)\) format\('woff2'\)/)
+            const latinMatch = css.match(/\/\* latin \*\/[\s\S]*?src: url\((.+?)\) format\(['"]woff2['"]\)/)
 
             if (latinMatch) {
                 return await fetch(latinMatch[1]).then(res => res.arrayBuffer())
             }
 
             // Fallback to any woff2
-            const match = css.match(/src: url\((.+?)\) format\('woff2'\)/)
+            const match = css.match(/src: url\((.+?)\) format\(['"]woff2['"]\)/)
 
-            if (!match) {
-                console.warn(`Could not parse font URL for ${fontFamily} ${style},${weight}`)
-                return null
+            if (match) {
+                return await fetch(match[1]).then(res => res.arrayBuffer())
             }
 
-            return await fetch(match[1]).then(res => res.arrayBuffer())
+            // Fallback to truetype if woff2 missing
+            const ttfMatch = css.match(/src: url\((.+?)\) format\(['"]truetype['"]\)/)
+            if (ttfMatch) {
+                return await fetch(ttfMatch[1]).then(res => res.arrayBuffer())
+            }
+
+            console.warn(`Could not parse font URL for ${fontFamily} ${style},${weight}`)
+            return null
         } catch (e) {
             console.error('Error fetching font:', e)
             return null
