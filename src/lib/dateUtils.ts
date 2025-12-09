@@ -16,8 +16,8 @@ export const formatDate = (date: Date, format: string): string => {
 
     // Month names
     const monthNames = [
-        "January", "February", "March", "April", "May", "June",
-        "July", "August", "September", "October", "November", "December"
+        'January', 'February', 'March', 'April', 'May', 'June',
+        'July', 'August', 'September', 'October', 'November', 'December',
     ]
 
     let result = format

@@ -10,33 +10,33 @@ interface AuthState {
   initialize: () => void
 }
 
-export const useAuthStore = create<AuthState>((set) => ({
-  user: null,
-  loading: true,
+export const useAuthStore = create<AuthState>(set => ({
+    user: null,
+    loading: true,
   
-  signInWithGoogle: async () => {
-    try {
-      await signInWithPopup(auth, googleProvider)
-      // User state will be updated by onAuthStateChanged listener
-    } catch (error) {
-      console.error('Error signing in with Google:', error)
-      throw error
-    }
-  },
+    signInWithGoogle: async () => {
+        try {
+            await signInWithPopup(auth, googleProvider)
+            // User state will be updated by onAuthStateChanged listener
+        } catch (error) {
+            console.error('Error signing in with Google:', error)
+            throw error
+        }
+    },
   
-  signOut: async () => {
-    try {
-      await firebaseSignOut(auth)
-      // User state will be updated by onAuthStateChanged listener
-    } catch (error) {
-      console.error('Error signing out:', error)
-      throw error
-    }
-  },
+    signOut: async () => {
+        try {
+            await firebaseSignOut(auth)
+            // User state will be updated by onAuthStateChanged listener
+        } catch (error) {
+            console.error('Error signing out:', error)
+            throw error
+        }
+    },
   
-  initialize: () => {
-    onAuthStateChanged(auth, (user) => {
-      set({ user, loading: false })
-    })
-  },
+    initialize: () => {
+        onAuthStateChanged(auth, user => {
+            set({ user, loading: false })
+        })
+    },
 }))

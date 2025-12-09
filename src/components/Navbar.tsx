@@ -11,7 +11,7 @@ import {
     DropdownMenuLabel,
     DropdownMenuSeparator,
     DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from '@/components/ui/dropdown-menu'
 import ThemeToggle from '@/components/ThemeToggle'
 import { APP_NAME } from '@/lib/constants'
 

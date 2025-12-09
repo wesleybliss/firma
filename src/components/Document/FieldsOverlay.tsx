@@ -104,10 +104,10 @@ const FieldsOverlay = ({
                         lockAspectRatio={true}
                         className={cn(
                             'pointer-events-auto',
-                            showChrome && '!cursor-auto'
+                            showChrome && '!cursor-auto',
                         )}>
                         <div
-                            onClick={(e) => {
+                            onClick={e => {
                                 e.stopPropagation()
                                 onFieldClick(field.id)
                             }}
@@ -115,11 +115,11 @@ const FieldsOverlay = ({
                                 'relative h-full w-full rounded p-1 transition-colors',
                                 showChrome
                                     ? 'z-50 border border-sky-500 bg-white/10 shadow-sm ring-1 ring-sky-500'
-                                    : 'z-10 border border-transparent hover:border-slate-300 hover:bg-white/10'
+                                    : 'z-10 border border-transparent hover:border-slate-300 hover:bg-white/10',
                             )}>
-                            <div className={cn("drag-handle absolute -left-3 -top-3 cursor-grab p-1",
-                                "text-slate-400 hover:text-slate-600 active:cursor-grabbing",
-                                !showChrome && "opacity-0 group-hover:opacity-100")}>
+                            <div className={cn('drag-handle absolute -left-3 -top-3 cursor-grab p-1',
+                                'text-slate-400 hover:text-slate-600 active:cursor-grabbing',
+                                !showChrome && 'opacity-0 group-hover:opacity-100')}>
                                 <div className="rounded-full bg-white p-1 shadow-sm ring-1 ring-slate-200">
                                     <PanelsTopLeft className="size-3" />
                                 </div>
@@ -133,9 +133,9 @@ const FieldsOverlay = ({
 
                             {showChrome && (
                                 <button
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        onSignatureRemove(field.id);
+                                    onClick={e => {
+                                        e.stopPropagation()
+                                        onSignatureRemove(field.id)
                                     }}
                                     className="absolute -right-3 -top-3 rounded-full bg-white p-1 text-slate-400
                                         shadow-sm ring-1 ring-slate-200 hover:bg-red-50 hover:text-red-500">

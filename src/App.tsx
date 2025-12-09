@@ -11,7 +11,7 @@ import { ThemeProvider } from '@/components/ThemeProvider'
 
 function App() {
     const { state, actions } = useFirma()
-    const initializeAuth = useAuthStore((state) => state.initialize)
+    const initializeAuth = useAuthStore(state => state.initialize)
 
     // Initialize Firebase authentication
     useEffect(() => {

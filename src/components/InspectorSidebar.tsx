@@ -18,7 +18,7 @@ const InspectorSidebar = ({
             className={cn(
                 'relative hidden border-l border-slate-200 bg-white/70 dark:bg-slate-800/70 py-6 transition-[width]',
                 'duration-300 ease-in-out lg:flex lg:flex-col',
-                isCollapsed ? 'w-10 px-2' : 'w-80 px-6'
+                isCollapsed ? 'w-10 px-2' : 'w-80 px-6',
             )}>
             <button
                 type="button"
@@ -32,7 +32,7 @@ const InspectorSidebar = ({
             <div
                 className={cn(
                     'flex flex-1 flex-col transition-opacity duration-200',
-                    isCollapsed && 'pointer-events-none opacity-0'
+                    isCollapsed && 'pointer-events-none opacity-0',
                 )}>
                 <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">Inspector</p>
                 <div className="mt-4 flex-1 space-y-4 overflow-y-auto rounded-2xl border border-slate-200
@@ -51,7 +51,7 @@ const InspectorSidebar = ({
                                 <div
                                     key={field.id}
                                     className={`rounded-xl border p-4 transition-colors ${isActive ? 'border-sky-500 bg-sky-50/70' : 'border-slate-200 bg-white hover:border-slate-300'
-                                        }`}>
+                                    }`}>
                                     <div className="mb-3 flex items-center justify-between">
                                         <div className="flex items-center gap-2">
                                             <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Field {index + 1}</p>

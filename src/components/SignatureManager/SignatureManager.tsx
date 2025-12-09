@@ -41,7 +41,7 @@ const SignatureManager = ({
             <div className="flex items-center justify-between">
                 <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Signatures</p>
                 <Dialog open={vm.isOpen} onOpenChange={vm.setIsOpen}>
-                    <DialogTrigger className={buttonVariants({ variant: "ghost", size: "icon-sm" })}>
+                    <DialogTrigger className={buttonVariants({ variant: 'ghost', size: 'icon-sm' })}>
                         <Plus className="size-4" />
                     </DialogTrigger>
                     <DialogContent className="sm:max-w-md">
@@ -81,7 +81,7 @@ const SignatureManager = ({
                                         id="name"
                                         placeholder="John Doe"
                                         value={vm.typedName}
-                                        onChange={(e) => vm.setTypedName(e.target.value)} />
+                                        onChange={e => vm.setTypedName(e.target.value)} />
                                 </div>
                                 <div className="flex h-32 items-center justify-center rounded-md border border-slate-200 bg-slate-50">
                                     <p className="text-4xl" style={{ fontFamily: '"Dancing Script", cursive' }}>

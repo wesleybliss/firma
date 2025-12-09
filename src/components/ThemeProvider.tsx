@@ -1,8 +1,8 @@
-import { APP_NAME } from "@/lib/constants"
-import { useEffect, useState } from "react"
-import { ThemeProviderContext } from "@/components/ThemeProviderContext"
+import { APP_NAME } from '@/lib/constants'
+import { useEffect, useState } from 'react'
+import { ThemeProviderContext } from '@/components/ThemeProviderContext'
 
-type Theme = "dark" | "light" | "system"
+type Theme = 'dark' | 'light' | 'system'
 
 type ThemeProviderProps = {
     children: React.ReactNode
@@ -12,24 +12,24 @@ type ThemeProviderProps = {
 
 export function ThemeProvider({
     children,
-    defaultTheme = "system",
+    defaultTheme = 'system',
     storageKey = `${APP_NAME.toLowerCase()}-theme`,
     ...props
 }: ThemeProviderProps) {
     const [theme, setTheme] = useState<Theme>(
-        () => (localStorage.getItem(storageKey) as Theme) || defaultTheme
+        () => (localStorage.getItem(storageKey) as Theme) || defaultTheme,
     )
 
     useEffect(() => {
         const root = window.document.documentElement
 
-        root.classList.remove("light", "dark")
+        root.classList.remove('light', 'dark')
 
-        if (theme === "system") {
-            const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)")
+        if (theme === 'system') {
+            const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
             const applySystemTheme = (isDark: boolean) => {
-                root.classList.remove("light", "dark")
-                root.classList.add(isDark ? "dark" : "light")
+                root.classList.remove('light', 'dark')
+                root.classList.add(isDark ? 'dark' : 'light')
             }
 
             // Apply current system theme immediately
@@ -37,8 +37,8 @@ export function ThemeProvider({
 
             // React to subsequent system changes
             const handleChange = (e: MediaQueryListEvent) => applySystemTheme(e.matches)
-            mediaQuery.addEventListener("change", handleChange)
-            return () => mediaQuery.removeEventListener("change", handleChange)
+            mediaQuery.addEventListener('change', handleChange)
+            return () => mediaQuery.removeEventListener('change', handleChange)
         }
 
         root.classList.add(theme)

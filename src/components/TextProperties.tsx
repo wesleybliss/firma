@@ -16,7 +16,7 @@ export function TextProperties({ field, onUpdate }: TextPropertiesProps) {
                 <p className="text-xs font-medium text-slate-500">Font Family</p>
                 <select
                     value={field.fontFamily}
-                    onChange={(e) => onUpdate('fontFamily', e.target.value)}
+                    onChange={e => onUpdate('fontFamily', e.target.value)}
                     className="w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 focus:border-slate-900 focus:outline-none">
                     {GOOGLE_FONTS.map(font => (
                         <option key={font.name} value={font.family} style={{ fontFamily: font.family }}>
@@ -33,7 +33,7 @@ export function TextProperties({ field, onUpdate }: TextPropertiesProps) {
                         <Input
                             type="number"
                             value={field.fontSize}
-                            onChange={(e) => onUpdate('fontSize', Number(e.target.value))}
+                            onChange={e => onUpdate('fontSize', Number(e.target.value))}
                             className="h-9"
                             min={8}
                             max={72}/>
@@ -47,7 +47,7 @@ export function TextProperties({ field, onUpdate }: TextPropertiesProps) {
                             <input
                                 type="color"
                                 value={field.color}
-                                onChange={(e) => onUpdate('color', e.target.value)}
+                                onChange={e => onUpdate('color', e.target.value)}
                                 className="absolute inset-0 h-full w-full cursor-pointer opacity-0"/>
                             <div
                                 className="flex h-9 w-full items-center gap-2 rounded-md border border-slate-200 bg-white px-2"

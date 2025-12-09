@@ -1,7 +1,7 @@
 import { memo } from 'react'
-import { Signature } from "@/types"
-import { Button } from "@/components/ui/button"
-import { Trash2 } from "lucide-react"
+import { Signature } from '@/types'
+import { Button } from '@/components/ui/button'
+import { Trash2 } from 'lucide-react'
 
 type SignatureImageProps = {
     signature: Signature
@@ -21,7 +21,7 @@ const SignatureImage = ({ signature, onPlaceSignature, removeSignature }: Signat
                 variant="ghost"
                 size="icon-sm"
                 className="absolute right-1 top-1 h-6 w-6 opacity-0 transition-opacity group-hover:opacity-100"
-                onClick={(e) => {
+                onClick={e => {
                     e.stopPropagation()
                     removeSignature(signature.id)
                 }}>

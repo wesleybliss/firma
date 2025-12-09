@@ -19,7 +19,7 @@ const SettingsPage = () => {
     return (
         <div className="container mx-auto max-w-2xl px-4 py-8">
             <div className="mb-8 flex items-center gap-4">
-                <Link to="/" className={buttonVariants({ variant: "ghost", size: "icon" })}>
+                <Link to="/" className={buttonVariants({ variant: 'ghost', size: 'icon' })}>
                     <ChevronLeft className="size-5" />
                 </Link>
                 <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">Settings</h1>
@@ -35,7 +35,7 @@ const SettingsPage = () => {
                                 <Input
                                     id="name"
                                     value={userStore.name}
-                                    onChange={(e) => userStore.setName(e.target.value)}
+                                    onChange={e => userStore.setName(e.target.value)}
                                     placeholder="John Doe"/>
                             </div>
                             <div className="grid gap-2">
@@ -43,7 +43,7 @@ const SettingsPage = () => {
                                 <Input
                                     id="initials"
                                     value={userStore.initials}
-                                    onChange={(e) => userStore.setInitials(e.target.value)}
+                                    onChange={e => userStore.setInitials(e.target.value)}
                                     placeholder="JD"/>
                             </div>
                         </div>
@@ -53,7 +53,7 @@ const SettingsPage = () => {
                                 <Input
                                     id="phone"
                                     value={userStore.phone}
-                                    onChange={(e) => userStore.setPhone(e.target.value)}
+                                    onChange={e => userStore.setPhone(e.target.value)}
                                     placeholder="(555) 000-0000"/>
                             </div>
                             <div className="grid gap-2">
@@ -61,9 +61,9 @@ const SettingsPage = () => {
                                 <select
                                     id="date-format"
                                     value={dateFormat}
-                                    onChange={(e) => setDateFormat(e.target.value)}
+                                    onChange={e => setDateFormat(e.target.value)}
                                     className="flex h-10 w-full rounded-md border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800 px-3 py-2 text-sm ring-offset-white file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-slate-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
-                                    {DATE_FORMATS.map((format) => (
+                                    {DATE_FORMATS.map(format => (
                                         <option key={format.value} value={format.value}>
                                             {format.label} ({format.value})
                                         </option>
@@ -78,7 +78,7 @@ const SettingsPage = () => {
                                     id="email"
                                     type="email"
                                     value={userStore.email}
-                                    onChange={(e) => userStore.setEmail(e.target.value)}
+                                    onChange={e => userStore.setEmail(e.target.value)}
                                     placeholder="john@example.com"/>
                             </div>
                             <div className="grid gap-2">
@@ -86,7 +86,7 @@ const SettingsPage = () => {
                                 <Input
                                     id="company"
                                     value={userStore.company}
-                                    onChange={(e) => userStore.setCompany(e.target.value)}
+                                    onChange={e => userStore.setCompany(e.target.value)}
                                     placeholder="Acme Inc."/>
                             </div>
                         </div>
@@ -103,9 +103,9 @@ const SettingsPage = () => {
                             <select
                                 id="font-family"
                                 value={fontFamily}
-                                onChange={(e) => setFontFamily(e.target.value)}
+                                onChange={e => setFontFamily(e.target.value)}
                                 className="flex h-10 w-full rounded-md border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800 px-3 py-2 text-sm ring-offset-white file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-slate-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
-                                {GOOGLE_FONTS.map((font) => (
+                                {GOOGLE_FONTS.map(font => (
                                     <option key={font.family} value={font.family}>
                                         {font.name}
                                     </option>
@@ -120,7 +120,7 @@ const SettingsPage = () => {
                                 min="8"
                                 max="72"
                                 value={fontSize}
-                                onChange={(e) => setFontSize(Number(e.target.value))}/>
+                                onChange={e => setFontSize(Number(e.target.value))}/>
                         </div>
                     </div>
                 </section>

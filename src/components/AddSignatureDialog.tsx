@@ -179,7 +179,7 @@ export function AddSignatureDialog() {
                                 id="signature-name"
                                 placeholder="John Doe"
                                 value={typedName}
-                                onChange={(e) => setTypedName(e.target.value)}
+                                onChange={e => setTypedName(e.target.value)}
                                 className="dark:bg-slate-950 dark:border-slate-800 dark:text-slate-100 dark:placeholder:text-slate-500" />
                         </div>
                         <div className="flex h-32 items-center justify-center rounded-md border border-slate-200 bg-slate-50 dark:border-slate-800">

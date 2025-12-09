@@ -31,11 +31,11 @@ export const useDocumentsStore = create<DocumentsStore>()(
 
             saveDocumentState: async (hash: string, state: DocumentState) => {
                 // Update local state immediately
-                set((prev) => ({
+                set(prev => ({
                     savedStates: {
                         ...prev.savedStates,
-                        [hash]: state
-                    }
+                        [hash]: state,
+                    },
                 }))
 
                 const user = useAuthStore.getState().user
@@ -65,11 +65,11 @@ export const useDocumentsStore = create<DocumentsStore>()(
 
                             // Update local cache if remote is newer or we don't have local
                             if (!localState || remoteState.lastModified > localState.lastModified) {
-                                set((prev) => ({
+                                set(prev => ({
                                     savedStates: {
                                         ...prev.savedStates,
-                                        [hash]: remoteState
-                                    }
+                                        [hash]: remoteState,
+                                    },
                                 }))
                                 return remoteState
                             }
@@ -83,16 +83,16 @@ export const useDocumentsStore = create<DocumentsStore>()(
             },
 
             clearDocumentState: (hash: string) => {
-                set((prev) => {
+                set(prev => {
                     const newStates = { ...prev.savedStates }
                     delete newStates[hash]
                     return { savedStates: newStates }
                 })
-            }
+            },
         }),
         {
             name: createStoreName('documents'),
             storage: createJSONStorage(() => localStorage),
-        }
-    )
+        },
+    ),
 )

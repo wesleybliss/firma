@@ -115,7 +115,7 @@ export function TextField({
                 <div className="drag-handle cursor-grab active:cursor-grabbing absolute left-0
                     -top-5 flex items-center gap-1 rounded bg-sky-100
                     px-1.5 py-0.5 text-[10px] font-medium text-sky-700"
-                    style={{ whiteSpace: 'nowrap' }}>
+                style={{ whiteSpace: 'nowrap' }}>
                     {getFieldIcon(field.fieldType)}
                     <span>{getFieldLabel(field.fieldType)}</span>
                 </div>
@@ -129,13 +129,13 @@ export function TextField({
                     'flex h-full w-full items-center gap-1 rounded p-1 transition-colors',
                     showChrome
                         ? 'z-50 border border-sky-500 bg-white/40 shadow-sm ring-1 ring-sky-500'
-                        : 'z-10 border border-transparent hover:border-slate-300 hover:bg-white/50'
+                        : 'z-10 border border-transparent hover:border-slate-300 hover:bg-white/50',
                 )}>
                 <div
                     className={cn(
                         'drag-handle cursor-grab p-0.5 text-slate-400',
                         'hover:text-slate-600 active:cursor-grabbing',
-                        !showChrome && 'opacity-0 group-hover:opacity-100'
+                        !showChrome && 'opacity-0 group-hover:opacity-100',
                     )}>
                     <PanelsTopLeft className="size-3" />
                 </div>
@@ -156,10 +156,10 @@ export function TextField({
                         onFocus={() => onFieldClick(field.id)}
                         onClick={() => onFieldClick(field.id)}
                         onChange={event => onFieldUpdate(field.id, event.target.value)}
-                        className={cn("absolute inset-0 h-full w-full border-0 bg-transparent p-0 text-slate-900 placeholder:text-slate-400 focus:ring-0 focus:outline-none",
-                            isCompact ? "text-center cursor-default" : "px-0.5"
+                        className={cn('absolute inset-0 h-full w-full border-0 bg-transparent p-0 text-slate-900 placeholder:text-slate-400 focus:ring-0 focus:outline-none',
+                            isCompact ? 'text-center cursor-default' : 'px-0.5',
                         )}
-                        placeholder={isCompact ? "" : "Type here..."}
+                        placeholder={isCompact ? '' : 'Type here...'}
                         style={{
                             ...fontStyles,
                             color: field.color,
@@ -178,8 +178,8 @@ export function TextField({
                             event.stopPropagation()
                             onFieldRemove(field.id)
                         }}
-                        className={cn("rounded-full p-1 text-slate-400 hover:text-red-500",
-                            isCompact && "absolute -right-3 -top-3 bg-white shadow-sm ring-1 ring-slate-200"
+                        className={cn('rounded-full p-1 text-slate-400 hover:text-red-500',
+                            isCompact && 'absolute -right-3 -top-3 bg-white shadow-sm ring-1 ring-slate-200',
                         )}>
                         <Trash2 className="size-3" />
                     </button>

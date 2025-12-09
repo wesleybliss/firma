@@ -1,9 +1,9 @@
-import HomeReady from "./HomeReady"
-import HomeLanding from "./HomeLanding"
+import HomeReady from './HomeReady'
+import HomeLanding from './HomeLanding'
 
 const HomePage = ({
     state,
-    actions
+    actions,
 }: {
     state: any
     actions: any

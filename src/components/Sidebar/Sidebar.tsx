@@ -33,7 +33,7 @@ const Sidebar = ({
             className={cn(
                 'relative hidden border-r border-slate-200 bg-white/70 dark:bg-slate-800/70 py-6',
                 'transition-[width] duration-300 ease-in-out md:flex md:flex-col',
-                isCollapsed ? 'w-10 px-2' : 'w-72 px-6'
+                isCollapsed ? 'w-10 px-2' : 'w-72 px-6',
             )}>
             <button
                 type="button"
@@ -51,7 +51,7 @@ const Sidebar = ({
             <div
                 className={cn(
                     'flex flex-1 flex-col gap-8 overflow-y-auto transition-opacity duration-200',
-                    isCollapsed && 'pointer-events-none opacity-0'
+                    isCollapsed && 'pointer-events-none opacity-0',
                 )}>
                 <OverviewSection
                     fileName={fileName}

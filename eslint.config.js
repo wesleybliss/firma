@@ -100,7 +100,7 @@ export default [
             'max-len': ['error', { 'code': 120 }],
             'block-spacing': ['error', 'always'],
             'space-before-blocks': ['error', 'always'],
-            'keyword-spacing': ['error', { 'before': true, 'after': true }]
+            'keyword-spacing': ['error', { 'before': true, 'after': true }],
         },
     },
 ]

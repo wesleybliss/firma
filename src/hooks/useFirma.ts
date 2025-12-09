@@ -75,7 +75,7 @@ export function useFirma() {
                 textFields,
                 signatureFields,
                 lastModified: Date.now(),
-                fileName
+                fileName,
             })
         }, 500)
 
@@ -202,13 +202,13 @@ export function useFirma() {
 
     const updateTextField = (id: string, text: string) => {
         setTextFields(previous =>
-            previous.map(field => (field.id === id ? { ...field, text, isNew: false } : field))
+            previous.map(field => (field.id === id ? { ...field, text, isNew: false } : field)),
         )
     }
 
     const updateFieldProperty = (id: string, property: keyof TextField, value: any) => {
         setTextFields(previous =>
-            previous.map(field => (field.id === id ? { ...field, [property]: value, isNew: false } : field))
+            previous.map(field => (field.id === id ? { ...field, [property]: value, isNew: false } : field)),
         )
     }
 
@@ -227,8 +227,8 @@ export function useFirma() {
                         y: clamp(position.y / height, 0, 1),
                         isNew: false,
                     }
-                    : field
-            )
+                    : field,
+            ),
         )
     }
 
@@ -242,8 +242,8 @@ export function useFirma() {
                         height: dimensions.height,
                         isNew: false,
                     }
-                    : field
-            )
+                    : field,
+            ),
         )
     }
 
@@ -274,7 +274,7 @@ export function useFirma() {
             const adjustedHeight = 150 / aspectRatio
 
             setSignatureFields(prev => prev.map(f =>
-                f.id === newField.id ? { ...f, height: adjustedHeight } : f
+                f.id === newField.id ? { ...f, height: adjustedHeight } : f,
             ))
         }
         img.src = signature.dataUrl
@@ -307,8 +307,8 @@ export function useFirma() {
                         y: clamp(position.y / height, 0, 1),
                         isNew: false,
                     }
-                    : field
-            )
+                    : field,
+            ),
         )
     }
 
@@ -322,8 +322,8 @@ export function useFirma() {
                         height: dimensions.height,
                         isNew: false,
                     }
-                    : field
-            )
+                    : field,
+            ),
         )
     }
 
@@ -538,7 +538,7 @@ export function useFirma() {
     const onPageLoadSuccess = useCallback((page: any) => {
         setPdfDimensions({
             width: page.originalWidth,
-            height: page.originalHeight
+            height: page.originalHeight,
         })
     }, [])
 

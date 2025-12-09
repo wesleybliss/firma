@@ -5,7 +5,7 @@ import { TextField } from '@/types'
 
 const OverviewSection = ({
     fileName,
-    textFields
+    textFields,
 }: {
     fileName: string | null
     textFields: TextField[]

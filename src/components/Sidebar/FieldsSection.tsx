@@ -1,10 +1,10 @@
-import { Button } from "@/components/ui/button"
+import { Button } from '@/components/ui/button'
 import { User, Hash, Mail, Phone, Building, Type, Calendar, SquareCheckBig, CircleDot, X } from 'lucide-react'
 
 const AddFieldButton = ({
     onClick,
     icon,
-    label
+    label,
 }: {
     onClick: () => void
     icon: React.ReactNode
@@ -21,7 +21,7 @@ const AddFieldButton = ({
 )
 
 const FieldsSection = ({
-    onAddTextField
+    onAddTextField,
 }: {
     onAddTextField: (type: 'text' | 'date' | 'fullName' | 'initials' | 'email' | 'phone' | 'company' | 'checkbox' | 'radio' | 'x') => void
 }) => {

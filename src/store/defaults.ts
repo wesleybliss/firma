@@ -20,7 +20,7 @@ const DEFAULT_SETTINGS = {
 
 export const useDefaultsStore = create<DefaultsState>()(
     persist(
-        (set) => ({
+        set => ({
             ...DEFAULT_SETTINGS,
             setFontFamily: (fontFamily: string) => set({ fontFamily }),
             setFontSize: (fontSize: number) => set({ fontSize }),
@@ -30,6 +30,6 @@ export const useDefaultsStore = create<DefaultsState>()(
         {
             name: createStoreName('defaults'),
             storage: createJSONStorage(() => localStorage),
-        }
-    )
+        },
+    ),
 )
