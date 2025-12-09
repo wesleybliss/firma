@@ -18,8 +18,7 @@ const AppReady = ({
                 activeFieldId={state.activeFieldId}
                 onAddTextField={actions.addTextField}
                 onUpdateFieldProperty={actions.updateFieldProperty}
-                onPlaceSignature={actions.placeSignature}
-            />
+                onPlaceSignature={actions.placeSignature}/>
 
             <main className="flex-1 overflow-hidden">
                 <div className="flex h-full flex-col gap-6">
@@ -41,8 +40,7 @@ const AppReady = ({
                         signatureFields={state.signatureFields}
                         onSignatureRemove={actions.removeSignatureField}
                         onSignaturePositionUpdate={actions.updateSignaturePosition}
-                        onSignatureDimensionsUpdate={actions.updateSignatureDimensions}
-                    />
+                        onSignatureDimensionsUpdate={actions.updateSignatureDimensions}/>
                 </div>
             </main>
 

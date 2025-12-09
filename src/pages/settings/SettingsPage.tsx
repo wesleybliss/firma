@@ -36,8 +36,7 @@ const SettingsPage = () => {
                                     id="name"
                                     value={userStore.name}
                                     onChange={(e) => userStore.setName(e.target.value)}
-                                    placeholder="John Doe"
-                                />
+                                    placeholder="John Doe"/>
                             </div>
                             <div className="grid gap-2">
                                 <Label htmlFor="initials">Initials</Label>
@@ -45,8 +44,7 @@ const SettingsPage = () => {
                                     id="initials"
                                     value={userStore.initials}
                                     onChange={(e) => userStore.setInitials(e.target.value)}
-                                    placeholder="JD"
-                                />
+                                    placeholder="JD"/>
                             </div>
                         </div>
                         <div className="grid grid-cols-2 gap-4">
@@ -56,8 +54,7 @@ const SettingsPage = () => {
                                     id="phone"
                                     value={userStore.phone}
                                     onChange={(e) => userStore.setPhone(e.target.value)}
-                                    placeholder="(555) 000-0000"
-                                />
+                                    placeholder="(555) 000-0000"/>
                             </div>
                             <div className="grid gap-2">
                                 <Label htmlFor="date-format">Date Format</Label>
@@ -65,8 +62,7 @@ const SettingsPage = () => {
                                     id="date-format"
                                     value={dateFormat}
                                     onChange={(e) => setDateFormat(e.target.value)}
-                                    className="flex h-10 w-full rounded-md border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800 px-3 py-2 text-sm ring-offset-white file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-slate-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                                >
+                                    className="flex h-10 w-full rounded-md border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800 px-3 py-2 text-sm ring-offset-white file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-slate-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
                                     {DATE_FORMATS.map((format) => (
                                         <option key={format.value} value={format.value}>
                                             {format.label} ({format.value})
@@ -83,8 +79,7 @@ const SettingsPage = () => {
                                     type="email"
                                     value={userStore.email}
                                     onChange={(e) => userStore.setEmail(e.target.value)}
-                                    placeholder="john@example.com"
-                                />
+                                    placeholder="john@example.com"/>
                             </div>
                             <div className="grid gap-2">
                                 <Label htmlFor="company">Company</Label>
@@ -92,8 +87,7 @@ const SettingsPage = () => {
                                     id="company"
                                     value={userStore.company}
                                     onChange={(e) => userStore.setCompany(e.target.value)}
-                                    placeholder="Acme Inc."
-                                />
+                                    placeholder="Acme Inc."/>
                             </div>
                         </div>
                     </div>
@@ -110,8 +104,7 @@ const SettingsPage = () => {
                                 id="font-family"
                                 value={fontFamily}
                                 onChange={(e) => setFontFamily(e.target.value)}
-                                className="flex h-10 w-full rounded-md border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800 px-3 py-2 text-sm ring-offset-white file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-slate-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                            >
+                                className="flex h-10 w-full rounded-md border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800 px-3 py-2 text-sm ring-offset-white file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-slate-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
                                 {GOOGLE_FONTS.map((font) => (
                                     <option key={font.family} value={font.family}>
                                         {font.name}
@@ -127,8 +120,7 @@ const SettingsPage = () => {
                                 min="8"
                                 max="72"
                                 value={fontSize}
-                                onChange={(e) => setFontSize(Number(e.target.value))}
-                            />
+                                onChange={(e) => setFontSize(Number(e.target.value))}/>
                         </div>
                     </div>
                 </section>
@@ -150,15 +142,13 @@ const SettingsPage = () => {
                             signatures.map(signature => (
                                 <div
                                     key={signature.id}
-                                    className="group relative flex h-32 items-center justify-center rounded-xl border border-slate-200 bg-white dark:bg-white p-4 transition-all hover:border-sky-500 hover:shadow-sm"
-                                >
+                                    className="group relative flex h-32 items-center justify-center rounded-xl border border-slate-200 bg-white dark:bg-white p-4 transition-all hover:border-sky-500 hover:shadow-sm">
                                     <img src={signature.dataUrl} alt="Signature" className="max-h-full max-w-full object-contain" />
                                     <Button
                                         variant="destructive"
                                         size="icon"
                                         className="absolute right-2 top-2 h-8 w-8 opacity-0 transition-opacity group-hover:opacity-100"
-                                        onClick={() => removeSignature(signature.id)}
-                                    >
+                                        onClick={() => removeSignature(signature.id)}>
                                         <Trash2 className="size-4" />
                                     </Button>
                                 </div>

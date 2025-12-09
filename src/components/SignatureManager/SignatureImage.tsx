@@ -15,8 +15,7 @@ const SignatureImage = ({ signature, onPlaceSignature, removeSignature }: Signat
             key={signature.id}
             className="group relative flex cursor-pointer items-center justify-center
                 rounded-lg border border-slate-200 bg-white p-2 transition-all hover:border-sky-500 hover:shadow-sm"
-            onClick={() => onPlaceSignature(signature.id)}
-        >
+            onClick={() => onPlaceSignature(signature.id)}>
             <img src={signature.dataUrl} alt="Signature" className="h-8 max-w-full object-contain bg-white" />
             <Button
                 variant="ghost"
@@ -25,8 +24,7 @@ const SignatureImage = ({ signature, onPlaceSignature, removeSignature }: Signat
                 onClick={(e) => {
                     e.stopPropagation()
                     removeSignature(signature.id)
-                }}
-            >
+                }}>
                 <Trash2 className="size-3 text-red-500" />
             </Button>
         </div>

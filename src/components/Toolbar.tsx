@@ -34,8 +34,7 @@ export function Toolbar({
                     max={ZOOM_MAX}
                     step={ZOOM_STEP}
                     value={[scale]}
-                    onValueChange={onZoomChange}
-                />
+                    onValueChange={onZoomChange}/>
                 <Button variant="outline" size="icon-sm" onClick={() => onZoomAdjust(0.1)} disabled={scale >= 2}>
                     <ZoomIn className="size-4" />
                 </Button>

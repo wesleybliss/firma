@@ -34,8 +34,7 @@ function App() {
                         type="file"
                         accept=".pdf"
                         onChange={actions.handleFileUpload}
-                        className="hidden"
-                    />
+                        className="hidden"/>
 
                     <div className="flex h-screen flex-col">
                         <Navbar state={state} actions={actions} />

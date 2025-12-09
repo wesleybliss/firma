@@ -19,15 +19,13 @@ const InspectorSidebar = ({
                 'relative hidden border-l border-slate-200 bg-white/70 dark:bg-slate-800/70 py-6 transition-[width]',
                 'duration-300 ease-in-out lg:flex lg:flex-col',
                 isCollapsed ? 'w-10 px-2' : 'w-80 px-6'
-            )}
-        >
+            )}>
             <button
                 type="button"
                 onClick={toggleCollapsed}
                 aria-label={isCollapsed ? 'Expand inspector' : 'Collapse inspector'}
                 className="absolute left-0 top-1/2 flex h-8 w-8 -translate-x-1/2 -translate-y-1/2 items-center
-                    justify-center rounded-full border border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-800 text-slate-600 shadow-sm transition-colors hover:bg-slate-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400"
-            >
+                    justify-center rounded-full border border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-800 text-slate-600 shadow-sm transition-colors hover:bg-slate-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400">
                 {isCollapsed ? <ChevronLeft className="size-4" /> : <ChevronRight className="size-4" />}
             </button>
 
@@ -35,8 +33,7 @@ const InspectorSidebar = ({
                 className={cn(
                     'flex flex-1 flex-col transition-opacity duration-200',
                     isCollapsed && 'pointer-events-none opacity-0'
-                )}
-            >
+                )}>
                 <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">Inspector</p>
                 <div className="mt-4 flex-1 space-y-4 overflow-y-auto rounded-2xl border border-slate-200
                     bg-white dark:border-slate-700 dark:bg-slate-800 p-4 shadow-sm transition-opacity duration-200">
@@ -54,8 +51,7 @@ const InspectorSidebar = ({
                                 <div
                                     key={field.id}
                                     className={`rounded-xl border p-4 transition-colors ${isActive ? 'border-sky-500 bg-sky-50/70' : 'border-slate-200 bg-white hover:border-slate-300'
-                                        }`}
-                                >
+                                        }`}>
                                     <div className="mb-3 flex items-center justify-between">
                                         <div className="flex items-center gap-2">
                                             <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Field {index + 1}</p>
@@ -80,8 +76,7 @@ const InspectorSidebar = ({
                                         onChange={event => actions.updateTextField(field.id, event.target.value)}
                                         onFocus={() => actions.setActiveFieldId(field.id)}
                                         placeholder="Enter text"
-                                        className="w-full rounded-md border border-slate-200 px-3 py-2 text-sm focus:border-sky-500 focus:outline-none"
-                                    />
+                                        className="w-full rounded-md border border-slate-200 px-3 py-2 text-sm focus:border-sky-500 focus:outline-none"/>
                                     <div className="mt-3 grid grid-cols-2 gap-2 text-[11px] text-slate-500">
                                         <span>X: {(field.x * 100).toFixed(0)}%</span>
                                         <span>Y: {(field.y * 100).toFixed(0)}%</span>

@@ -47,8 +47,7 @@ const FieldsOverlay = ({
             style={{
                 width: scaledWidth,
                 height: scaledHeight,
-            }}
-        >
+            }}>
             {textFields
                 .filter(field => field.page === currentPage)
                 .map(field => (
@@ -63,8 +62,7 @@ const FieldsOverlay = ({
                         onFieldUpdate={onFieldUpdate}
                         onFieldRemove={onFieldRemove}
                         onFieldPositionUpdate={onFieldPositionUpdate}
-                        onFieldDimensionsUpdate={onFieldDimensionsUpdate}
-                    />
+                        onFieldDimensionsUpdate={onFieldDimensionsUpdate}/>
                 ))}
         </div>
 
@@ -73,8 +71,7 @@ const FieldsOverlay = ({
             style={{
                 width: scaledWidth,
                 height: scaledHeight,
-            }}
-        >
+            }}>
             {signatureFields.filter(f => f.page === currentPage).map(field => {
                 const isActive = activeFieldId === field.id
                 const showChrome = isActive || field.isNew
@@ -108,8 +105,7 @@ const FieldsOverlay = ({
                         className={cn(
                             'pointer-events-auto',
                             showChrome && '!cursor-auto'
-                        )}
-                    >
+                        )}>
                         <div
                             onClick={(e) => {
                                 e.stopPropagation()
@@ -120,8 +116,7 @@ const FieldsOverlay = ({
                                 showChrome
                                     ? 'z-50 border border-sky-500 bg-white/10 shadow-sm ring-1 ring-sky-500'
                                     : 'z-10 border border-transparent hover:border-slate-300 hover:bg-white/10'
-                            )}
-                        >
+                            )}>
                             <div className={cn("drag-handle absolute -left-3 -top-3 cursor-grab p-1",
                                 "text-slate-400 hover:text-slate-600 active:cursor-grabbing",
                                 !showChrome && "opacity-0 group-hover:opacity-100")}>
@@ -134,8 +129,7 @@ const FieldsOverlay = ({
                                 src={field.dataUrl}
                                 alt="Signature"
                                 className="h-full w-full object-contain"
-                                draggable={false}
-                            />
+                                draggable={false}/>
 
                             {showChrome && (
                                 <button
@@ -144,8 +138,7 @@ const FieldsOverlay = ({
                                         onSignatureRemove(field.id);
                                     }}
                                     className="absolute -right-3 -top-3 rounded-full bg-white p-1 text-slate-400
-                                        shadow-sm ring-1 ring-slate-200 hover:bg-red-50 hover:text-red-500"
-                                >
+                                        shadow-sm ring-1 ring-slate-200 hover:bg-red-50 hover:text-red-500">
                                     <Trash2 className="size-3" />
                                 </button>
                             )}

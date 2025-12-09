@@ -14,8 +14,7 @@ const AddFieldButton = ({
         variant="ghost"
         size="sm"
         className="justify-start"
-        onClick={onClick}
-    >
+        onClick={onClick}>
         {icon}
         <span className="text-sm">{label}</span>
     </Button>
@@ -41,38 +40,31 @@ const FieldsSection = ({
                     <AddFieldButton
                         onClick={() => onAddTextField('text')}
                         icon={<Type className="size-4" />}
-                        label="Text"
-                    />
+                        label="Text"/>
                     <AddFieldButton
                         onClick={() => onAddTextField('date')}
                         icon={<Calendar className="size-4" />}
-                        label="Date"
-                    />
+                        label="Date"/>
                     <AddFieldButton
                         onClick={() => onAddTextField('fullName')}
                         icon={<User className="size-4" />}
-                        label="Name"
-                    />
+                        label="Name"/>
                     <AddFieldButton
                         onClick={() => onAddTextField('initials')}
                         icon={<Hash className="size-4" />}
-                        label="Initials"
-                    />
+                        label="Initials"/>
                     <AddFieldButton
                         onClick={() => onAddTextField('email')}
                         icon={<Mail className="size-4" />}
-                        label="Email"
-                    />
+                        label="Email"/>
                     <AddFieldButton
                         onClick={() => onAddTextField('phone')}
                         icon={<Phone className="size-4" />}
-                        label="Phone"
-                    />
+                        label="Phone"/>
                     <AddFieldButton
                         onClick={() => onAddTextField('company')}
                         icon={<Building className="size-4" />}
-                        label="Company"
-                    />
+                        label="Company"/>
                 </div>
 
                 <hr className="w-full border-t border-gray-200 my-2" />
@@ -81,18 +73,15 @@ const FieldsSection = ({
                     <AddFieldButton
                         onClick={() => onAddTextField('checkbox')}
                         icon={<SquareCheckBig className="size-4" />}
-                        label="Checkbox"
-                    />
+                        label="Checkbox"/>
                     <AddFieldButton
                         onClick={() => onAddTextField('radio')}
                         icon={<CircleDot className="size-4" />}
-                        label="Radio"
-                    />
+                        label="Radio"/>
                     <AddFieldButton
                         onClick={() => onAddTextField('x')}
                         icon={<X className="size-4" />}
-                        label="X Mark"
-                    />
+                        label="X Mark"/>
                 </div>
 
             </div>

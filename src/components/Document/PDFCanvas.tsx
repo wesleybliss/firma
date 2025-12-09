@@ -24,15 +24,13 @@ const PDFViewer = memo(({ file, scale, pageNumber, onDocumentLoadSuccess, onPage
                     Rendering PDF…
                 </div>
             }
-            onLoadSuccess={onDocumentLoadSuccess}
-        >
+            onLoadSuccess={onDocumentLoadSuccess}>
             <Page
                 pageNumber={pageNumber}
                 scale={scale}
                 renderTextLayer={false}
                 renderAnnotationLayer={false}
-                onLoadSuccess={onPageLoadSuccess}
-            />
+                onLoadSuccess={onPageLoadSuccess}/>
         </Document>
     )
 })
@@ -85,8 +83,7 @@ export function PDFCanvas({
     return (
         <div
             className="relative flex flex-1 overflow-hidden"
-            onClick={onCanvasClick}
-        >
+            onClick={onCanvasClick}>
             <div className="relative h-full w-full overflow-auto py-2">
                 <div className="flex min-h-full items-center justify-center">
                     <div
@@ -94,15 +91,13 @@ export function PDFCanvas({
                         style={{
                             width: scaledWidth || undefined,
                             height: scaledHeight || undefined,
-                        }}
-                    >
+                        }}>
                         <PDFViewer
                             file={pdfFile}
                             scale={scale}
                             pageNumber={currentPage}
                             onDocumentLoadSuccess={onDocumentLoadSuccess}
-                            onPageLoadSuccess={onPageLoadSuccess}
-                        />
+                            onPageLoadSuccess={onPageLoadSuccess}/>
 
                         {pdfDimensions.width > 0 && (
                             <FieldsOverlay
@@ -120,8 +115,7 @@ export function PDFCanvas({
                                 onFieldDimensionsUpdate={onFieldDimensionsUpdate}
                                 onSignatureRemove={onSignatureRemove}
                                 onSignaturePositionUpdate={onSignaturePositionUpdate}
-                                onSignatureDimensionsUpdate={onSignatureDimensionsUpdate}
-                            />
+                                onSignatureDimensionsUpdate={onSignatureDimensionsUpdate}/>
                         )}
                     </div>
                 </div>

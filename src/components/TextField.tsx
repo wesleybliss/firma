@@ -110,8 +110,7 @@ export function TextField({
             enableResizing={false}
             disableDragging={!showChrome}
             className={cn('pointer-events-auto !border-none !outline-none', showChrome && '!cursor-auto')}
-            style={{ border: 'none' }}
-        >
+            style={{ border: 'none' }}>
             {showChrome && field.fieldType && (
                 <div className="drag-handle cursor-grab active:cursor-grabbing absolute left-0
                     -top-5 flex items-center gap-1 rounded bg-sky-100
@@ -131,15 +130,13 @@ export function TextField({
                     showChrome
                         ? 'z-50 border border-sky-500 bg-white/40 shadow-sm ring-1 ring-sky-500'
                         : 'z-10 border border-transparent hover:border-slate-300 hover:bg-white/50'
-                )}
-            >
+                )}>
                 <div
                     className={cn(
                         'drag-handle cursor-grab p-0.5 text-slate-400',
                         'hover:text-slate-600 active:cursor-grabbing',
                         !showChrome && 'opacity-0 group-hover:opacity-100'
-                    )}
-                >
+                    )}>
                     <PanelsTopLeft className="size-3" />
                 </div>
 
@@ -148,8 +145,7 @@ export function TextField({
                     {/* Hidden span to dictate width */}
                     <span
                         className="invisible col-start-1 row-start-1 whitespace-pre px-0.5"
-                        style={fontStyles}
-                    >
+                        style={fontStyles}>
                         {field.text || (isCompact ? ' ' : 'Type here...')}
                     </span>
 
@@ -173,8 +169,7 @@ export function TextField({
                             ]
                                 .filter(Boolean)
                                 .join(' '),
-                        }}
-                    />
+                        }}/>
                 </div>
 
                 {showChrome && (
@@ -185,8 +180,7 @@ export function TextField({
                         }}
                         className={cn("rounded-full p-1 text-slate-400 hover:text-red-500",
                             isCompact && "absolute -right-3 -top-3 bg-white shadow-sm ring-1 ring-slate-200"
-                        )}
-                    >
+                        )}>
                         <Trash2 className="size-3" />
                     </button>
                 )}

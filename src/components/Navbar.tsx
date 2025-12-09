@@ -60,8 +60,7 @@ const Navbar = ({ state, actions }: { state: any, actions: any }) => {
                     onZoomChange={actions.handleZoomChange}
                     onZoomAdjust={actions.adjustZoom}
                     onZoomReset={actions.resetZoom}
-                    onPageChange={actions.changePage}
-                />}
+                    onPageChange={actions.changePage}/>}
 
                 <div className="flex items-center gap-2">
                     <Button variant="outline" size="sm" onClick={actions.openFileDialog}>
@@ -81,8 +80,7 @@ const Navbar = ({ state, actions }: { state: any, actions: any }) => {
                                         <img
                                             src={user.photoURL}
                                             alt={user.displayName || 'User'}
-                                            className="size-6 rounded-full"
-                                        />
+                                            className="size-6 rounded-full"/>
                                     ) : (
                                         <div className="size-6 rounded-full bg-slate-200" />
                                     )}

@@ -41,18 +41,15 @@ const AppLanding = ({
                     <FeatureCard
                         icon={<FileText className="size-5 text-slate-900 dark:text-slate-100" />}
                         title="Precise placement"
-                        description="Drag fields with pixel-perfect control on a crisp PDF preview."
-                    />
+                        description="Drag fields with pixel-perfect control on a crisp PDF preview."/>
                     <FeatureCard
                         icon={<MousePointer2 className="size-5 text-slate-900 dark:text-slate-100" />}
                         title="Simple editing"
-                        description="Click any field to edit the text, size, or position instantly."
-                    />
+                        description="Click any field to edit the text, size, or position instantly."/>
                     <FeatureCard
                         icon={<Download className="size-5 text-slate-900 dark:text-slate-100" />}
                         title="Private export"
-                        description="Everything happens locally. Download a flattened PDF in one click."
-                    />
+                        description="Everything happens locally. Download a flattened PDF in one click."/>
                 </div>
             </div>
         </main>
