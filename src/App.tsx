@@ -8,6 +8,7 @@ import { useFirebaseSync } from '@/hooks/useFirebaseSync'
 import { useAuthStore } from '@/store/auth'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { ThemeProvider } from '@/components/ThemeProvider'
+import { GOOGLE_FONTS } from '@/lib/fonts'
 
 function App() {
     const { handleFileUpload } = useFileLoader()
@@ -17,6 +18,25 @@ function App() {
     const openFileDialog = () => {
         fileInputRef.current?.click()
     }
+
+    // Load Google Fonts into the DOM
+    useEffect(() => {
+        const links = GOOGLE_FONTS.map(font => {
+            const link = document.createElement('link')
+            link.href = font.url
+            link.rel = 'stylesheet'
+            document.head.appendChild(link)
+            return link
+        })
+
+        return () => {
+            links.forEach(link => {
+                if (link.parentNode) {
+                    document.head.removeChild(link)
+                }
+            })
+        }
+    }, [])
 
     // Initialize Firebase authentication
     useEffect(() => {
