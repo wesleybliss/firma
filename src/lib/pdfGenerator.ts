@@ -99,6 +99,23 @@ export const generateSignedPdf = async (
         const pdfDoc = await PDFDocument.load(existingPdfBytes)
         pdfDoc.registerFontkit(fontkit)
 
+        // Attempt to remove form fields to solve z-index issues without breaking fonts
+        // flattening was causing font embedding issues, so we just remove the interactive elements
+        try {
+            const form = pdfDoc.getForm()
+            const fields = form.getFields()
+            fields.forEach(field => {
+                try {
+                    // removing the field removes the widget annotation, clearing the z-index obstruction
+                    form.removeField(field)
+                } catch (e) {
+                    // ignore individual field removal errors
+                }
+            })
+        } catch (e) {
+            console.warn('Could not process form fields:', e)
+        }
+
         // Group fields by page
         const fieldsByPage: Record<number, TextField[]> = {}
         textFields.forEach(field => {
@@ -137,6 +154,7 @@ export const generateSignedPdf = async (
                         font = await pdfDoc.embedFont(fontBytes)
                         fontCache[fontKey] = font
                     } else {
+                        // Fallback to standard font if custom font fails
                         font = await pdfDoc.embedFont(StandardFonts.Helvetica)
                     }
                 }
