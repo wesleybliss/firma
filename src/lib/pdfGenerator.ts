@@ -103,13 +103,17 @@ export const generateSignedPdf = async (
         // flattening was causing font embedding issues, so we just remove the interactive elements
         try {
             const form = pdfDoc.getForm()
+            // Disable automatic appearance updates which can fail on malformed PDFs
+            form.acroForm.dict.set(form.acroForm.context.obj('NeedAppearances'), form.acroForm.context.obj(false))
+            
             const fields = form.getFields()
             fields.forEach(field => {
                 try {
                     // removing the field removes the widget annotation, clearing the z-index obstruction
                     form.removeField(field)
                 } catch (e) {
-                    // ignore individual field removal errors
+                    // ignore individual field removal errors (including appearance dict issues)
+                    console.debug('Skipping field removal:', e)
                 }
             })
         } catch (e) {
