@@ -1,53 +1,46 @@
+import { useEffect } from 'react'
 import { PDFCanvas } from '@/components/Document/PDFCanvas'
 import Sidebar from '@/components/Sidebar'
 import InspectorSidebar from '@/components/InspectorSidebar'
+import { usePdfStore } from '@/store/pdf'
+import { useCanvasStore } from '@/store/canvas'
+import { useDocumentsStore } from '@/store/documents'
 
-const AppReady = ({
-    state,
-    actions,
-}: {
-    state: any
-    actions: any
-}) => {
+const HomeReady = () => {
+    const { pdfHash, fileName } = usePdfStore()
+    const { textFields, signatureFields } = useCanvasStore()
+    const { saveDocumentState } = useDocumentsStore()
+
+    // Auto-save effect
+    useEffect(() => {
+        if (!pdfHash || !fileName) return
+
+        const timeoutId = setTimeout(() => {
+            saveDocumentState(pdfHash, {
+                hash: pdfHash,
+                textFields,
+                signatureFields,
+                lastModified: Date.now(),
+                fileName,
+            })
+        }, 500)
+
+        return () => clearTimeout(timeoutId)
+    }, [textFields, signatureFields, pdfHash, fileName, saveDocumentState])
 
     return (
         <div className="flex flex-1 overflow-hidden">
-            <Sidebar
-                fileName={state.fileName}
-                textFields={state.textFields}
-                activeFieldId={state.activeFieldId}
-                onAddTextField={actions.addTextField}
-                onUpdateFieldProperty={actions.updateFieldProperty}
-                onPlaceSignature={actions.placeSignature}/>
+            <Sidebar />
 
             <main className="flex-1 overflow-hidden">
                 <div className="flex h-full flex-col gap-6">
-                    <PDFCanvas
-                        pdfFile={state.pdfFile}
-                        scale={state.scale}
-                        currentPage={state.currentPage}
-                        textFields={state.textFields}
-                        activeFieldId={state.activeFieldId}
-                        pdfDimensions={state.pdfDimensions}
-                        onDocumentLoadSuccess={actions.onDocumentLoadSuccess}
-                        onPageLoadSuccess={actions.onPageLoadSuccess}
-                        onCanvasClick={actions.handleCanvasClick}
-                        onFieldClick={actions.setActiveFieldId}
-                        onFieldUpdate={actions.updateTextField}
-                        onFieldRemove={actions.removeTextField}
-                        onFieldPositionUpdate={actions.updateFieldPosition}
-                        onFieldDimensionsUpdate={actions.updateFieldDimensions}
-                        signatureFields={state.signatureFields}
-                        onSignatureRemove={actions.removeSignatureField}
-                        onSignaturePositionUpdate={actions.updateSignaturePosition}
-                        onSignatureDimensionsUpdate={actions.updateSignatureDimensions}/>
+                    <PDFCanvas />
                 </div>
             </main>
 
-            <InspectorSidebar state={state} actions={actions} />
+            <InspectorSidebar />
         </div>
     )
-
 }
 
-export default AppReady
+export default HomeReady

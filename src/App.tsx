@@ -1,17 +1,22 @@
-import { useEffect } from 'react'
+import { useRef, useEffect } from 'react'
 import Navbar from '@/components/Navbar'
 import { Toaster } from '@/components/ui/sonner'
 import HomePage from './pages/home'
 import SettingsPage from './pages/settings/SettingsPage'
-import { useFirma } from '@/hooks/useFirma'
+import { useFileLoader } from '@/hooks/useFileLoader'
 import { useFirebaseSync } from '@/hooks/useFirebaseSync'
 import { useAuthStore } from '@/store/auth'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { ThemeProvider } from '@/components/ThemeProvider'
 
 function App() {
-    const { state, actions } = useFirma()
+    const { handleFileUpload } = useFileLoader()
+    const fileInputRef = useRef<HTMLInputElement>(null)
     const initializeAuth = useAuthStore(state => state.initialize)
+
+    const openFileDialog = () => {
+        fileInputRef.current?.click()
+    }
 
     // Initialize Firebase authentication
     useEffect(() => {
@@ -31,16 +36,16 @@ function App() {
                     <Toaster richColors />
 
                     <input
-                        ref={state.fileInputRef}
+                        ref={fileInputRef}
                         type="file"
                         accept=".pdf"
-                        onChange={actions.handleFileUpload}
+                        onChange={handleFileUpload}
                         className="hidden" />
 
                     <div className="flex h-screen flex-col">
-                        <Navbar state={state} actions={actions} />
+                        <Navbar onOpenFileDialog={openFileDialog} />
                         <Routes>
-                            <Route path="/" element={<HomePage state={state} actions={actions} />} />
+                            <Route path="/" element={<HomePage onOpenFileDialog={openFileDialog} />} />
                             <Route path="/settings" element={<SettingsPage />} />
                         </Routes>
                     </div>

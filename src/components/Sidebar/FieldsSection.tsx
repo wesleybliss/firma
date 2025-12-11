@@ -11,9 +11,7 @@ import {
     CircleDot,
     X,
 } from 'lucide-react'
-
-type onAddTextFieldTypeArg = 'text' | 'date' | 'fullName' | 'initials'
-    | 'email' | 'phone' | 'company' | 'checkbox' | 'radio' | 'x'
+import { useCanvasStore } from '@/store/canvas'
 
 const AddFieldButton = ({
     onClick,
@@ -34,11 +32,9 @@ const AddFieldButton = ({
     </Button>
 )
 
-const FieldsSection = ({
-    onAddTextField,
-}: {
-    onAddTextField: (type: onAddTextFieldTypeArg) => void
-}) => {
+const FieldsSection = () => {
+    const addTextField = useCanvasStore(state => state.addTextField)
+
     return (
         <section>
 
@@ -52,31 +48,31 @@ const FieldsSection = ({
 
                 <div className="grid grid-cols-2 gap-1">
                     <AddFieldButton
-                        onClick={() => onAddTextField('text')}
+                        onClick={() => addTextField('text')}
                         icon={<Type className="size-4" />}
                         label="Text" />
                     <AddFieldButton
-                        onClick={() => onAddTextField('date')}
+                        onClick={() => addTextField('date')}
                         icon={<Calendar className="size-4" />}
                         label="Date" />
                     <AddFieldButton
-                        onClick={() => onAddTextField('fullName')}
+                        onClick={() => addTextField('fullName')}
                         icon={<User className="size-4" />}
                         label="Name" />
                     <AddFieldButton
-                        onClick={() => onAddTextField('initials')}
+                        onClick={() => addTextField('initials')}
                         icon={<Hash className="size-4" />}
                         label="Initials" />
                     <AddFieldButton
-                        onClick={() => onAddTextField('email')}
+                        onClick={() => addTextField('email')}
                         icon={<Mail className="size-4" />}
                         label="Email" />
                     <AddFieldButton
-                        onClick={() => onAddTextField('phone')}
+                        onClick={() => addTextField('phone')}
                         icon={<Phone className="size-4" />}
                         label="Phone" />
                     <AddFieldButton
-                        onClick={() => onAddTextField('company')}
+                        onClick={() => addTextField('company')}
                         icon={<Building className="size-4" />}
                         label="Company" />
                 </div>
@@ -85,15 +81,15 @@ const FieldsSection = ({
 
                 <div className="grid grid-cols-2 gap-1">
                     <AddFieldButton
-                        onClick={() => onAddTextField('checkbox')}
+                        onClick={() => addTextField('checkbox')}
                         icon={<SquareCheckBig className="size-4" />}
                         label="Checkbox" />
                     <AddFieldButton
-                        onClick={() => onAddTextField('radio')}
+                        onClick={() => addTextField('radio')}
                         icon={<CircleDot className="size-4" />}
                         label="Radio" />
                     <AddFieldButton
-                        onClick={() => onAddTextField('x')}
+                        onClick={() => addTextField('x')}
                         icon={<X className="size-4" />}
                         label="X Mark" />
                 </div>

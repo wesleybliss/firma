@@ -1,15 +1,12 @@
 import { Link } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { Settings, Sparkles } from 'lucide-react'
-import { TextField } from '@/types'
+import { usePdfStore } from '@/store/pdf'
+import { useCanvasStore } from '@/store/canvas'
 
-const OverviewSection = ({
-    fileName,
-    textFields,
-}: {
-    fileName: string | null
-    textFields: TextField[]
-}) => {
+const OverviewSection = () => {
+    const fileName = usePdfStore(state => state.fileName)
+    const textFields = useCanvasStore(state => state.textFields)
 
     return (
         <section>

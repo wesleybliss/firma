@@ -1,8 +1,9 @@
-import React, { memo } from 'react'
+import React, { memo, useCallback } from 'react'
 import { Document, Page, pdfjs } from 'react-pdf'
-import { TextField as TextFieldType, SignatureField } from '@/types'
 import 'react-pdf/dist/Page/TextLayer.css'
 import FieldsOverlay from './FieldsOverlay'
+import { usePdfStore } from '@/store/pdf'
+import { useCanvasStore } from '@/store/canvas'
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`
 
@@ -30,60 +31,61 @@ const PDFViewer = memo(({ file, scale, pageNumber, onDocumentLoadSuccess, onPage
                 scale={scale}
                 renderTextLayer={false}
                 renderAnnotationLayer={false}
-                onLoadSuccess={onPageLoadSuccess}/>
+                onLoadSuccess={onPageLoadSuccess} />
         </Document>
     )
 })
 PDFViewer.displayName = 'PDFViewer'
 
-interface PDFCanvasProps {
-    pdfFile: string | null
-    scale: number
-    currentPage: number
-    textFields: TextFieldType[]
-    activeFieldId: string | null
-    pdfDimensions: { width: number; height: number }
-    onDocumentLoadSuccess: (pdf: any) => void
-    onPageLoadSuccess: (page: any) => void
-    onCanvasClick: (e: React.MouseEvent) => void
-    onFieldClick: (id: string) => void
-    onFieldUpdate: (id: string, text: string) => void
-    onFieldRemove: (id: string) => void
-    onFieldPositionUpdate: (id: string, position: { x: number; y: number }) => void
-    onFieldDimensionsUpdate: (id: string, dimensions: { width: number; height: number }) => void
-    signatureFields: SignatureField[]
-    onSignatureRemove: (id: string) => void
-    onSignaturePositionUpdate: (id: string, position: { x: number; y: number }) => void
-    onSignatureDimensionsUpdate: (id: string, dimensions: { width: number; height: number }) => void
-}
+export function PDFCanvas() {
+    const {
+        pdfFile,
+        scale,
+        currentPage,
+        pdfDimensions,
+        setNumPages,
+        setPdfDimensions,
+    } = usePdfStore()
 
-export function PDFCanvas({
-    pdfFile,
-    scale,
-    currentPage,
-    textFields,
-    activeFieldId,
-    pdfDimensions,
-    onDocumentLoadSuccess,
-    onPageLoadSuccess,
-    onCanvasClick,
-    onFieldClick,
-    onFieldUpdate,
-    onFieldRemove,
-    onFieldPositionUpdate,
-    onFieldDimensionsUpdate,
-    signatureFields,
-    onSignatureRemove,
-    onSignaturePositionUpdate,
-    onSignatureDimensionsUpdate,
-}: PDFCanvasProps) {
+    const {
+        textFields,
+        activeFieldId,
+        signatureFields,
+        setActiveFieldId,
+        updateTextField,
+        removeTextField,
+        updateFieldPosition,
+        updateFieldDimensions,
+        removeSignatureField,
+        updateSignaturePosition,
+        updateSignatureDimensions,
+        deselectAll,
+    } = useCanvasStore()
+
+    const onDocumentLoadSuccess = useCallback((pdf: any) => {
+        setNumPages(pdf.numPages)
+    }, [setNumPages])
+
+    const onPageLoadSuccess = useCallback((page: any) => {
+        setPdfDimensions({
+            width: page.originalWidth,
+            height: page.originalHeight,
+        })
+    }, [setPdfDimensions])
+
+    const handleCanvasClick = (e: React.MouseEvent) => {
+        if (e.target === e.currentTarget || (e.target as HTMLElement).closest('.react-pdf__Page')) {
+            deselectAll()
+        }
+    }
+
     const scaledWidth = pdfDimensions.width * scale
     const scaledHeight = pdfDimensions.height * scale
 
     return (
         <div
             className="relative flex flex-1 overflow-hidden"
-            onClick={onCanvasClick}>
+            onClick={handleCanvasClick}>
             <div className="relative h-full w-full overflow-auto py-2">
                 <div className="flex min-h-full items-center justify-center">
                     <div
@@ -97,7 +99,7 @@ export function PDFCanvas({
                             scale={scale}
                             pageNumber={currentPage}
                             onDocumentLoadSuccess={onDocumentLoadSuccess}
-                            onPageLoadSuccess={onPageLoadSuccess}/>
+                            onPageLoadSuccess={onPageLoadSuccess} />
 
                         {pdfDimensions.width > 0 && (
                             <FieldsOverlay
@@ -108,14 +110,14 @@ export function PDFCanvas({
                                 scaledWidth={scaledWidth}
                                 scaledHeight={scaledHeight}
                                 activeFieldId={activeFieldId}
-                                onFieldClick={onFieldClick}
-                                onFieldUpdate={onFieldUpdate}
-                                onFieldRemove={onFieldRemove}
-                                onFieldPositionUpdate={onFieldPositionUpdate}
-                                onFieldDimensionsUpdate={onFieldDimensionsUpdate}
-                                onSignatureRemove={onSignatureRemove}
-                                onSignaturePositionUpdate={onSignaturePositionUpdate}
-                                onSignatureDimensionsUpdate={onSignatureDimensionsUpdate}/>
+                                onFieldClick={setActiveFieldId}
+                                onFieldUpdate={updateTextField}
+                                onFieldRemove={removeTextField}
+                                onFieldPositionUpdate={updateFieldPosition}
+                                onFieldDimensionsUpdate={updateFieldDimensions}
+                                onSignatureRemove={removeSignatureField}
+                                onSignaturePositionUpdate={updateSignaturePosition}
+                                onSignatureDimensionsUpdate={updateSignatureDimensions} />
                         )}
                     </div>
                 </div>

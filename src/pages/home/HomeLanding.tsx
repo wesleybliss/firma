@@ -4,9 +4,9 @@ import { FeatureCard } from '@/components/FeatureCard'
 // import BraveDebug from '@/components/BraveDebug'
 
 const AppLanding = ({
-    actions,
+    onOpenFileDialog,
 }: {
-    actions: any
+    onOpenFileDialog: () => void
 }) => {
 
     return (
@@ -35,7 +35,7 @@ const AppLanding = ({
                         </p>
                     </div>
                     <div className="mt-10 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
-                        <Button size="lg" onClick={actions.openFileDialog}>
+                        <Button size="lg" onClick={onOpenFileDialog}>
                             <UploadCloud className="size-5" />
                             Choose PDF
                         </Button>

@@ -8,15 +8,10 @@ import { Upload, Plus, ChevronDown } from 'lucide-react'
 import StyledCanvas from '@/components/StyledCanvas'
 import SignatureImage from './SignatureImage'
 import useSignatureManager from '@/hooks/useSignatureManager'
+import { useCanvasStore } from '@/store/canvas'
 
-interface SignatureManagerProps {
-    onPlaceSignature: (id: string) => void
-}
-
-const SignatureManager = ({
-    onPlaceSignature,
-}: SignatureManagerProps) => {
-
+const SignatureManager = () => {
+    const placeSignature = useCanvasStore(state => state.placeSignature)
     const vm = useSignatureManager()
 
     useEffect(() => {
@@ -130,7 +125,7 @@ const SignatureManager = ({
                             <SignatureImage
                                 key={signature.id}
                                 signature={signature}
-                                onPlaceSignature={onPlaceSignature}
+                                onPlaceSignature={placeSignature}
                                 removeSignature={vm.removeSignature} />
                         ))}
                         {vm.signatures.length > 3 && (

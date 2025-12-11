@@ -2,28 +2,13 @@ import { useState } from 'react'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { TextProperties } from '@/components/TextProperties'
 import SignatureManager from '@/components/SignatureManager'
-import { TextField, FieldType } from '@/types'
 import { cn } from '@/lib/utils'
 import OverviewSection from './OverviewSection'
 import FieldsSection from './FieldsSection'
+import { useCanvasStore } from '@/store/canvas'
 
-interface SidebarProps {
-    fileName: string | null
-    textFields: TextField[]
-    activeFieldId: string | null
-    onAddTextField: (fieldType?: FieldType) => void
-    onUpdateFieldProperty: (id: string, property: keyof TextField, value: any) => void
-    onPlaceSignature: (id: string) => void
-}
-
-const Sidebar = ({
-    fileName,
-    textFields,
-    activeFieldId,
-    onAddTextField,
-    onUpdateFieldProperty,
-    onPlaceSignature,
-}: SidebarProps) => {
+const Sidebar = () => {
+    const { textFields, activeFieldId, updateFieldProperty } = useCanvasStore()
     const activeField = textFields.find(f => f.id === activeFieldId)
     const [isCollapsed, setIsCollapsed] = useState(false)
     const toggleCollapsed = () => setIsCollapsed(prev => !prev)
@@ -54,19 +39,15 @@ const Sidebar = ({
                     'flex flex-1 flex-col gap-8 overflow-y-auto transition-opacity duration-200',
                     isCollapsed && 'pointer-events-none opacity-0',
                 )}>
-                <OverviewSection
-                    fileName={fileName}
-                    textFields={textFields} />
-                <FieldsSection
-                    onAddTextField={onAddTextField} />
-                <SignatureManager
-                    onPlaceSignature={onPlaceSignature} />
+                <OverviewSection />
+                <FieldsSection />
+                <SignatureManager />
 
                 {/* @todo: move this to the right side, above the inspector */}
                 {activeField && (
                     <TextProperties
                         field={activeField}
-                        onUpdate={(property, value) => onUpdateFieldProperty(
+                        onUpdate={(property, value) => updateFieldProperty(
                             activeField.id, property, value)} />
                 )}
             </div>

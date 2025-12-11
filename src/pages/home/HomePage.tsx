@@ -1,20 +1,15 @@
 import HomeReady from './HomeReady'
 import HomeLanding from './HomeLanding'
+import { usePdfStore } from '@/store/pdf'
 
-const HomePage = ({
-    state,
-    actions,
-}: {
-    state: any
-    actions: any
-}) => {
+const HomePage = ({ onOpenFileDialog }: { onOpenFileDialog: () => void }) => {
+    const pdfFile = usePdfStore(state => state.pdfFile)
 
-    return state.pdfFile ? (
-        <HomeReady state={state} actions={actions} />
+    return pdfFile ? (
+        <HomeReady />
     ) : (
-        <HomeLanding actions={actions} />
+        <HomeLanding onOpenFileDialog={onOpenFileDialog} />
     )
-
 }
 
 export default HomePage

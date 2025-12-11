@@ -2,14 +2,17 @@ import { useState } from 'react'
 import { ChevronLeft, ChevronRight, FileText } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { cn, getFieldLabel } from '@/lib/utils'
+import { useCanvasStore } from '@/store/canvas'
 
-const InspectorSidebar = ({
-    state,
-    actions,
-}: {
-    state: any,
-    actions: any,
-}) => {
+const InspectorSidebar = () => {
+    const {
+        textFields,
+        activeFieldId,
+        removeTextField,
+        updateTextField,
+        setActiveFieldId,
+    } = useCanvasStore()
+
     const [isCollapsed, setIsCollapsed] = useState(false)
     const toggleCollapsed = () => setIsCollapsed(prev => !prev)
 
@@ -41,7 +44,7 @@ const InspectorSidebar = ({
                     text-slate-500 dark:text-slate-400">Inspector</p>
                 <div className="mt-4 flex-1 space-y-4 overflow-y-auto rounded-2xl border border-slate-200
                     bg-white dark:border-slate-700 dark:bg-slate-800 p-4 shadow-sm transition-opacity duration-200">
-                    {state.textFields.length === 0 ? (
+                    {textFields.length === 0 ? (
                         <div className="flex h-full flex-col items-center justify-center
                             gap-2 text-center text-sm text-slate-500 dark:text-slate-400">
                             <div className="size-6 text-slate-300">
@@ -50,8 +53,8 @@ const InspectorSidebar = ({
                             Add a text field to see it here.
                         </div>
                     ) : (
-                        state.textFields.map((field: any, index: number) => {
-                            const isActive = state.activeFieldId === field.id
+                        textFields.map((field, index) => {
+                            const isActive = activeFieldId === field.id
                             return (
                                 <div
                                     key={field.id}
@@ -72,7 +75,7 @@ const InspectorSidebar = ({
                                         <Button
                                             variant="ghost"
                                             size="icon-sm"
-                                            onClick={() => actions.removeTextField(field.id)}>
+                                            onClick={() => removeTextField(field.id)}>
                                             <div className="size-4 text-slate-400">
                                                 <svg
                                                     xmlns="http://www.w3.org/2000/svg"
@@ -96,8 +99,8 @@ const InspectorSidebar = ({
                                     </div>
                                     <input
                                         value={field.text}
-                                        onChange={event => actions.updateTextField(field.id, event.target.value)}
-                                        onFocus={() => actions.setActiveFieldId(field.id)}
+                                        onChange={event => updateTextField(field.id, event.target.value)}
+                                        onFocus={() => setActiveFieldId(field.id)}
                                         placeholder="Enter text"
                                         className="w-full rounded-md border border-slate-200
                                             px-3 py-2 text-sm focus:border-sky-500 focus:outline-none"/>

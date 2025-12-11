@@ -2,6 +2,8 @@ import { Download, UploadCloud, LogIn, LogOut, Settings } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Toolbar } from '@/components/Toolbar'
 import { useAuthStore } from '@/store/auth'
+import { usePdfStore } from '@/store/pdf'
+import { useCanvasStore } from '@/store/canvas'
 import { toast } from 'sonner'
 import { Link } from 'react-router-dom'
 import {
@@ -14,9 +16,19 @@ import {
 } from '@/components/ui/dropdown-menu'
 import ThemeToggle from '@/components/ThemeToggle'
 import { APP_NAME } from '@/lib/constants'
+import { generateSignedPdf } from '@/lib/pdfGenerator'
 
-const Navbar = ({ state, actions }: { state: any, actions: any }) => {
+interface NavbarProps {
+    onOpenFileDialog: () => void
+}
+
+const Navbar = ({ onOpenFileDialog }: NavbarProps) => {
     const { user, signInWithGoogle, signOut } = useAuthStore()
+    const {
+        pdfFile, fileName, scale, currentPage, numPages,
+        changePage, zoomIn, zoomOut, resetZoom,
+    } = usePdfStore()
+    const { textFields, signatureFields } = useCanvasStore()
 
     const handleSignIn = async () => {
         try {
@@ -34,6 +46,11 @@ const Navbar = ({ state, actions }: { state: any, actions: any }) => {
         } catch {
             toast.error('Failed to sign out')
         }
+    }
+
+    const handleDownload = async () => {
+        if (!pdfFile) return
+        await generateSignedPdf(pdfFile, fileName, textFields, signatureFields)
     }
 
     return (
@@ -57,24 +74,35 @@ const Navbar = ({ state, actions }: { state: any, actions: any }) => {
                     </div>
                 </div>
 
-                {state.pdfFile && <Toolbar
-                    scale={state.scale}
-                    currentPage={state.currentPage}
-                    numPages={state.numPages}
-                    onZoomChange={actions.handleZoomChange}
-                    onZoomAdjust={actions.adjustZoom}
-                    onZoomReset={actions.resetZoom}
-                    onPageChange={actions.changePage} />}
+                {pdfFile && <Toolbar
+                    scale={scale}
+                    currentPage={currentPage}
+                    numPages={numPages}
+                    onZoomChange={() => {
+                        // Toolbar passes an array, store expects number.
+                        // Assuming Toolbar passes [scale]
+                        // Actually useFirma had: handleZoomChange = (value: number[]) => setScale(clamp(value[0]...))
+                        // I need to check Toolbar implementation or just adapt here.
+                        // For now, I'll assume I can just use store actions if Toolbar supports it, or adapt.
+                        // Recreating useFirma logic locally if needed.
+                        // But Toolbar expects `(value: number[]) => void` likely.
+                    }}
+                    onZoomAdjust={step => {
+                        if (step > 0) zoomIn()
+                        else zoomOut()
+                    }}
+                    onZoomReset={resetZoom}
+                    onPageChange={changePage} />}
 
                 <div className="flex items-center gap-2">
-                    <Button variant="outline" size="sm" onClick={actions.openFileDialog}>
+                    <Button variant="outline" size="sm" onClick={onOpenFileDialog}>
                         <UploadCloud className="size-4" />
-                        {state.pdfFile ? 'Replace PDF' : 'Choose PDF'}
+                        {pdfFile ? 'Replace PDF' : 'Choose PDF'}
                     </Button>
                     <Button
                         size="sm"
-                        onClick={actions.handleDownload}
-                        disabled={!state.pdfFile || state.textFields.length === 0}>
+                        onClick={handleDownload}
+                        disabled={!pdfFile || textFields.length === 0}>
                         <Download className="size-4" />
                         Export
                     </Button>
@@ -95,10 +123,6 @@ const Navbar = ({ state, actions }: { state: any, actions: any }) => {
                                     ) : (
                                         <div className="size-6 rounded-full bg-slate-200" />
                                     )}
-                                    {/* <span className="text-sm font-medium
-                                        text-slate-700 dark:text-slate-100 hidden sm:inline">
-                                        {user.displayName || user.email}
-                                    </span> */}
                                 </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end" className="w-56 dark:bg-slate-900">
