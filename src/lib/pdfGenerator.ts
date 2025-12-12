@@ -104,8 +104,10 @@ export const generateSignedPdf = async (
         try {
             const form = pdfDoc.getForm()
             // Disable automatic appearance updates which can fail on malformed PDFs
-            form.acroForm.dict.set(form.acroForm.context.obj('NeedAppearances'), form.acroForm.context.obj(false))
-            
+            form.acroForm.dict.set(
+                form.acroForm.context.obj('NeedAppearances'),
+                form.acroForm.context.obj(false))
+
             const fields = form.getFields()
             fields.forEach(field => {
                 try {

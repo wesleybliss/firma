@@ -12,6 +12,7 @@ export type DocumentState = {
     signatureFields: SignatureField[]
     lastModified: number
     fileName: string
+    // hasNativeEditableFieldsFlattened: boolean
 }
 
 type DocumentsStore = {

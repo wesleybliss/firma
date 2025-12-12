@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useState, useMemo } from 'react'
 import { useAuthStore } from '@/store/auth'
 import { usePdfStore } from '@/store/pdf'
 import { useCanvasStore } from '@/store/canvas'
@@ -14,6 +14,7 @@ const NavbarViewModel = () => {
         changePage, zoomIn, zoomOut, resetZoom,
     } = usePdfStore()
     const { textFields, signatureFields } = useCanvasStore()
+    const [isFlattenPdfDialogOpen, setIsFlattenPdfDialogOpen] = useState(false)
 
     const isLocalhost = useMemo(() => (
         ['localhost', '127.0.0.1', '0.0.0.0', '192.168']
@@ -40,6 +41,9 @@ const NavbarViewModel = () => {
 
     const handleDownload = async () => {
         if (!pdfFile) return
+
+
+
         await generateSignedPdf(pdfFile, fileName, textFields, signatureFields)
     }
 
@@ -60,6 +64,8 @@ const NavbarViewModel = () => {
         resetZoom,
         textFields,
         signatureFields,
+        isFlattenPdfDialogOpen,
+        setIsFlattenPdfDialogOpen,
         handleSignIn,
         handleSignOut,
         handleDownload,

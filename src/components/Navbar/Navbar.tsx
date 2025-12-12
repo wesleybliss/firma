@@ -5,6 +5,7 @@ import ThemeToggle from '@/components/theme/ThemeToggle'
 import { APP_NAME } from '@/lib/constants'
 import UserAccountMenu from './UserAccountMenu'
 import useNavbarViewModel from './NavbarViewModel'
+import ConfirmFlattenPdfDialog from '@/components/dialogs/ConfirmFlattenPdfDialog'
 
 interface NavbarProps {
     onOpenFileDialog: () => void
@@ -78,6 +79,10 @@ const Navbar = ({ onOpenFileDialog }: NavbarProps) => {
                         handleSignIn={vm.handleSignIn} />
                 </div>
             </div>
+
+            <ConfirmFlattenPdfDialog
+                open={vm.isFlattenPdfDialogOpen}
+                onOpenChange={vm.setIsFlattenPdfDialogOpen} />
         </header>
     )
 
