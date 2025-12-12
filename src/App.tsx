@@ -1,6 +1,7 @@
 import { useRef, useEffect } from 'react'
 import Navbar from '@/components/Navbar'
 import { Toaster } from '@/components/ui/sonner'
+import DebugPage from './pages/debug'
 import HomePage from './pages/home'
 import SettingsPage from './pages/settings/SettingsPage'
 import { useFileLoader } from '@/hooks/useFileLoader'
@@ -22,9 +23,11 @@ function App() {
     // Load Google Fonts into the DOM
     useEffect(() => {
         const links = GOOGLE_FONTS.map(font => {
+            // eslint-disable-next-line no-restricted-globals
             const link = document.createElement('link')
             link.href = font.url
             link.rel = 'stylesheet'
+            // eslint-disable-next-line no-restricted-globals
             document.head.appendChild(link)
             return link
         })
@@ -32,6 +35,7 @@ function App() {
         return () => {
             links.forEach(link => {
                 if (link.parentNode) {
+                    // eslint-disable-next-line no-restricted-globals
                     document.head.removeChild(link)
                 }
             })
@@ -65,6 +69,7 @@ function App() {
                     <div className="flex h-screen flex-col">
                         <Navbar onOpenFileDialog={openFileDialog} />
                         <Routes>
+                            <Route path="/debug" element={<DebugPage />} />
                             <Route path="/" element={<HomePage onOpenFileDialog={openFileDialog} />} />
                             <Route path="/settings" element={<SettingsPage />} />
                         </Routes>
