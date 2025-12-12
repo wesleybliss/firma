@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { PDFCanvas } from '@/components/Document/PDFCanvas'
 import Sidebar from '@/components/Sidebar'
-import InspectorSidebar from '@/components/InspectorSidebar'
+import InspectorSidebar from '@/components/Sidebar/InspectorSidebar'
 import { usePdfStore } from '@/store/pdf'
 import { useCanvasStore } from '@/store/canvas'
 import { useDocumentsStore } from '@/store/documents'

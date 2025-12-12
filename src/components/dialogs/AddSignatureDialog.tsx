@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useSignaturesStore } from '@/store/signatures'
-import StyledCanvas from './StyledCanvas'
+import StyledCanvas from '@/components/StyledCanvas'
 
 export function AddSignatureDialog() {
     const { addSignature } = useSignaturesStore()

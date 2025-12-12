@@ -1,7 +1,7 @@
 import { Bug, Download, UploadCloud } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Toolbar } from '@/components/Toolbar'
-import ThemeToggle from '@/components/ThemeToggle'
+import { Toolbar } from '@/components/Navbar/Toolbar'
+import ThemeToggle from '@/components/theme/ThemeToggle'
 import { APP_NAME } from '@/lib/constants'
 import UserAccountMenu from './UserAccountMenu'
 import useNavbarViewModel from './NavbarViewModel'
@@ -67,9 +67,11 @@ const Navbar = ({ onOpenFileDialog }: NavbarProps) => {
                         Export
                     </Button>
                     <ThemeToggle />
-                    <Button size="sm" variant="outline" onClick={() => vm.navigate('/debug')}>
-                        <Bug className="size-4 text-red-500" />
-                    </Button>
+                    {vm.isLocalhost && (
+                        <Button size="sm" variant="outline" onClick={() => vm.navigate('/debug')}>
+                            <Bug className="size-4 text-red-500" />
+                        </Button>
+                    )}
                     <UserAccountMenu
                         user={vm.user}
                         handleSignOut={vm.handleSignOut}

@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { Trash2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { AddSignatureDialog } from '@/components/AddSignatureDialog'
+import { AddSignatureDialog } from '@/components/dialogs/AddSignatureDialog'
 import { useSignaturesStore } from '@/store/signatures'
 import { DocumentState, useDocumentsStore } from '@/store/documents'
 import { formatDate } from '@/lib/dateUtils'

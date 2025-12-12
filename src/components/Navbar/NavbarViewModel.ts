@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import { useAuthStore } from '@/store/auth'
 import { usePdfStore } from '@/store/pdf'
 import { useCanvasStore } from '@/store/canvas'
@@ -13,6 +14,11 @@ const NavbarViewModel = () => {
         changePage, zoomIn, zoomOut, resetZoom,
     } = usePdfStore()
     const { textFields, signatureFields } = useCanvasStore()
+
+    const isLocalhost = useMemo(() => (
+        ['localhost', '127.0.0.1', '0.0.0.0', '192.168']
+            .some(it => window.location.hostname.startsWith(it))
+    ), [])
 
     const handleSignIn = async () => {
         try {
@@ -42,6 +48,7 @@ const NavbarViewModel = () => {
         signInWithGoogle,
         signOut,
         navigate,
+        isLocalhost,
         pdfFile,
         fileName,
         scale,

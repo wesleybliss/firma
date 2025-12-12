@@ -1,6 +1,6 @@
 import { APP_NAME } from '@/lib/constants'
 import { useEffect, useState } from 'react'
-import { ThemeProviderContext } from '@/components/ThemeProviderContext'
+import { ThemeProviderContext } from '@/components/theme/ThemeProviderContext'
 
 type Theme = 'dark' | 'light' | 'system'
 

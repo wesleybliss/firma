@@ -8,7 +8,7 @@ import { useFileLoader } from '@/hooks/useFileLoader'
 import { useFirebaseSync } from '@/hooks/useFirebaseSync'
 import { useAuthStore } from '@/store/auth'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import { ThemeProvider } from '@/components/ThemeProvider'
+import { ThemeProvider } from '@/components/theme/ThemeProvider'
 import { GOOGLE_FONTS } from '@/lib/fonts'
 
 function App() {
