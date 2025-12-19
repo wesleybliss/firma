@@ -12,6 +12,7 @@ type UserData = {
     phone: string
     company: string
     address: string
+    address2: string
 }
 
 type UserStore = UserData & {
@@ -21,6 +22,7 @@ type UserStore = UserData & {
     setPhone: (phone: string) => void
     setCompany: (company: string) => void
     setAddress: (address: string) => void
+    setAddress2: (address2: string) => void
     syncWithFirestore: (userId: string) => () => void
     saveToFirestore: (userId: string) => Promise<void>
 }
@@ -68,9 +70,17 @@ export const useUserStore = create<UserStore>()(
                     get().saveToFirestore(user.uid)
                 }
             },
-            address: '',
             setAddress: (address: string) => {
                 set({ address })
+                const user = useAuthStore.getState().user
+                if (user) {
+                    get().saveToFirestore(user.uid)
+                }
+            },
+            address: '',
+            address2: '',
+            setAddress2: (address2: string) => {
+                set({ address2 })
                 const user = useAuthStore.getState().user
                 if (user) {
                     get().saveToFirestore(user.uid)
@@ -90,6 +100,7 @@ export const useUserStore = create<UserStore>()(
                             phone: data.phone || '',
                             company: data.company || '',
                             address: data.address || '',
+                            address2: data.address2 || '',
                         })
                     } else {
                         // If document doesn't exist, push local data to Firestore
@@ -103,7 +114,7 @@ export const useUserStore = create<UserStore>()(
             },
             saveToFirestore: async (userId: string) => {
                 try {
-                    const { name, initials, email, phone, company, address } = get()
+                    const { name, initials, email, phone, company, address, address2 } = get()
                     const userRef = doc(db, 'users', userId)
                     await setDoc(userRef, {
                         name,
@@ -112,6 +123,7 @@ export const useUserStore = create<UserStore>()(
                         phone,
                         company,
                         address,
+                        address2,
                     }, { merge: true })
                 } catch (error) {
                     console.error('Error saving to Firestore:', error)

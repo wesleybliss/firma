@@ -50,35 +50,37 @@ const initialState: CanvasState = {
 // Helper to get defaults based on field type and current store state
 const getFieldDefaults = (fieldType: FieldType) => {
     const user = useUserStore.getState()
-    const { dateFormat } = useDefaultsStore.getState()
+    const { dateFormat, fontSize, fontFamily } = useDefaultsStore.getState()
 
     switch (fieldType) {
         case 'date': {
             const today = new Date()
             const formatted = formatDate(today, dateFormat)
-            return { text: formatted, width: 140, height: 40, fontSize: 12 }
+            return { text: formatted, width: 140, height: 40, fontSize, fontFamily }
         }
         case 'fullName':
-            return { text: user.name || 'Full Name', width: 200, height: 40, fontSize: 12 }
+            return { text: user.name || 'Full Name', width: 200, height: 40, fontSize, fontFamily }
         case 'initials':
-            return { text: user.initials || 'AB', width: 60, height: 40, fontSize: 12 }
+            return { text: user.initials || 'AB', width: 60, height: 40, fontSize, fontFamily }
         case 'email':
-            return { text: user.email || 'email@example.com', width: 220, height: 40, fontSize: 12 }
+            return { text: user.email || 'email@example.com', width: 220, height: 40, fontSize, fontFamily }
         case 'phone':
-            return { text: user.phone || '(555) 000-0000', width: 160, height: 40, fontSize: 12 }
+            return { text: user.phone || '(555) 000-0000', width: 160, height: 40, fontSize, fontFamily }
         case 'company':
-            return { text: user.company || 'Company Name', width: 200, height: 40, fontSize: 12 }
+            return { text: user.company || 'Company Name', width: 200, height: 40, fontSize, fontFamily }
         case 'address':
-            return { text: user.address || 'Address', width: 250, height: 60, fontSize: 12 }
+            return { text: user.address || 'Address', width: 250, height: 60, fontSize, fontFamily }
+        case 'address2':
+            return { text: user.address2 || 'Address 2', width: 250, height: 60, fontSize, fontFamily }
         case 'checkbox':
-            return { text: '✓', width: 14, height: 24, fontSize: 16 }
+            return { text: '✓', width: 14, height: 24, fontSize: 16, fontFamily }
         case 'radio':
-            return { text: '⏺', width: 24, height: 24, fontSize: 16 }
+            return { text: '⏺', width: 24, height: 24, fontSize: 16, fontFamily }
         case 'x':
-            return { text: '✕', width: 24, height: 24, fontSize: 16 }
+            return { text: '✕', width: 24, height: 24, fontSize: 16, fontFamily }
         case 'text':
         default:
-            return { text: 'New text', width: 120, height: 40, fontSize: 16 }
+            return { text: 'New text', width: 120, height: 40, fontSize, fontFamily }
     }
 }
 
@@ -107,7 +109,7 @@ export const useCanvasStore = create<CanvasState & CanvasActions>(set => ({
             width: defaults.width,
             height: defaults.height,
             isNew: true,
-            fontFamily: 'Inter',
+            fontFamily: defaults.fontFamily,
             fontSize: defaults.fontSize,
             color: '#000000',
             isBold: false,

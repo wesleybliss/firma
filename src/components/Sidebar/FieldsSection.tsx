@@ -80,6 +80,10 @@ const FieldsSection = () => {
                         onClick={() => addTextField('address')}
                         icon={<MapPin className="size-4" />}
                         label="Address" />
+                    <AddFieldButton
+                        onClick={() => addTextField('address2')}
+                        icon={<MapPin className="size-4" />}
+                        label="Address 2" />
                 </div>
 
                 <hr className="w-full border-t border-gray-200 my-2" />

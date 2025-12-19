@@ -90,6 +90,15 @@ const UserSettingsPanel = () => {
                             placeholder="123 Main St, City, Country"
                             className="min-h-[100px]" />
                     </div>
+                    <div className="grid gap-2">
+                        <Label htmlFor="address2">Address 2</Label>
+                        <Textarea
+                            id="address2"
+                            value={userStore.address2}
+                            onChange={e => userStore.setAddress2(e.target.value)}
+                            placeholder="Apt, Suite, Unit, etc."
+                            className="min-h-[100px]" />
+                    </div>
                 </div>
             </section>
 
