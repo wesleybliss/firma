@@ -2,7 +2,7 @@ import { create } from 'zustand'
 import { v4 as uuidv4 } from 'uuid'
 import { toast } from 'sonner'
 import {
-    TextField, SignatureField, FieldType
+    TextField, SignatureField, FieldType,
 } from '@/types'
 import { usePdfStore } from '@/store/pdf'
 import { useUserStore } from '@/store/user'
@@ -68,6 +68,8 @@ const getFieldDefaults = (fieldType: FieldType) => {
             return { text: user.phone || '(555) 000-0000', width: 160, height: 40, fontSize: 12 }
         case 'company':
             return { text: user.company || 'Company Name', width: 200, height: 40, fontSize: 12 }
+        case 'address':
+            return { text: user.address || 'Address', width: 250, height: 60, fontSize: 12 }
         case 'checkbox':
             return { text: '✓', width: 14, height: 24, fontSize: 16 }
         case 'radio':
@@ -80,7 +82,7 @@ const getFieldDefaults = (fieldType: FieldType) => {
     }
 }
 
-export const useCanvasStore = create<CanvasState & CanvasActions>((set) => ({
+export const useCanvasStore = create<CanvasState & CanvasActions>(set => ({
     ...initialState,
 
     setTextFields: textFields => set({ textFields }),

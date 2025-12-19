@@ -1,5 +1,5 @@
 export type FieldType = 'text' | 'date' | 'fullName' | 'initials'
-    | 'email' | 'phone' | 'company' | 'checkbox' | 'radio' | 'x'
+    | 'email' | 'phone' | 'company' | 'address' | 'checkbox' | 'radio' | 'x'
 
 export type TextField = {
     id: string

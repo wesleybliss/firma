@@ -116,22 +116,24 @@ export function TextField({
 
                 {/* CSS Grid container for auto-sizing */}
                 <div className="relative grid flex-1">
-                    {/* Hidden span to dictate width */}
+                    {/* Hidden span to dictate width/height */}
                     <span
-                        className="invisible col-start-1 row-start-1 whitespace-pre px-0.5"
+                        className="invisible col-start-1 row-start-1 whitespace-pre-wrap px-0.5"
                         style={fontStyles}>
                         {field.text || (isCompact ? ' ' : 'Type here...')}
                     </span>
 
-                    {/* Input overlay */}
-                    <input
+                    {/* Textarea overlay */}
+                    <textarea
                         id={`field-${field.id}`}
                         value={field.text}
                         onFocus={() => onFieldClick(field.id)}
                         onClick={() => onFieldClick(field.id)}
                         onChange={event => onFieldUpdate(field.id, event.target.value)}
+                        rows={1}
                         className={cn('absolute inset-0 h-full w-full border-0 bg-transparent',
                             'p-0 text-slate-900 placeholder:text-slate-400 focus:ring-0 focus:outline-none',
+                            'resize-none overflow-hidden',
                             isCompact ? 'text-center cursor-default' : 'px-0.5',
                         )}
                         placeholder={isCompact ? '' : 'Type here...'}

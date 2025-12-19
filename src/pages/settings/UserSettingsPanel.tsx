@@ -1,4 +1,5 @@
 import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
 import { useUserStore } from '@/store/user'
 import { useDefaultsStore } from '@/store/defaults'
@@ -79,6 +80,15 @@ const UserSettingsPanel = () => {
                                 onChange={e => userStore.setCompany(e.target.value)}
                                 placeholder="Acme Inc." />
                         </div>
+                    </div>
+                    <div className="grid gap-2">
+                        <Label htmlFor="address">Address</Label>
+                        <Textarea
+                            id="address"
+                            value={userStore.address}
+                            onChange={e => userStore.setAddress(e.target.value)}
+                            placeholder="123 Main St, City, Country"
+                            className="min-h-[100px]" />
                     </div>
                 </div>
             </section>

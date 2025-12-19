@@ -11,6 +11,7 @@ type UserData = {
     email: string
     phone: string
     company: string
+    address: string
 }
 
 type UserStore = UserData & {
@@ -19,6 +20,7 @@ type UserStore = UserData & {
     setEmail: (email: string) => void
     setPhone: (phone: string) => void
     setCompany: (company: string) => void
+    setAddress: (address: string) => void
     syncWithFirestore: (userId: string) => () => void
     saveToFirestore: (userId: string) => Promise<void>
 }
@@ -66,6 +68,14 @@ export const useUserStore = create<UserStore>()(
                     get().saveToFirestore(user.uid)
                 }
             },
+            address: '',
+            setAddress: (address: string) => {
+                set({ address })
+                const user = useAuthStore.getState().user
+                if (user) {
+                    get().saveToFirestore(user.uid)
+                }
+            },
             syncWithFirestore: (userId: string) => {
                 const userRef = doc(db, 'users', userId)
 
@@ -79,6 +89,7 @@ export const useUserStore = create<UserStore>()(
                             email: data.email || '',
                             phone: data.phone || '',
                             company: data.company || '',
+                            address: data.address || '',
                         })
                     } else {
                         // If document doesn't exist, push local data to Firestore
@@ -92,7 +103,7 @@ export const useUserStore = create<UserStore>()(
             },
             saveToFirestore: async (userId: string) => {
                 try {
-                    const { name, initials, email, phone, company } = get()
+                    const { name, initials, email, phone, company, address } = get()
                     const userRef = doc(db, 'users', userId)
                     await setDoc(userRef, {
                         name,
@@ -100,6 +111,7 @@ export const useUserStore = create<UserStore>()(
                         email,
                         phone,
                         company,
+                        address,
                     }, { merge: true })
                 } catch (error) {
                     console.error('Error saving to Firestore:', error)

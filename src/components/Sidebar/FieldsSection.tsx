@@ -10,6 +10,7 @@ import {
     SquareCheckBig,
     CircleDot,
     X,
+    MapPin,
 } from 'lucide-react'
 import { useCanvasStore } from '@/store/canvas'
 
@@ -75,6 +76,10 @@ const FieldsSection = () => {
                         onClick={() => addTextField('company')}
                         icon={<Building className="size-4" />}
                         label="Company" />
+                    <AddFieldButton
+                        onClick={() => addTextField('address')}
+                        icon={<MapPin className="size-4" />}
+                        label="Address" />
                 </div>
 
                 <hr className="w-full border-t border-gray-200 my-2" />

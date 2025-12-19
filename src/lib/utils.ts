@@ -28,6 +28,8 @@ export const getFieldLabel = (fieldType: FieldType) => {
             return 'Phone'
         case 'company':
             return 'Company'
+        case 'address':
+            return 'Address'
         case 'checkbox':
             return 'Checkbox'
         case 'radio':

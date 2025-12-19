@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Textarea } from '@/components/ui/textarea'
 import { ChevronLeft, ChevronRight, FileText } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { cn, getFieldLabel } from '@/lib/utils'
@@ -97,13 +98,12 @@ const InspectorSidebar = () => {
                                             </div>
                                         </Button>
                                     </div>
-                                    <input
+                                    <Textarea
                                         value={field.text}
                                         onChange={event => updateTextField(field.id, event.target.value)}
                                         onFocus={() => setActiveFieldId(field.id)}
                                         placeholder="Enter text"
-                                        className="w-full rounded-md border border-slate-200
-                                            px-3 py-2 text-sm focus:border-sky-500 focus:outline-none"/>
+                                        className="min-h-[60px] resize-none" />
                                     <div className="mt-3 grid grid-cols-2 gap-2 text-[11px] text-slate-500">
                                         <span>X: {(field.x * 100).toFixed(0)}%</span>
                                         <span>Y: {(field.y * 100).toFixed(0)}%</span>
