@@ -242,3 +242,18 @@ export const generateSignedPdf = async (
         toast.error('Something went wrong while creating your PDF')
     }
 }
+
+export const hasFormFields = async (pdfFile: string): Promise<boolean> => {
+    if (!pdfFile) return false
+
+    try {
+        const existingPdfBytes = await fetch(pdfFile).then(res => res.arrayBuffer())
+        const pdfDoc = await PDFDocument.load(existingPdfBytes)
+        const form = pdfDoc.getForm()
+        const fields = form.getFields()
+        return fields.length > 0
+    } catch (e) {
+        // If getting the form fails, it likely doesn't have one or it's malformed
+        return false
+    }
+}

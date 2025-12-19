@@ -6,7 +6,7 @@ import { APP_NAME } from '@/lib/constants'
 import UserAccountMenu from './UserAccountMenu'
 import useNavbarViewModel from './NavbarViewModel'
 import ConfirmFlattenPdfDialog from '@/components/dialogs/ConfirmFlattenPdfDialog'
-
+import { Link } from 'react-router-dom'
 interface NavbarProps {
     onOpenFileDialog: () => void
 }
@@ -20,7 +20,7 @@ const Navbar = ({ onOpenFileDialog }: NavbarProps) => {
 
             <div className="w-full flex h-16 items-center justify-between px-4 sm:px-6">
 
-                <div className="flex items-center gap-3">
+                <Link to="/" className="flex items-center gap-3">
                     <div className="flex size-10 items-center justify-center
                         rounded-2xl bg-slate-200 dark:bg-slate-700 text-white">
                         <img src="/favicon-96x96.png" alt={APP_NAME} className="size-6" />
@@ -33,7 +33,7 @@ const Navbar = ({ onOpenFileDialog }: NavbarProps) => {
                             Fill, align, and export PDFs in seconds
                         </p>
                     </div>
-                </div>
+                </Link>
 
                 {vm.pdfFile && <Toolbar
                     scale={vm.scale}
@@ -82,7 +82,8 @@ const Navbar = ({ onOpenFileDialog }: NavbarProps) => {
 
             <ConfirmFlattenPdfDialog
                 open={vm.isFlattenPdfDialogOpen}
-                onOpenChange={vm.setIsFlattenPdfDialogOpen} />
+                onOpenChange={vm.setIsFlattenPdfDialogOpen}
+                onConfirm={vm.confirmDownload} />
         </header>
     )
 

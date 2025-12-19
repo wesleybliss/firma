@@ -4,7 +4,7 @@ import { usePdfStore } from '@/store/pdf'
 import { useCanvasStore } from '@/store/canvas'
 import { toast } from 'sonner'
 import { useNavigate } from 'react-router-dom'
-import { generateSignedPdf } from '@/lib/pdfGenerator'
+import { generateSignedPdf, hasFormFields } from '@/lib/pdfGenerator'
 
 const NavbarViewModel = () => {
     const { user, signInWithGoogle, signOut } = useAuthStore()
@@ -42,8 +42,16 @@ const NavbarViewModel = () => {
     const handleDownload = async () => {
         if (!pdfFile) return
 
+        const hasFields = await hasFormFields(pdfFile)
+        if (hasFields) {
+            setIsFlattenPdfDialogOpen(true)
+        } else {
+            await generateSignedPdf(pdfFile, fileName, textFields, signatureFields)
+        }
+    }
 
-
+    const confirmDownload = async () => {
+        if (!pdfFile) return
         await generateSignedPdf(pdfFile, fileName, textFields, signatureFields)
     }
 
@@ -69,6 +77,7 @@ const NavbarViewModel = () => {
         handleSignIn,
         handleSignOut,
         handleDownload,
+        confirmDownload,
     }
 }
 
