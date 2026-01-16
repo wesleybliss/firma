@@ -5,7 +5,7 @@ import ThemeToggle from '@/components/theme/ThemeToggle'
 import { APP_NAME } from '@/lib/constants'
 import UserAccountMenu from './UserAccountMenu'
 import useNavbarViewModel from './NavbarViewModel'
-import ConfirmFlattenPdfDialog from '@/components/dialogs/ConfirmFlattenPdfDialog'
+import ConfirmDestructiveOpDialog from '@/components/dialogs/ConfirmDestructiveOpDialog'
 import { Link } from 'react-router-dom'
 interface NavbarProps {
     onOpenFileDialog: () => void
@@ -80,10 +80,16 @@ const Navbar = ({ onOpenFileDialog }: NavbarProps) => {
                 </div>
             </div>
 
-            <ConfirmFlattenPdfDialog
+            <ConfirmDestructiveOpDialog
                 open={vm.isFlattenPdfDialogOpen}
                 onOpenChange={vm.setIsFlattenPdfDialogOpen}
-                onConfirm={vm.confirmDownload} />
+                onConfirm={vm.confirmDownload}
+                title="Export Flattened PDF">
+                <>
+                    <p>This document contains editable fields, which will be removed from the document.</p>
+                    <p>Are you sure you want to export the flattened PDF?</p>
+                </>
+            </ConfirmDestructiveOpDialog>
         </header>
     )
 

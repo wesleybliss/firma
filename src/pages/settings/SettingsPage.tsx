@@ -4,12 +4,17 @@ import { Button, buttonVariants } from '@/components/ui/button'
 import { APP_NAME } from '@/lib/constants'
 import UserSettingsPanel from './UserSettingsPanel'
 import AppSettingsPanel from './AppSettingsPanel'
+import { useState } from 'react'
+import ConfirmDestructiveOpDialog from '@/components/dialogs/ConfirmDestructiveOpDialog'
 
 const SettingsPage = () => {
-    const handleReset = () => {
-        if (!confirm('Are you sure you want to clear all data? This action cannot be undone.'))
-            return
+    const [isResetDialogOpen, setIsResetDialogOpen] = useState(false)
 
+    const handleReset = () => {
+        setIsResetDialogOpen(true)
+    }
+
+    const confirmReset = () => {
         const keysToRemove = []
         for (let i = 0; i < localStorage.length; i++) {
             const key = localStorage.key(i)
@@ -65,6 +70,13 @@ const SettingsPage = () => {
                     </div>
                 </section>
             </div>
+            <ConfirmDestructiveOpDialog
+                open={isResetDialogOpen}
+                onOpenChange={setIsResetDialogOpen}
+                onConfirm={confirmReset}
+                title="Reset All Data">
+                <p>Are you sure you want to clear all data? This action cannot be undone.</p>
+            </ConfirmDestructiveOpDialog>
         </div>
     )
 }
